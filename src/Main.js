@@ -265,7 +265,7 @@ LTH.Main.prototype = {
 			].join("\n");
 		//this.preview.src = 'about:blank';
 		this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
-		this.previewDoc.open('text/html', 'replace');
+		this.previewDoc.open();//'text/html', 'replace');
 		this.previewDoc.write(myContent);
 		this.previewDoc.close(this.preview);
 		//this.preview.contentWindow.location.reload(true);

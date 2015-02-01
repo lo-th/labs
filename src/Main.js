@@ -83,7 +83,7 @@ LTH.Main = function(){
 	this.previewDoc = null;
 	this.previewMain = null;
 
-	this.happ = this.supports_history_api();
+	this.happ = false;//this.supports_history_api();
 	this.init();
 }
 

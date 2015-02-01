@@ -1,0 +1,167 @@
+*{ 
+	padding:0; margin: 0;
+	-o-user-select:none; -ms-user-select:none; -khtml-user-select:none; 
+	-webkit-user-select:none; -moz-user-select: none;/* pointer-events:none; */
+	box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box;
+}
+html, body {
+	font-family: Consolas, 'ConsolasRegular', 'Courier New', monospace;
+	font-size: 14px;
+    height:100%;
+    background:#25292e;
+    color:#d2cec8;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    overflow:hidden;
+    /*pointer-events:none;*/
+}
+
+.night { background:#25292e; color:#d2cec8; }
+.day { background:#d2cec8; color:#25292e; }
+
+/* PREVIEW */
+
+.preview{
+	position:absolute; display:none; border:none; 
+	pointer-events:auto; background:none; z-index:0;
+}
+
+/* LOGO */
+
+.logo {
+	position:absolute; left:50%; top:15px; margin-left:-64px; width:128px; height:128px; 
+	text-align:center; pointer-events:auto; cursor:pointer;
+}
+
+.lmin { 
+	-webkit-transform: scale(0.4,0.4);
+	-moz-transform: scale(0.4,0.4);
+	-o-transform: scale(0.4,0.4);
+	transform: scale(0.4,0.4);
+	-webkit-transition: 0.2s ease-out;
+	-moz-transition: 0.2s ease-out;
+    -o-transition: 0.2s ease-out;
+    transition: 0.2s ease-out;
+}
+.lman { 
+	-webkit-transform: scale(1,1);
+	-moz-transform: scale(1,1); 
+	-o-transform: scale(1,1); 
+	transform: scale(1,1); 
+	-webkit-transition: 0.2s ease-out;
+	-moz-transition: 0.2s ease-out;
+    -o-transition: 0.2s ease-out;
+    transition: 0.2s ease-out;
+}
+
+/* TITLE */
+
+.title {position:absolute; left:50%; top:140px;  margin-left:-64px; width:120px; height:40px; text-align:center; font-weight: bold; }
+
+/* MENU */
+
+.menu { position:absolute; top:0; left:0; width:100%; height:100%; background:none; overflow:hidden; z-index:2; }
+.night .menu{ background:#25292e; color:#d2cec8; }
+.day .menu{ background:#d2cec8; color:#25292e; }
+
+.home {  width:100%; box-shadow:none; }
+.exemple {  width:60px; box-shadow:-12px 0px 12px -12px rgba(0, 0, 0, 0.3) inset; }
+
+.In {  width:180px; 
+    -webkit-transition: 0.2s ease-out;
+    -moz-transition: 0.2s ease-out;
+    -o-transition: 0.2s ease-out;
+    transition: 0.2s ease-out;
+}
+.Out {  width:60px;
+    -webkit-transition: 0.2s ease-out;
+    -moz-transition: 0.2s ease-out;
+    -o-transition: 0.2s ease-out;
+    transition: 0.2s ease-out;
+}
+
+.bottomLeftMenu {
+	position:absolute; bottom:20px; width:100%; height:22px; text-align:center; overflow:hidden;
+}
+
+.ic{
+	display:block; width:158px; height:30px;  cursor:pointer; pointer-events:auto;
+}
+
+.night .icover {background:#393f45;}
+.day .icover {background:#c6c0ba;}
+.icout {background:none;}
+
+/* EDITOR */
+
+.editor {
+	position:absolute; background-color:none; pointer-events:auto; display:none; border:none; box-shadow: -12px -12px 12px -12px rgba(0, 0, 0, 0.3) inset; z-index:1;
+}
+
+
+
+/* ZONE */
+
+.zone {
+	position:absolute; left:10px; top:180px; width:calc(100% - 20px); height:calc(100% - 260px);
+	border:1px dashed rgba(0,0,0,0.1); pointer-events:auto; overflow:hidden;
+}
+
+.day .zone   {border:1px dashed rgba(0,0,0,0.1);}
+.night .zone {border:1px dashed rgba(255, 255, 255, 0.1);}
+
+.day .hover { border: 1px dashed rgba(0,0,0,0.3); }
+.night .hover { border: 1px dashed rgba(255, 255, 255 ,0.3); }
+
+/* BUTTON */
+
+.b{
+	width:20px; height:20px; font-size:14px; cursor:pointer; border:1px solid #25292e;
+	text-align:center; pointer-events:auto; display:inline-block; border-radius:20px; margin: 2px;
+}
+
+.day .b   {border:1px solid #25292e;}
+.night .b {border:1px solid #d2cec8;}
+
+/* Rubtrique */
+
+.rub{
+	width:128px; height:128px; font-size:14px;  font-weight: bold; cursor:pointer;
+	text-align:center; pointer-events:auto; display:inline-block; border-radius:64px; margin: 20px; padding-top:54px;
+	
+}
+
+.night .rub   {
+	box-shadow: 1px 1px 4px 4px rgba(0, 0, 0, 0.1);
+	background:#25292e; color:#d2cec8;
+	-webkit-transition: 0.2s ease-out;
+    -moz-transition: 0.2s ease-out;
+    -o-transition: 0.2s ease-out;
+    transition: 0.2s ease-out;
+}
+
+.day .rub {
+	box-shadow: 1px 1px 4px 4px rgba(0, 0, 0, 0.1);
+	background:#d2cec8; color:#25292e;
+	-webkit-transition: 0.2s ease-out;
+    -moz-transition: 0.2s ease-out;
+    -o-transition: 0.2s ease-out;
+    transition: 0.2s ease-out;  
+}
+
+.night .rubover {
+	box-shadow: -2px -4px 6px 8px rgba(0, 0, 0, 0.3) inset;
+	background:#d2cec8; color:#25292e;
+    -webkit-transition: 0.2s ease-out;
+    -moz-transition: 0.2s ease-out;
+    -o-transition: 0.2s ease-out;
+    transition: 0.2s ease-out;
+}
+
+.day .rubover {
+	box-shadow: -2px -4px 6px 8px rgba(0, 0, 0, 0.3) inset;
+	background:#25292e; color:#d2cec8;
+    -webkit-transition: 0.2s ease-out;
+    -moz-transition: 0.2s ease-out;
+    -o-transition: 0.2s ease-out;
+    transition: 0.2s ease-out;
+}

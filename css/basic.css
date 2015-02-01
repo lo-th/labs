@@ -1,0 +1,114 @@
+* {  margin: 0; padding: 0; border: 0; 
+-o-user-select:none; -ms-user-select:none; -khtml-user-select:none; 
+    -webkit-user-select:none; -moz-user-select: none;/* pointer-events:none; */
+    /*box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box;*/
+}
+html{ overflow:hidden; width:100%; height:100%; }
+body{ background:none; overflow: hidden; color:#25292e; font-family:Consolas, 'ConsolasRegular', 'Courier New', monospace; font-size: 12px; }
+.canvas{ pointer-events:auto;}
+
+.night { color:#d2cec8; }
+.day { color:#25292e; }
+
+body .dg.main {
+    font-family:Consolas, 'ConsolasRegular', 'Courier New', monospace;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.3); 
+    font-size: 12px;
+    /*opacity: 0.97;*/
+    text-align: left;
+    float: right;
+    margin-right: 0px;
+    margin-bottom: 20px;
+    background-color: none; 
+}
+
+/* GUI */
+
+body .dg.main.taller-than-window .close-button {
+    border-top: 1px solid #ddd;
+}
+
+body .dg.main .close-button {
+    background-color: rgba(0,0,0,0.0);
+    border-bottom-left-radius: 10px;
+}
+ 
+body.night .dg.main .close-button:hover { background-color: rgba(0,0,0,0.3); }
+body.day .dg.main .close-button:hover { background-color: rgba(255,255,255,0.3); }
+
+body.night .dg{
+    color: #d2cec8;
+    /*text-shadow: none !important;*/
+}
+body.day .dg{
+    color: #25292e;
+    /*text-shadow: none !important;*/
+}
+
+
+body .dg.main::-webkit-scrollbar {
+    background: #f00;
+}
+
+body .dg.main::-webkit-scrollbar-thumb {
+    background: #bb0;/*;*/
+}
+ 
+body .dg li:not(.folder) {
+    background:none;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.3); 
+    font-size: 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+ 
+body .dg li.save-row .button {
+    text-shadow: none !important;
+}
+
+body.night .dg li.title {
+    background: rgba(0,0,0,0.3) url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;
+    font-family: Consolas, 'ConsolasRegular', 'Courier New', monospace;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.3); 
+    font-size: 14px;
+}
+body.day .dg li.title {
+    background: rgba(255,255,255,0.3) url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;
+    font-family: Consolas, 'ConsolasRegular', 'Courier New', monospace;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.3); 
+    font-size: 14px;
+}
+body .dg .cr.function:hover,.dg .cr.boolean:hover {
+    background:  none;/*#fff*/;
+}
+ 
+body .dg .c input[type=text] {
+    background: none;/*#e9e9e9;*/
+}
+ 
+body .dg .c input[type=text]:hover {
+    background: none;/*#eee;*/
+}
+ 
+body .dg .c input[type=text]:focus {
+    background: none;/*#eee;*/
+    color: #2fa1d6;
+}
+body .dg .c input:focus, textarea:focus, select:focus {outline-color: #2fa1d6;  background: none;}
+body .dg .c select, textarea, input {
+	/*-webkit-appearance: none;*/
+    background: none;/*#eee;*/
+    color: #2fa1d6;
+    padding: 2px;
+}
+body .dg .c .button {
+	/*-webkit-appearance: none;*/
+    background: none;/*#eee;*/
+    color: #2fa1d6;
+    padding: 2px;
+}
+
+body.night .dg .c .slider { background: rgba(0,0,0,0.1);}
+body.night .dg .c .slider:hover { background: rgba(0,0,0,0.3);}
+
+body.day .dg .c .slider { background: rgba(255,255,255,0.1);}
+body.day .dg .c .slider:hover { background: rgba(255,255,255,0.3);}

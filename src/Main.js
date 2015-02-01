@@ -284,10 +284,14 @@ LTH.Main.prototype = {
 				"</body></html>"
 			].join("\n");
 			//this.preview.src = 'about:blank';
+
+			this.preview.src = "demo.html";
+			this.preview.onload = function(e){_this.frameLoaded()};
+
 			
 			
 
-			try {
+			/*try {
 				this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
 				this.previewMain = this.preview.contentWindow;
 			}catch(err){
@@ -298,7 +302,7 @@ LTH.Main.prototype = {
 			    this.previewDoc.close(this.preview);
 			    var _this = this;
 				this.previewMain.onload = function(e){_this.frameLoaded()};
-			}
+			}*/
 
 			/*var _this = this;
 			setTimeout(function(){
@@ -331,6 +335,8 @@ LTH.Main.prototype = {
 		}
 	},
 	frameLoaded:function(){
+		this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
+		this.previewMain = this.preview.contentWindow;
 		console.log('loaded')
 		//this.previewMain = this.preview.contentWindow;
 		if(this.mode==='shader') this.previewMain.main = this;

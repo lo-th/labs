@@ -221,12 +221,12 @@ LTH.Main.prototype = {
 		}
 	},
 	initPreview:function(){
-		if(this.preview == null){
-			this.preview = this.doc.createElement( 'iframe' );
-			this.preview.className = 'preview';
+		this.preview = this.doc.createElement( 'iframe' );
+		this.doc.body.appendChild(this.preview);
+		this.preview.className = 'preview';
 
-			this.doc.body.appendChild(this.preview);
-	    }
+		
+	    
 		this.resize();
 		this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
 
@@ -266,10 +266,10 @@ LTH.Main.prototype = {
 		this.previewDoc.write(myContent);
 		this.previewDoc.close();
 	},
-	update:function(value, isPureSrcipt) {
+	update:function(value) {
 		
-		if(isPureSrcipt && value!==''){
-			if(this.preview !== null) this.clearPreview();
+		if(value!==''){
+			this.clearPreview();
 			this.initPreview();
 			var _this = this;
 		

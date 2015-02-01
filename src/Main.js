@@ -216,8 +216,8 @@ LTH.Main.prototype = {
 	clearPreview:function(){
 		if(this.preview !== null){
 			this.doc.body.removeChild(this.preview);
-			this.preview = null;
-			this.codeLoaded=false;
+			//this.preview = null;
+			
 			//console.clear();
 		}
 	},
@@ -278,12 +278,13 @@ LTH.Main.prototype = {
 	update:function(value) {
 		
 		if(value!==''){
-
+			this.codeLoaded=false;
+			
 			this.clearPreview();
 			this.initPreview();
 
 			var _this = this;
-		
+			this.preview.onerror = function(e){console.log('error')}
 			this.preview.onload = function(e){
 				console.log('loaded')
 				_this.previewMain = _this.preview.contentWindow;

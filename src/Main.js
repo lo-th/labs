@@ -216,7 +216,7 @@ LTH.Main.prototype = {
 	clearPreview:function(){
 		if(this.preview !== null){
 			this.doc.body.removeChild(this.preview);
-			//this.preview = null;
+			this.preview = null;
 			
 			//console.clear();
 		}
@@ -227,70 +227,89 @@ LTH.Main.prototype = {
 		this.preview = this.doc.createElement( 'iframe' );
 		//this.preview.setAttribute('id', 'ifrm');
 		//this.preview.setAttribute('src', 'demo.html');
-		this.doc.body.appendChild(this.preview);
+		
 		this.preview.className = 'preview';
 
-		this.preview.style.cssText = 'position:absolute;  border:none; pointer-events:auto; background:none; z-index:0; '
-	    
+		this.preview.style.cssText = 'position:absolute;  border:none; pointer-events:auto; background:none; z-index:0; display:none;'
+	    this.doc.body.appendChild(this.preview);
 		//this.resize();
 		//this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
 
-		var baseView = "<script src='./src/Vue3d.js'></script>";
-		var threeLib = "<script src='./js/libs/three.js'></script>";
-		if(isMain){
-		    baseView = "<script src='./build/v3d.min.js'></script>";
-		    threeLib = "<script src='./js/libs/three.min.js'></script>";
-		}
-
-		// extra libs
-		var options = '';
-		var ops = LTH.option[LTH.cRubrique][LTH.cFile];
-		var i = ops.length;
-		while(i--) options+="<script src='./js/libs/"+ops[i]+".min.js'></script>";
-
-        var myContent = [
-		    "<!DOCTYPE html>",
-			"<html lang='en'>",
-			"<head>",
-			"<title>prev</title>",
-			"<meta charset='utf-8'>",
-			"<link rel='stylesheet' href='./css/consolas.css'>",
-			"<link rel='stylesheet' href='./css/basic.css'>",
-			threeLib,
-			"<script src='./js/libs/three.post.js'></script>",
-			options,
-			baseView,
-			"<script id='shader'></script>",
-			"</head><body>",
-			"<script> var main = null; var canvas = document.createElement('canvas'); document.body.appendChild( canvas );</script>",
-			"</body></html>"
-			].join("\n");
-		//this.preview.src = 'about:blank';
-		this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
-		this.previewDoc.open();//'text/html', 'replace');
-		this.previewDoc.write(myContent);
-		this.previewDoc.close(this.preview);
+		
 		//this.preview.contentWindow.location.reload(true);
 		//this.preview.src = this.preview.src;
-		
-		console.log(this.preview.contentDocument)
+		//this.doc.body.appendChild(this.preview);
+		//console.log(this.preview.contentDocument)
 	},
 	update:function(value) {
 		
 		if(value!==''){
 			this.codeLoaded=false;
-			
+
 			this.clearPreview();
 			this.initPreview();
 
-			var _this = this;
-			this.preview.onerror = function(e){console.log('error')}
-			this.preview.onload = function(e){
+			this.tmpcode = value;
+
+			var baseView = "<script src='./src/Vue3d.js'></script>";
+			var threeLib = "<script src='./js/libs/three.js'></script>";
+			if(isMain){
+			    baseView = "<script src='./build/v3d.min.js'></script>";
+			    threeLib = "<script src='./js/libs/three.min.js'></script>";
+			}
+
+			// extra libs
+			var options = '';
+			var ops = LTH.option[LTH.cRubrique][LTH.cFile];
+			var i = ops.length;
+			while(i--) options+="<script src='./js/libs/"+ops[i]+".min.js'></script>";
+
+	        var myContent = [
+			    "<!DOCTYPE html>",
+				"<html lang='en'>",
+				"<head>",
+				"<title>prev</title>",
+				"<meta charset='utf-8'>",
+				"<link rel='stylesheet' href='./css/consolas.css'>",
+				"<link rel='stylesheet' href='./css/basic.css'>",
+				threeLib,
+				"<script src='./js/libs/three.post.js'></script>",
+				options,
+				baseView,
+				"<script id='shader'></script>",
+				"</head><body>",
+				"<script> var main = null; var canvas = document.createElement('canvas'); document.body.appendChild( canvas ); </script>",
+				"</body></html>"
+				].join("\n");
+			this.preview.src = 'about:blank';
+			
+			
+
+			try {
+				this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
+				this.previewMain = this.preview.contentWindow;
+			}catch(err){
+
+			}finally {
+				this.previewDoc.open('text/html', 'replace');
+			    this.previewDoc.write(myContent);
+			    this.previewDoc.close(this.preview);
+			    var _this = this;
+				this.previewMain.onload = function(e){_this.frameLoaded()};
+			}
+
+			/*var _this = this;
+			setTimeout(function(){
+				_this.preview.onload = function(e){console.log('loaded'); _this.frameLoaded()}
+			    _this.preview.onerror = function(e){console.log('error')}
+			}, 100);*/
+			
+			/*this.preview.onload = function(e){
 				console.log('loaded')
 				_this.previewMain = _this.preview.contentWindow;
 				if(_this.mode==='shader') _this.previewMain.main = _this;
 				var head = _this.previewDoc.getElementsByTagName('head')[0];
-				//_this.preview.style.display = 'block';
+				
 				var nscript = _this.previewDoc.createElement("script");
 				//nscript.id = 'base';
 				nscript.setAttribute("id", "base");
@@ -299,14 +318,39 @@ LTH.Main.prototype = {
 				nscript.text = value;
 				head.appendChild(nscript);
 
+				_this.preview.style.display = 'block';
 				_this.codeLoaded = true;
 				_this.previewTheme();
 				_this.resize();
 				
 				if(_this.isFirst)_this.isFirst=false;
 				else _this.showModif();
-			}
+			}*/
 		}
+	},
+	frameLoaded:function(){
+		console.log('loaded')
+		//this.previewMain = this.preview.contentWindow;
+		if(this.mode==='shader') this.previewMain.main = this;
+			var head = this.previewDoc.getElementsByTagName('head')[0];
+			var nscript = this.previewDoc.createElement("script");
+				//nscript.id = 'base';
+			//nscript.setAttribute("id", "base");
+			//window.onload = init;
+			nscript.type = "text/javascript";
+			nscript.charset = "utf-8";
+			nscript.text = this.tmpcode;
+			head.appendChild(nscript);
+			
+			this.tmpcode = '';
+
+			this.preview.style.display = 'block';
+			this.codeLoaded = true;
+			this.previewTheme();
+			this.resize();
+				
+			if(this.isFirst)this.isFirst=false;
+			else this.showModif();
 	},
 	checkCurrent:function(){
 		for(var i=0; i< this.numLesson; i++){

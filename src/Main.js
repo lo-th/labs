@@ -217,7 +217,7 @@ LTH.Main.prototype = {
 		if(this.preview !== null){
 			this.doc.body.removeChild(this.preview);
 			this.preview = null;
-			console.clear();
+			//console.clear();
 		}
 	},
 	initPreview:function(){
@@ -385,7 +385,7 @@ LTH.ShaderToy.prototype = {
 			var val = JSON.stringify(uniforms[key].value);
 
 			//
-			console.log(key, val, type);
+			//console.log(key, val, type);
 			if(type === 'c') this.uniformColors[key] = val;
 			else this.uniformValues[key] = val;
 
@@ -766,7 +766,7 @@ LTH.Menu.prototype = {
 	            if (entry.isFile) {
 	                this.addFile(e.dataTransfer.items[i].getAsFile());
 	            } else if (entry.isDirectory) {
-	                console.log('dir', e.dataTransfer.items[i].getAsFile(), entry.fullPath);
+	                //console.log('dir', e.dataTransfer.items[i].getAsFile(), entry.fullPath);
 	            }
 	        }
 	    } else{

@@ -222,6 +222,8 @@ LTH.Main.prototype = {
 		}
 	},
 	initPreview:function(){
+		//this.clearPreview();
+
 		this.preview = this.doc.createElement( 'iframe' );
 		//this.preview.setAttribute('id', 'ifrm');
 		//this.preview.setAttribute('src', 'demo.html');
@@ -276,15 +278,17 @@ LTH.Main.prototype = {
 	update:function(value) {
 		
 		if(value!==''){
+
 			this.clearPreview();
 			this.initPreview();
+
 			var _this = this;
 		
 			this.preview.onload = function(e){
 				_this.previewMain = _this.preview.contentWindow;
 				if(_this.mode==='shader') _this.previewMain.main = _this;
 				var head = _this.previewDoc.getElementsByTagName('head')[0];
-				_this.preview.style.display = 'block';
+				//_this.preview.style.display = 'block';
 				var nscript = _this.previewDoc.createElement("script");
 				//nscript.id = 'base';
 				nscript.setAttribute("id", "base");

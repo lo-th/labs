@@ -217,6 +217,8 @@ LTH.Main.prototype = {
 		if(this.preview !== null){
 			this.doc.body.removeChild(this.preview);
 			this.preview = null;
+			this.previewDoc = null;
+			this.previewMain = null;
 			
 			//console.clear();
 		}
@@ -280,8 +282,8 @@ LTH.Main.prototype = {
 				"</head><body>",
 				"<script> var main = null; var canvas = document.createElement('canvas'); document.body.appendChild( canvas ); </script>",
 				"</body></html>"
-				].join("\n");
-			this.preview.src = 'about:blank';
+			].join("\n");
+			//this.preview.src = 'about:blank';
 			
 			
 
@@ -289,7 +291,7 @@ LTH.Main.prototype = {
 				this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
 				this.previewMain = this.preview.contentWindow;
 			}catch(err){
-
+				console.log('error', err)
 			}finally {
 				this.previewDoc.open('text/html', 'replace');
 			    this.previewDoc.write(myContent);

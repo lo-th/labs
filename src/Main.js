@@ -144,7 +144,7 @@ LTH.Main.prototype = {
 				    	this.setStyle (this.editorVertex.content, v0, v4, v1, v4);
 				    	this.setStyle (this.editorFragment.content, v0, v4+v4, v1, v4);
 				    }
-				    if(this.preview)this.setStyle (this.preview, v0+v1, 0, v1, h);
+				    if(this.preview!==null)this.setStyle (this.preview, v0+v1, 0, v1, h);
 				break;
 				case 'horizon':
 				    if(this.mode!=='shader')this.setStyle (this.editor.content, v0, 0, w-v0, v2);
@@ -153,7 +153,7 @@ LTH.Main.prototype = {
 				    	this.setStyle (this.editorVertex.content, v0+v3, 0, v3, v2);
 				    	this.setStyle (this.editorFragment.content, v0+v3+v3, 0, v3, v2);
 				    }
-				    if(this.preview)this.setStyle (this.preview, v0, v2, w-v0, v2);
+				    if(this.preview!==null)this.setStyle (this.preview, v0, v2, w-v0, v2);
 				break;
 			}
 			this.editor.refresh();
@@ -167,7 +167,7 @@ LTH.Main.prototype = {
 				this.editorVertex.content.style.display = 'none';
 				this.editorFragment.content.style.display = 'none';
 			}
-			if(this.preview)this.setStyle (this.preview, v0, 0, w-v0, h);
+			if(this.preview!==null)this.setStyle (this.preview, v0, 0, w-v0, h);
 		}
 	},
 	setTextSize:function(){
@@ -230,7 +230,7 @@ LTH.Main.prototype = {
 		this.doc.body.appendChild(this.preview);
 		this.preview.className = 'preview';
 
-
+		this.preview.style.cssText = 'position:absolute;  border:none; pointer-events:auto; background:none; z-index:0; '
 	    
 		//this.resize();
 		//this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
@@ -285,6 +285,7 @@ LTH.Main.prototype = {
 			var _this = this;
 		
 			this.preview.onload = function(e){
+				console.log('loaded')
 				_this.previewMain = _this.preview.contentWindow;
 				if(_this.mode==='shader') _this.previewMain.main = _this;
 				var head = _this.previewDoc.getElementsByTagName('head')[0];
@@ -297,7 +298,7 @@ LTH.Main.prototype = {
 				nscript.text = value;
 				head.appendChild(nscript);
 
-				_this.codeLoaded=true;
+				_this.codeLoaded = true;
 				_this.previewTheme();
 				_this.resize();
 				

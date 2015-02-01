@@ -217,11 +217,14 @@ LTH.Main.prototype = {
 		if(this.preview !== null){
 			this.doc.body.removeChild(this.preview);
 			this.preview = null;
+			this.codeLoaded=false;
 			//console.clear();
 		}
 	},
 	initPreview:function(){
 		this.preview = this.doc.createElement( 'iframe' );
+		//this.preview.setAttribute('id', 'ifrm');
+		//this.preview.setAttribute('src', 'demo.html');
 		this.doc.body.appendChild(this.preview);
 		this.preview.className = 'preview';
 
@@ -265,9 +268,9 @@ LTH.Main.prototype = {
 		this.previewDoc.open('text/html', 'replace');
 		this.previewDoc.write(myContent);
 		this.previewDoc.close(this.preview);
-
-		this.resize();
-
+		//this.preview.contentWindow.location.reload(true);
+		//this.preview.src = this.preview.src;
+		
 		console.log(this.preview.contentDocument)
 	},
 	update:function(value) {
@@ -278,7 +281,6 @@ LTH.Main.prototype = {
 			var _this = this;
 		
 			this.preview.onload = function(e){
-				_this.previewTheme();
 				_this.previewMain = _this.preview.contentWindow;
 				if(_this.mode==='shader') _this.previewMain.main = _this;
 				var head = _this.previewDoc.getElementsByTagName('head')[0];
@@ -292,8 +294,8 @@ LTH.Main.prototype = {
 				head.appendChild(nscript);
 
 				_this.codeLoaded=true;
-
 				_this.previewTheme();
+				_this.resize();
 				
 				if(_this.isFirst)_this.isFirst=false;
 				else _this.showModif();

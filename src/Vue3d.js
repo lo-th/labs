@@ -1,5 +1,5 @@
 'use strict';
-var THREE, canvas, mainClick, mainDown, mainUp, mainMove, mainRay, main
+var THREE, canvas, mainClick, mainDown, mainUp, mainMove, mainRay, main, v, dat, shader;
 var V = {};
 var TWEEN = TWEEN || null;
 V.AR8 = typeof Uint8Array!="undefined"?Uint8Array:Array;

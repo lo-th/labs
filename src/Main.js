@@ -1,4 +1,5 @@
 var LTH = {};
+var isMain;
 
 LTH.rubriques = ['physics-2d', 'physics-3d', 'games', 'shaders', 'experiments', 'others'];
 //LTH.numExemples = [         2,            2,       2,         1,             1,       1 ];
@@ -11,7 +12,7 @@ LTH.option = {
 'others':     [ ['dat.gui' ]                                               ]
 }
 
-LTH.cRubrique = '';//-1;
+LTH.cRubrique = '';
 LTH.cFile = 0;
 var esprima = esprima || {};
 var CodeMirror = CodeMirror || {};
@@ -229,6 +230,13 @@ LTH.Main.prototype = {
 		this.resize();
 		this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
 
+		var baseView = "<script src='./src/Vue3d.js'></script>";
+		var threeLib = "<script src='./js/libs/three.js'></script>";
+		if(isMain){
+		    baseView = "<script src='./build/v3d.min.js'></script>";
+		    threeLib = "<script src='./js/libs/three.min.js'></script>";
+		}
+
 		// extra libs
 		var options = '';
 		var ops = LTH.option[LTH.cRubrique][LTH.cFile];
@@ -243,17 +251,10 @@ LTH.Main.prototype = {
 			"<meta charset='utf-8'>",
 			"<link rel='stylesheet' href='./css/consolas.css'>",
 			"<link rel='stylesheet' href='./css/basic.css'>",
-			//"<script src='./js/libs/three.min.js'></script>",
-			"<script src='./js/libs/three.js'></script>",
+			threeLib,
 			"<script src='./js/libs/three.post.js'></script>",
-			//"<script src='./js/libs/sea3d.min.js'></script>",
-			//"<script src='./js/libs/tween.min.js'></script>",
-			//"<script src='./js/libs/serious.min.js'></script>",
-			//"<script src='./js/libs/dat.gui.min.js'></script>",
-			//"<script src='./js/libs/rot.min.js'></script>",
 			options,
-			"<script src='./src/Vue3d.js'></script>",
-			//"<script src='./build/v3d.min.js'></script>",
+			baseView,
 			"<script id='shader'></script>",
 			"</head><body>",
 			"<script> var main = null; var canvas = document.createElement('canvas'); document.body.appendChild( canvas );</script>",

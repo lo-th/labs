@@ -253,18 +253,18 @@ LTH.Main.prototype = {
 
 			this.tmpcode = value;
 
-			var baseView = "<script src='./src/Vue3d.js'></script>";
-			var threeLib = "<script src='./js/libs/three.js'></script>";
+			var baseView = "<script src='src/Vue3d.js'></script>";
+			var threeLib = "<script src='js/libs/three.js'></script>";
 			if(isMain){
-			    baseView = "<script src='./build/v3d.min.js'></script>";
-			    threeLib = "<script src='./js/libs/three.min.js'></script>";
+			    baseView = "<script src='build/v3d.min.js'></script>";
+			    threeLib = "<script src='js/libs/three.min.js'></script>";
 			}
 
 			// extra libs
 			var options = '';
 			var ops = LTH.option[LTH.cRubrique][LTH.cFile];
 			var i = ops.length;
-			while(i--) options+="<script src='./js/libs/"+ops[i]+".min.js'></script>";
+			while(i--) options+="<script src='js/libs/"+ops[i]+".min.js'></script>";
 
 	        var myContent = [
 			    "<!DOCTYPE html>",
@@ -272,10 +272,10 @@ LTH.Main.prototype = {
 				"<head>",
 				"<title>prev</title>",
 				"<meta charset='utf-8'>",
-				"<link rel='stylesheet' href='./css/consolas.css'>",
-				"<link rel='stylesheet' href='./css/basic.css'>",
+				"<link rel='stylesheet' href='css/consolas.css'>",
+				"<link rel='stylesheet' href='css/basic.css'>",
 				threeLib,
-				"<script src='./js/libs/three.post.js'></script>",
+				"<script src='js/libs/three.post.js'></script>",
 				options,
 				baseView,
 				"<script id='shader'></script>",

@@ -225,10 +225,10 @@ LTH.Main.prototype = {
 		this.doc.body.appendChild(this.preview);
 		this.preview.className = 'preview';
 
-		
+
 	    
-		this.resize();
-		this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
+		//this.resize();
+		//this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
 
 		var baseView = "<script src='./src/Vue3d.js'></script>";
 		var threeLib = "<script src='./js/libs/three.js'></script>";
@@ -260,11 +260,15 @@ LTH.Main.prototype = {
 			"<script> var main = null; var canvas = document.createElement('canvas'); document.body.appendChild( canvas );</script>",
 			"</body></html>"
 			].join("\n");
-		this.preview.src = 'about:blank';
+		//this.preview.src = 'about:blank';
 		this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
 		this.previewDoc.open('text/html', 'replace');
 		this.previewDoc.write(myContent);
-		this.previewDoc.close();
+		this.previewDoc.close(this.preview);
+
+		this.resize();
+
+		console.log(this.preview.contentDocument)
 	},
 	update:function(value) {
 		

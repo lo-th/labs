@@ -83,7 +83,7 @@ LTH.Main = function(){
 	this.previewDoc = null;
 	this.previewMain = null;
 
-	this.happ = false;//this.supports_history_api();
+	this.happ = this.supports_history_api();
 	this.init();
 }
 
@@ -201,10 +201,10 @@ LTH.Main.prototype = {
 		if(this.codeLoaded) this.previewTheme();
 	},
 	previewTheme:function(){
-		if(this.day)this.previewDoc.body.className = 'day';
+		if(this.day) this.previewDoc.body.className = 'day';
 		else this.previewDoc.body.className = 'night';
 
-		if(this.previewMain){
+		if(this.previewMain && this.previewMain.v){
 			if(this.day) this.previewMain.v.colorBack(0xd2cec8);
 			else this.previewMain.v.colorBack(0x25292e);//202020);
 		}
@@ -230,7 +230,7 @@ LTH.Main.prototype = {
 		//this.preview.setAttribute('id', 'ifrm');
 		//this.preview.setAttribute('src', 'demo.html');
 		
-		this.preview.className = 'preview';
+		//this.preview.className = 'preview';
 
 		this.preview.style.cssText = 'position:absolute;  border:none; pointer-events:auto; background:none; z-index:0; display:none;'
 	    this.doc.body.appendChild(this.preview);
@@ -249,63 +249,74 @@ LTH.Main.prototype = {
 		if(value!==''){
 			this.codeLoaded=false;
 
-			//
-			this.clearPreview();
-			this.initPreview();
+			//if(this.isFirst){
+			
+				this.clearPreview();
+				this.initPreview();
 
-			this.tmpcode = value;
+				//this.tmpcode = value;
 
-			var baseView = "<script src='src/Vue3d.js'></script>";
-			var threeLib = "<script src='js/libs/three.js'></script>";
-			if(isMain){
-			    baseView = "<script src='build/v3d.min.js'></script>";
-			    threeLib = "<script src='js/libs/three.min.js'></script>";
-			}
+				var baseView = "<script src='src/Vue3d.js'></script>";
+				var threeLib = "<script src='js/libs/three.js'></script>";
+				if(isMain){
+				    baseView = "<script src='build/v3d.min.js'></script>";
+				    threeLib = "<script src='js/libs/three.min.js'></script>";
+				}
 
-			// extra libs
-			var options = '';
-			var ops = LTH.option[LTH.cRubrique][LTH.cFile];
-			var i = ops.length;
-			while(i--) options+="<script src='js/libs/"+ops[i]+".min.js'></script>";
+				// extra libs
+				var options = '';
+				var ops = LTH.option[LTH.cRubrique][LTH.cFile];
+				var i = ops.length;
+				while(i--) options+="<script src='js/libs/"+ops[i]+".min.js'></script>";
 
-	        var myContent = [
-			    "<!DOCTYPE html>",
-				"<html lang='en'>",
-				"<head>",
-				"<title>prev</title>",
-				"<meta charset='utf-8'>",
-				"<link rel='stylesheet' href='css/consolas.css'>",
-				"<link rel='stylesheet' href='css/basic.css'>",
-				threeLib,
-				"<script src='js/libs/three.post.js'></script>",
-				options,
-				baseView,
-				"<script id='shader'></script>",
-				"</head><body>",
-				"<script> var main = null; var canvas = document.createElement('canvas'); document.body.appendChild( canvas ); </script>",
-				"</body></html>"
-			].join("\n");
+		        var myContent = [
+				    "<!DOCTYPE html>",
+					"<html lang='en'>",
+					"<head>",
+					"<title>prev</title>",
+					"<meta charset='utf-8'>",
+					"<link rel='stylesheet' href='css/consolas.css'>",
+					"<link rel='stylesheet' href='css/basic.css'>",
+					threeLib,
+					"<script src='js/libs/three.post.js'></script>",
+					options,
+					baseView,
+					"<script id='shader'></script>",
+					"</head><body>",
+					"<script> var main = null;",
+					"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
+					"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
+					"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
+					"</script>",
+					"</body></html>"
+				].join("\n");
 			//this.preview.src = 'about:blank';
 
-			var _this = this; 
-			//this.preview.src = "demo.html";
-			//this.preview.onload = function(e){_this.frameLoaded()};
+			/*var _this = this; 
+			this.preview.src = "demo.html";
+			this.preview.onload = function(e){_this.frameLoaded()};*/
 
 			
 			
 
-			try {
-				this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
-				this.previewMain = this.preview.contentWindow;
-			}catch(err){
-				console.log('error', err)
-			}finally {
-				this.previewDoc.open('text/html', 'replace');
-			    this.previewDoc.write(myContent);
-			    this.previewDoc.close(this.preview);
-			    var _this = this;
-				this.previewMain.onload = function(e){_this.frameLoaded()};
-			}
+				try {
+					this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
+					this.previewMain = this.preview.contentWindow;
+				}catch(err){
+					console.log('error', err)
+				}finally {
+					this.previewDoc.open('text/html', 'replace');
+				    this.previewDoc.write(myContent);
+				    this.previewDoc.close(this.preview);
+				    //var _this = this;
+					//this.previewMain.onload = function(e){_this.frameLoaded()};
+
+					this.frameLoaded(value);
+					this.resize();
+				}
+			//} else {
+			//    this.frameLoaded(value);
+			//}
 
 			/*var _this = this;
 			setTimeout(function(){
@@ -337,33 +348,50 @@ LTH.Main.prototype = {
 			}*/
 		}
 	},
-	frameLoaded:function(){
+	frameLoaded:function(value){
+		//
+
 		//this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
 		//this.previewMain = this.preview.contentWindow;
+
 		console.log('loaded')
 		//this.previewMain = this.preview.contentWindow;
 		if(this.mode==='shader') this.previewMain.main = this;
-			var head = this.previewDoc.getElementsByTagName('head')[0];
-			var nscript = this.previewDoc.createElement("script");
-				//nscript.id = 'base';
-			//nscript.setAttribute("id", "base");
-			//window.onload = init;
-			nscript.name = "topScript";
-			nscript.id = "topScript";
-			nscript.type = "text/javascript";
-			nscript.charset = "utf-8";
-			nscript.text = this.tmpcode;
-			head.appendChild(nscript);
-			
-			this.tmpcode = '';
 
-			this.preview.style.display = 'block';
-			this.codeLoaded = true;
-			this.previewTheme();
-			this.resize();
-				
-			if(this.isFirst)this.isFirst=false;
-			else this.showModif();
+		var head = this.previewDoc.getElementsByTagName('head')[0];
+		var nscript = this.previewDoc.createElement("script");
+			//nscript.id = 'base';
+		//nscript.setAttribute("id", "base");
+		//window.onload = init;
+		nscript.type = "text/javascript";
+		nscript.name = "topScript";
+		nscript.id = "topScript";
+		nscript.charset = "utf-8";
+		nscript.text = value;
+		//head.appendChild(nscript);
+		
+		this.tmpcode = '';
+
+		this.preview.style.display = 'block';
+		this.codeLoaded = true;
+
+		var _this = this;
+		this.previewMain.onload = function(){
+			_this.previewTheme();
+			head.appendChild(nscript);
+		}
+		
+			
+		if(this.isFirst){
+			this.isFirst=false;
+			//this.previewMain.onload = this.previewMain.init;
+			//this.previewTheme();
+			//this.resize();
+		} else{ 
+			//this.previewMain.clear();
+			//this.previewMain.init();
+			this.menu.modified();
+		}
 	},
 	checkCurrent:function(){
 		for(var i=0; i< this.numLesson; i++){
@@ -380,9 +408,6 @@ LTH.Main.prototype = {
 	},
 	createLink:function(blob, name, type){
 		this.menu.addIconLink(blob, name, type);
-	},
-	showModif:function(){
-		this.menu.modified();
 	},
 	callSave:function(){
 		this.fileSystem.save();

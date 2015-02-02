@@ -1,4 +1,5 @@
 var v = new V.View(180, 45, 100);
+
 var geo, mat, mat2, map, gui, player, gamePhase = 'start';
 
 v.tell('The dungeon');
@@ -50,6 +51,7 @@ function mainRay(ray){
 }
 
 function onload(){
+	v.colorBack(0x25292e);
 	geo = {};
 	var m = v.pool.meshes.wall;
 	for(var n in m) geo[m[n].name] = m[n].geometry; 

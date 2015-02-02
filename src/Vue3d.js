@@ -1,5 +1,6 @@
 'use strict';
-var THREE, canvas, mainClick, mainDown, mainUp, mainMove, mainRay, main, v, dat, shader;
+var canvas, info, debug;
+var THREE, mainClick, mainDown, mainUp, mainMove, mainRay, main, v, dat, shader;
 var V = {};
 var TWEEN = TWEEN || null;
 V.AR8 = typeof Uint8Array!="undefined"?Uint8Array:Array;
@@ -28,20 +29,13 @@ V.View = function(h,v,d){
     this.dimentions = {w:window.innerWidth,  h:window.innerHeight, r:window.innerWidth/window.innerHeight };
 
 	this.canvas = canvas;
-    this.canvas.style.pointerEvents = 'auto';
+    this.debug = debug;
+    this.info = info;
+
     this.renderer = new THREE.WebGLRenderer({canvas:canvas, precision: "mediump", antialias:true, alpha: true, stencil:false });
     this.renderer.setSize( this.dimentions.w, this.dimentions.h );
     this.renderer.setClearColor( 0x000000, 0 );
     this.renderer.autoClear = false;
-    //document.body.appendChild( this.renderer.domElement );
-
-	this.info = document.createElement( 'div' );
-	this.info.style.cssText = "position:absolute; left:10px; top:10px; width: 200px; height: 400px; pointer-events:none;";
-	document.body.appendChild( this.info );
-
-	this.debug = document.createElement( 'div' );
-	this.debug.style.cssText = "position:absolute; left:10px; bottom:10px; width: 200px; height: 12px; pointer-events:none; ";
-	document.body.appendChild( this.debug );
 
     this.clock = new THREE.Clock();
 
@@ -505,6 +499,9 @@ V.Worker = function(parent, name){
 }
 V.Worker.prototype = {
     constructor: V.Worker,
+    clear:function(){
+        this.w.terminate();
+    },
     onMessage:function(e){
         var d = this.d;
         var _this = this;

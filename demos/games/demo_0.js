@@ -16,6 +16,7 @@ function loop(){
 }
 
 function onload(){
+	v.colorBack(0x25292e);
     var m = v.pool.meshes.world;
     var i = 21, nm = '';
     while(i--){

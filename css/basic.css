@@ -4,11 +4,15 @@
     /*box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box;*/
 }
 html{ overflow:hidden; width:100%; height:100%; }
-body{ background:none; overflow: hidden; color:#25292e; font-family:Consolas, 'ConsolasRegular', 'Courier New', monospace; font-size: 12px;  width:100%; height:100%; }
+body{ background:none; overflow: hidden; color:#d2cec8; font-family:Consolas, 'ConsolasRegular', 'Courier New', monospace; font-size: 12px;  width:100%; height:100%; }
 .canvas{ pointer-events:auto; width:100%; height:100%; }
 
 .night { color:#d2cec8; }
 .day { color:#25292e; }
+
+
+.info{position:absolute; left:10px; top:10px; width: 200px; height: 400px; pointer-events:none;}
+.debug{position:absolute; left:10px; bottom:10px; width: 200px; height: 12px; pointer-events:none;}
 
 body .dg.main {
     font-family:Consolas, 'ConsolasRegular', 'Courier New', monospace;

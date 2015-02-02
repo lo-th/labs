@@ -230,9 +230,10 @@ LTH.Main.prototype = {
 		//this.preview.setAttribute('id', 'ifrm');
 		//this.preview.setAttribute('src', 'demo.html');
 		
-		//this.preview.className = 'preview';
+		this.preview.className = 'preview';
+		this.preview.src = 'about:blank';
 
-		this.preview.style.cssText = 'position:absolute;  border:none; pointer-events:auto; background:none; z-index:0; display:none;'
+		//this.preview.style.cssText = 'position:absolute;  border:none; pointer-events:auto; background:none; z-index:0; display:none;'
 	    this.doc.body.appendChild(this.preview);
 	    //this.preview.src = "demo.html";
 		//this.resize();
@@ -290,7 +291,8 @@ LTH.Main.prototype = {
 					"</script>",
 					"</body></html>"
 				].join("\n");
-			//this.preview.src = 'about:blank';
+
+
 
 			/*var _this = this; 
 			this.preview.src = "demo.html";
@@ -305,14 +307,16 @@ LTH.Main.prototype = {
 				}catch(err){
 					console.log('error', err)
 				}finally {
-					this.previewDoc.open('text/html', 'replace');
+					//this.previewDoc.open('text/html', 'replace');
+					this.previewDoc.open('text/htmlreplace')
 				    this.previewDoc.write(myContent);
-				    this.previewDoc.close(this.preview);
-				    //var _this = this;
+				    this.previewDoc.close();//this.preview);
+				    this.resize();
+				    var _this = this;
 					//this.previewMain.onload = function(e){_this.frameLoaded()};
 
-					this.frameLoaded(value);
-					this.resize();
+					setTimeout(function(){_this.frameLoaded(value);},10);
+					
 				}
 			//} else {
 			//    this.frameLoaded(value);

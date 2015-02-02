@@ -267,7 +267,7 @@ W.Sim.prototype = {
             var body = world.CreateBody(bodyDef);
             body.CreateFixtureFromDef(fixtureDef);
             this.decals[n] = body;
-            console.log('addnew');
+            //console.log('addnew');
         }else{
         	this.decals[n].DestroyFixture(this.decals[n].fixtures[0]);
         	this.decals[n].CreateFixtureFromDef(fixtureDef);

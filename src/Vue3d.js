@@ -25,6 +25,8 @@ V.randInt = function (a, b, n) { return V.lerp(a, b, Math.random()).toFixed(n ||
 
 V.MeshList = [ 'plane', 'sphere', 'skull', 'skullhigh', 'head', 'woman', 'babe'];
 
+V.Main = null;
+
 V.View = function(h,v,d){
     this.dimentions = {w:window.innerWidth,  h:window.innerHeight, r:window.innerWidth/window.innerHeight };
 
@@ -282,7 +284,7 @@ V.View.prototype = {
         line.geometry.verticesNeedUpdate = true;
 
         if(this.w){
-            console.log(pid*2, (pid*2)+1)
+            //console.log(pid*2, (pid*2)+1)
             this.w.dr[pid*2] = obj.position.x;
             this.w.dr[(pid*2)+1] = obj.position.z;
             this.w.msg = 'updecal';
@@ -825,7 +827,7 @@ V.TransGeo = function(g, noBuffer){
     g.computeVertexNormals(true);
     g.computeTangents() ;
 
-    console.log(g.hasTangents) 
+    //console.log(g.hasTangents) 
 
     //g.dynamic = false;
 
@@ -887,7 +889,7 @@ V.Particle.prototype = {
         var i = n;
         while(i--) this.addV();
         this.update()
-        console.log(n,this.particles.geometry.vertices.length )
+        //console.log(n,this.particles.geometry.vertices.length )
     },
     addV : function (x,y,z) {
         var v = new THREE.Vector3(x||0,y||0,z||0);
@@ -921,7 +923,7 @@ V.Shader = function(name, parameters){
 V.Shader.prototype = Object.create( THREE.ShaderMaterial.prototype );
 V.Shader.prototype.constructor = V.Shader;
 V.Shader.prototype.load = function(name){
-    if(main) main.shader.open(name);
+    if(V.Main !== null) V.Main.shader.open(name);
 }
 V.Shader.prototype.up = function(name, n){
     if(this.uniforms[name])this.uniforms[name].value = n;

@@ -103,6 +103,7 @@ LTH.Main.prototype = {
 			if(this.mode==='shader') this.clearShader();
 			if(mode==='shader') this.initShader();
 			this.mode = mode;
+
 		}
 	},
 	clearShader:function(){
@@ -274,6 +275,9 @@ LTH.Main.prototype = {
 				var i = ops.length;
 				while(i--) options+="<script src='js/libs/"+ops[i]+".min.js'></script>";
 
+				//var mr = "var main = null;"
+				//if(this.mode=='shader') mr = "var main ="+this+";"
+
 		        var myContent = [
 				    "<!DOCTYPE html>",
 					"<html lang='en'>",
@@ -289,7 +293,8 @@ LTH.Main.prototype = {
 					"<script id='shader'></script>",
 					//"<script id='topScript'>"+value+"</script>",
 					"</head><body>",
-					"<script> var main = null;",
+					"<script>",
+					"var main = null;",
 					"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
 					"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
 					"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
@@ -312,7 +317,7 @@ LTH.Main.prototype = {
 					this.previewMain = this.preview.contentWindow;
 
 
-					console.log(this.previewDoc);
+					//console.log(this.previewDoc);
 				//}catch(err){
 				//	console.log('error', err)
 				//}finally {
@@ -320,11 +325,22 @@ LTH.Main.prototype = {
 					//this.previewDoc.open('text/htmlreplace')
 				    this.previewDoc.write(myContent);
 				    this.previewDoc.close();//this.preview);
+                    this.preview.style.display = 'block';
 
 //this.preview.contentWindow.contents = myContent;
 //this.preview.src = 'javascript:window["myContent"]';
 				    this.resize();
-				    //var _this = this;
+				    var _this = this;
+
+				    this.previewMain.onload = function(){
+				    	
+				    	_this.previewTheme();
+				    	if(_this.mode=='shader'){
+				    	     _this.previewMain.main = _this;
+				    	    //_this.previewMain.V.Main= _this;
+				    	   // console.log(_this.mode, _this.previewMain.V.Main)
+				    	 }
+				    }
 					//this.previewMain.onload = function(e){_this.frameLoaded()};
 					//this.frameLoaded(value)
 					//setTimeout(function(){_this.frameLoaded(value);},10);
@@ -362,6 +378,9 @@ LTH.Main.prototype = {
 				if(_this.isFirst)_this.isFirst=false;
 				else _this.showModif();
 			}*/
+			if(this.isFirst) this.isFirst=false;
+			else this.menu.modified();
+		
 		}
 	},
 	frameLoaded:function(value){
@@ -451,7 +470,8 @@ LTH.ShaderToy = function(main){
 LTH.ShaderToy.prototype = {
 	constructor: LTH.ShaderToy,
 	open:function(name){
-		this.main.fileSystem.load('./shaders/'+name+'.js', true);
+		console.log(name);
+		this.main.fileSystem.load('shaders/'+name+'.js', true);
 	},
 	clear:function(){
 		this.shaderName = '';

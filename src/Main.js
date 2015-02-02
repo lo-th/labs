@@ -255,6 +255,10 @@ LTH.Main.prototype = {
 				this.clearPreview();
 				this.initPreview();
 
+
+				
+
+
 				//this.tmpcode = value;
 
 				var baseView = "<script src='src/Vue3d.js'></script>";
@@ -283,12 +287,13 @@ LTH.Main.prototype = {
 					options,
 					baseView,
 					"<script id='shader'></script>",
+					//"<script id='topScript'>"+value+"</script>",
 					"</head><body>",
 					"<script> var main = null;",
 					"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
 					"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
 					"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
-					"</script>",
+					value+"</script>",
 					"</body></html>"
 				].join("\n");
 
@@ -307,7 +312,7 @@ LTH.Main.prototype = {
 					this.previewMain = this.preview.contentWindow;
 
 
-					console.log(this.previewDoc, this.previewMain)
+					console.log(this.previewDoc);
 				//}catch(err){
 				//	console.log('error', err)
 				//}finally {
@@ -319,9 +324,9 @@ LTH.Main.prototype = {
 //this.preview.contentWindow.contents = myContent;
 //this.preview.src = 'javascript:window["myContent"]';
 				    this.resize();
-				    var _this = this;
+				    //var _this = this;
 					//this.previewMain.onload = function(e){_this.frameLoaded()};
-					this.frameLoaded(value)
+					//this.frameLoaded(value)
 					//setTimeout(function(){_this.frameLoaded(value);},10);
 					
 				//}

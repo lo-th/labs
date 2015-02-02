@@ -297,27 +297,34 @@ LTH.Main.prototype = {
 			/*var _this = this; 
 			this.preview.src = "demo.html";
 			this.preview.onload = function(e){_this.frameLoaded()};*/
+			//this.preview.srcdoc = myContent;
 
 			
 			
 
-				try {
+				//try {
 					this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
 					this.previewMain = this.preview.contentWindow;
-				}catch(err){
-					console.log('error', err)
-				}finally {
-					//this.previewDoc.open('text/html', 'replace');
-					this.previewDoc.open('text/htmlreplace')
+
+
+					console.log(this.previewDoc, this.previewMain)
+				//}catch(err){
+				//	console.log('error', err)
+				//}finally {
+					this.previewDoc.open('text/html', 'replace');
+					//this.previewDoc.open('text/htmlreplace')
 				    this.previewDoc.write(myContent);
 				    this.previewDoc.close();//this.preview);
+
+//this.preview.contentWindow.contents = myContent;
+//this.preview.src = 'javascript:window["myContent"]';
 				    this.resize();
 				    var _this = this;
 					//this.previewMain.onload = function(e){_this.frameLoaded()};
-
-					setTimeout(function(){_this.frameLoaded(value);},10);
+					this.frameLoaded(value)
+					//setTimeout(function(){_this.frameLoaded(value);},10);
 					
-				}
+				//}
 			//} else {
 			//    this.frameLoaded(value);
 			//}
@@ -360,7 +367,7 @@ LTH.Main.prototype = {
 
 		console.log('loaded')
 		//this.previewMain = this.preview.contentWindow;
-		if(this.mode==='shader') this.previewMain.main = this;
+		//if(this.mode==='shader') this.previewMain.main = this;
 
 		var head = this.previewDoc.getElementsByTagName('head')[0];
 		var nscript = this.previewDoc.createElement("script");
@@ -383,6 +390,7 @@ LTH.Main.prototype = {
 		this.previewMain.onload = function(){
 			_this.previewTheme();
 			head.appendChild(nscript);
+			if(_this.mode==='shader') _this.previewMain.main = _this;
 		}
 		
 			

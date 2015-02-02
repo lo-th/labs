@@ -1,6 +1,6 @@
 'use strict';
 var canvas, info, debug;
-var THREE, mainClick, mainDown, mainUp, mainMove, mainRay, main, v, dat, shader;
+var THREE, mainClick, mainDown, mainUp, mainMove, mainRay, v, dat, shader;
 var V = {};
 var TWEEN = TWEEN || null;
 V.AR8 = typeof Uint8Array!="undefined"?Uint8Array:Array;
@@ -918,6 +918,7 @@ V.Particle.prototype = {
 
 V.Shader = function(name, parameters){
     THREE.ShaderMaterial.call( this, parameters );
+    this.parameters = parameters;
     if(name)this.load(name);
 }
 V.Shader.prototype = Object.create( THREE.ShaderMaterial.prototype );
@@ -934,7 +935,6 @@ V.Shader.prototype.upColor = function(name, n){
 V.Shader.prototype.upBool = function(name, n){
     if(this.uniforms[name])this.uniforms[name].value = n ? 1:0;
 }
-
 V.Shader.prototype.init = function(parameters){
     this.setValues( parameters );
 }
@@ -943,6 +943,10 @@ V.Shader.prototype.apply = function(shad){
     this.vertexShader = shad.vs;
     this.fragmentShader  = shad.fs;
     this.needsUpdate = true;
+    for ( var key in this.parameters ) {
+        //console.log(key)
+        if(this.uniforms[key]) this.uniforms[key].value = this.parameters[key];
+    }
 }
 
 

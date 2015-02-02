@@ -1,4 +1,5 @@
 V.Main = window.top.main;
+
 var v = new V.View(180, 45, 130);
 v.tell('basic shader');
 v.initGui(true);

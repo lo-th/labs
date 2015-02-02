@@ -56,6 +56,7 @@ LTH.Main = function(){
 
 	this.doc = document;
 	this.doc.body.className = 'night';
+	this.mainClass = 'night';
 	this.doc.body.ondragover = function(e){return false;};
 	this.doc.body.onmousemove = showHideMenu;
 	//this.doc.body.ondrop = function(e){return false;};
@@ -72,7 +73,7 @@ LTH.Main = function(){
 
 	this.scriptText = 14;
 	this.currentLesson = -1;
-	this.codeLoaded = false;
+	//this.codeLoaded = false;
 	this.isFirst = false;
 
 	this.menu = null;
@@ -199,11 +200,10 @@ LTH.Main.prototype = {
 				this.editorFragment.changeTheme(1);
 			}
 		}
-		if(this.codeLoaded) this.previewTheme();
+		this.previewTheme();
 	},
 	previewTheme:function(){
-		if(this.day) this.previewDoc.body.className = 'day';
-		else this.previewDoc.body.className = 'night';
+		if(this.previewDoc.body)this.previewDoc.body.className = this.mainClass;
 
 		if(this.previewMain && this.previewMain.v){
 			if(this.day) this.previewMain.v.colorBack(0xd2cec8);
@@ -221,126 +221,89 @@ LTH.Main.prototype = {
 			this.previewDoc = null;
 			this.previewMain = null;
 			
-			//console.clear();
+			console.clear();
 		}
 	},
 	initPreview:function(){
 		//this.clearPreview();
 
 		this.preview = this.doc.createElement( 'iframe' );
-		//this.preview.setAttribute('id', 'ifrm');
-		//this.preview.setAttribute('src', 'demo.html');
-		
 		this.preview.className = 'preview';
 		this.preview.src = 'about:blank';
-
-		//this.preview.style.cssText = 'position:absolute;  border:none; pointer-events:auto; background:none; z-index:0; display:none;'
 	    this.doc.body.appendChild(this.preview);
-	    //this.preview.src = "demo.html";
-		//this.resize();
-		//this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
-
-		
-		//this.preview.contentWindow.location.reload(true);
-		//this.preview.src = this.preview.src;
-		//this.doc.body.appendChild(this.preview);
-		//console.log(this.preview.contentDocument)
 	},
 	update:function(value) {
 		
 		if(value!==''){
-			this.codeLoaded=false;
+			//this.codeLoaded=false;
 
 			//if(this.isFirst){
 			
-				this.clearPreview();
-				this.initPreview();
+			this.clearPreview();
+			this.initPreview();
 
-
-				
-
-
-				//this.tmpcode = value;
-
-				var baseView = "<script src='src/Vue3d.js'></script>";
-				var threeLib = "<script src='js/libs/three.js'></script>";
-				if(isMain){
-				    baseView = "<script src='build/v3d.min.js'></script>";
-				    threeLib = "<script src='js/libs/three.min.js'></script>";
-				}
-
-				// extra libs
-				var options = '';
-				var ops = LTH.option[LTH.cRubrique][LTH.cFile];
-				var i = ops.length;
-				while(i--) options+="<script src='js/libs/"+ops[i]+".min.js'></script>";
-
-				//var mr = "var main = null;"
-				//if(this.mode=='shader') mr = "var main ="+this+";"
-
-		        var myContent = [
-				    "<!DOCTYPE html>",
-					"<html lang='en'>",
-					"<head>",
-					"<title>prev</title>",
-					"<meta charset='utf-8'>",
-					"<link rel='stylesheet' href='css/consolas.css'>",
-					"<link rel='stylesheet' href='css/basic.css'>",
-					threeLib,
-					"<script src='js/libs/three.post.js'></script>",
-					options,
-					baseView,
-					"<script id='shader'></script>",
-					//"<script id='topScript'>"+value+"</script>",
-					"</head><body>",
-					"<script>",
-					"var main = null;",
-					"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
-					"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
-					"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
-					value+"</script>",
-					"</body></html>"
-				].join("\n");
-
-
-
-			/*var _this = this; 
-			this.preview.src = "demo.html";
-			this.preview.onload = function(e){_this.frameLoaded()};*/
-			//this.preview.srcdoc = myContent;
 
 			
-			
-
-				//try {
-					this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
-					this.previewMain = this.preview.contentWindow;
 
 
-					//console.log(this.previewDoc);
-				//}catch(err){
-				//	console.log('error', err)
-				//}finally {
-					this.previewDoc.open('text/html', 'replace');
-					//this.previewDoc.open('text/htmlreplace')
-				    this.previewDoc.write(myContent);
-				    this.previewDoc.close();//this.preview);
-                    this.preview.style.display = 'block';
+			//this.tmpcode = value;
 
-//this.preview.contentWindow.contents = myContent;
-//this.preview.src = 'javascript:window["myContent"]';
-				    this.resize();
-				    var _this = this;
+			var baseView = "<script src='src/Vue3d.js'></script>";
+			var threeLib = "<script src='js/libs/three.js'></script>";
+			if(isMain){
+			    baseView = "<script src='build/v3d.min.js'></script>";
+			    threeLib = "<script src='js/libs/three.min.js'></script>";
+			}
 
-				    this.previewMain.onload = function(){
-				    	
-				    	_this.previewTheme();
-				    	if(_this.mode=='shader'){
-				    	     _this.previewMain.main = _this;
-				    	    //_this.previewMain.V.Main= _this;
-				    	   // console.log(_this.mode, _this.previewMain.V.Main)
-				    	 }
-				    }
+			// extra libs
+			var options = '';
+			var ops = LTH.option[LTH.cRubrique][LTH.cFile];
+			var i = ops.length;
+			while(i--) options+="<script src='js/libs/"+ops[i]+".min.js'></script>";
+
+	        var myContent = [
+			    "<!DOCTYPE html>",
+				"<html lang='en'>",
+				"<head>",
+				"<title>prev</title>",
+				"<meta charset='utf-8'>",
+				"<link rel='stylesheet' href='css/consolas.css'>",
+				"<link rel='stylesheet' href='css/basic.css'>",
+				threeLib,
+				"<script src='js/libs/three.post.js'></script>",
+				options,
+				baseView,
+				"<script id='shader'></script>",
+				"</head><body class='"+this.mainClass+"'>",
+				"<script>",
+				"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
+				"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
+				"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
+				value,
+				"</script>",
+				"</body></html>"
+			].join("\n");
+
+			this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
+			this.previewMain = this.preview.contentWindow;
+
+			this.previewDoc.open('text/html', 'replace');
+		    this.previewDoc.write(myContent);
+		    this.previewDoc.close();
+            this.preview.style.display = 'block';
+
+		    this.resize();
+		    var _this = this;
+
+		    this.previewMain.onload = function(){
+		    	
+		        _this.previewTheme();
+		    	//if(_this.mode=='shader'){
+		    	    // _this.previewMain.main = _this;
+		    	    //_this.previewMain.V.Main= _this;
+		    	   // console.log(_this.mode, _this.previewMain.V.Main)
+		    	// }
+		    }
 					//this.previewMain.onload = function(e){_this.frameLoaded()};
 					//this.frameLoaded(value)
 					//setTimeout(function(){_this.frameLoaded(value);},10);
@@ -383,7 +346,7 @@ LTH.Main.prototype = {
 		
 		}
 	},
-	frameLoaded:function(value){
+	/*frameLoaded:function(value){
 		//
 
 		//this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
@@ -428,7 +391,7 @@ LTH.Main.prototype = {
 			//this.previewMain.init();
 			this.menu.modified();
 		}
-	},
+	},*/
 	checkCurrent:function(){
 		for(var i=0; i< this.numLesson; i++){
 			if(this.items[i].name==this.currentLesson) this.items[i].style.background = '#881288';
@@ -470,7 +433,7 @@ LTH.ShaderToy = function(main){
 LTH.ShaderToy.prototype = {
 	constructor: LTH.ShaderToy,
 	open:function(name){
-		console.log(name);
+		//console.log(name);
 		this.main.fileSystem.load('shaders/'+name+'.js', true);
 	},
 	clear:function(){
@@ -866,6 +829,7 @@ LTH.Menu.prototype = {
 		//this.img2.src = './images/logo_w.gif';
 		this.logo.innerHTML = LTH.Logos('25292e');
 		this.main.day = true;
+		this.main.mainClass = 'day';
 		this.doc.body.className = 'day';
 		this.colorSelect = '#25292e';
 		this.colorOver = 'rgba(0,0,0,0.3)';
@@ -874,6 +838,7 @@ LTH.Menu.prototype = {
 		//this.img2.src = './images/logo.gif';
 		this.logo.innerHTML = LTH.Logos('d2cec8');
 		this.main.day = false;
+		this.main.mainClass = 'night';
 		this.doc.body.className = 'night';
 		this.colorSelect = '#d2cec8';
 		this.colorOver = 'rgba(255,255,255,0.3)';

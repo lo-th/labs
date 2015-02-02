@@ -6,7 +6,7 @@ LTH.rubriques = ['physics-2d', 'physics-3d', 'games', 'shaders', 'experiments', 
 LTH.option = {
 'physics-2d': [ [], [], []                                      ],
 'physics-3d': [ [], []                                           ],
-'games':      [ ['sea3d', 'dat.gui'], ['sea3d', 'dat.gui', 'rot', 'tween']  ],
+'games':      [ ['sea3d', 'dat.gui'], ['sea3d', 'dat.gui', 'rot', 'tween'] , ['sea3d', 'tween'] ],
 'shaders':    [ ['sea3d','dat.gui'], ['sea3d','dat.gui'], ['sea3d','dat.gui'], ['sea3d','dat.gui'], ['sea3d','dat.gui']   ],
 'experiments':[ ['serious']                                  ],
 'others':     [ ['dat.gui' ]                                               ]

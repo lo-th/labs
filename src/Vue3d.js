@@ -618,6 +618,7 @@ V.Nav = function(parent, h, v, d){
     this.position = new THREE.Vector3();
 	this.cam = { horizontal:h||0, vertical:v||90, distance:d||20, automove:false };
     this.mouse = { x:0, y:0, ox:0, oy:0, h:0, v:0, mx:0, my:0, down:false, move:true, button:0 };
+    this.key = { up:0, down:0, left:0, right:0, ctrl:0, action:0, space:0, shift:0 };
 
     this.moveCamera();
 
@@ -726,7 +727,43 @@ V.Nav.prototype = {
 			//this.mouse.move = true;
 			//this.cursor.change();
 		}
-	}
+	},
+    // ACTIVE KEYBOARD
+    bindKeys:function(){
+        var _this = this;
+        window.top.onkeydown = function(e) {
+            e = e || window.event;
+            switch ( e.keyCode ) {
+                case 38: case 87: case 90: _this.key.up = 1;     break; // up, W, Z
+                case 40: case 83:          _this.key.down = 1;   break; // down, S
+                case 37: case 65: case 81: _this.key.left = 1;   break; // left, A, Q
+                case 39: case 68:          _this.key.right = 1;  break; // right, D
+                case 17: case 67:          _this.key.ctrl = 1;   break; // ctrl, C
+                case 69:                   _this.key.action = 1; break; // E
+                case 32:                   _this.key.space = 1;  break; // space
+                case 16:                   _this.key.shift = 1;  break; // shift
+            }
+        }
+        window.top.onkeyup = function(e) {
+            e = e || window.event;
+            switch( e.keyCode ) {
+                case 38: case 87: case 90: _this.key.up = 0;     break; // up, W, Z
+                case 40: case 83:          _this.key.down = 0;   break; // down, S
+                case 37: case 65: case 81: _this.key.left = 0;   break; // left, A, Q
+                case 39: case 68:          _this.key.right = 0;  break; // right, D
+                case 17: case 67:          _this.key.ctrl = 0;   break; // ctrl, C
+                case 69:                   _this.key.action = 0; break; // E
+                case 32:                   _this.key.space = 0;  break; // space
+                case 16:                   _this.key.shift = 0;  break; // shift
+            }
+        }
+    },
+    unwrapDegrees:function(r){
+        r = r % 360;
+        if (r > 180) r -= 360;
+        if (r < -180) r += 360;
+        return r;
+    }
 }
 
 
@@ -768,16 +805,20 @@ V.SeaPool = function(){
 }
 V.SeaPool.prototype = {
     constructor: V.SeaPool,
-    load:function(name, end){
+    load:function(name, end, displayList){
+        var list = "";
         var _this = this;
         var loader = new THREE.SEA3D( true );
         loader.onComplete = function( e ) {
+
             _this.meshes[name] = {};
             var i = loader.meshes.length, m;
             while(i--){
                 m = loader.meshes[i];
                 _this.meshes[name][m.name] = m;
+                list+=m.name+',';
             }
+            if(displayList) console.log(list);
             if(end)end();
         }
         loader.parser = THREE.SEA3D.DEFAULT;

@@ -1,5 +1,7 @@
 V.Shader = function(name, parameters, isEdit, callback){
     THREE.ShaderMaterial.call( this, parameters );
+    this.isActive = false;
+    this.visible = false;
     this.parameters = parameters;
     this.callback = callback || function(){};
 
@@ -33,10 +35,12 @@ V.Shader.prototype.apply = function(shad){
     this.uniforms = THREE.UniformsUtils.clone( shad.uniforms );
     this.vertexShader = shad.vs;
     this.fragmentShader  = shad.fs;
-    this.needsUpdate = true;
+    //this.needsUpdate = true;
     for ( var key in this.parameters ) {
         if(this.uniforms[key]) this.uniforms[key].value = this.parameters[key];
     }
+    this.isActive = true;
+    this.visible = true;
 }
 
 V.Shader.prototype.loading = function(name) {
@@ -48,11 +52,13 @@ V.Shader.prototype.loading = function(name) {
         this.uniforms = s.uniforms;
         this.vertexShader = s.vs;
         this.fragmentShader  = s.fs;
-        this.needsUpdate = true;
+        //this.needsUpdate = true;
         for ( var key in this.parameters ) {
             if(this.uniforms[key]){ this.uniforms[key].value = this.parameters[key]; console.log(key)}
         }
         this.callback();
+        this.isActive = true;
+        this.visible = true;
     }.bind(this);
     xhr.open('GET', 'shaders/'+name+'.js', true);
     xhr.send();

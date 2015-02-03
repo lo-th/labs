@@ -3,6 +3,7 @@
 
 var canvas, info, debug;
 var THREE, mainClick, mainDown, mainUp, mainMove, mainRay, v, shader;
+
 var V = {};
 var TWEEN = TWEEN || null;
 V.AR8 = typeof Uint8Array!="undefined"?Uint8Array:Array;
@@ -88,7 +89,6 @@ V.View.prototype = {
         
         // worker test
         if(this.w && !this.isW){
-            var _this = this;
             if(this.w.isReady){ this.wFun(); this.isW=true; }
         }
 
@@ -155,8 +155,7 @@ V.View.prototype = {
             this.scene.add(this.basic);
         } else { 
             this.tmpmat = mat;
-            var _this = this;
-            this.pool.load(_this.model, _this.onModelLoaded); 
+            this.pool.load( this.model, this.onModelLoaded); 
         }
     },
     onModelLoaded:function(){
@@ -428,33 +427,32 @@ V.Nav.prototype = {
 	},
     // ACTIVE KEYBOARD
     bindKeys:function(){
-        var _this = this;
         window.top.onkeydown = function(e) {
             e = e || window.event;
             switch ( e.keyCode ) {
-                case 38: case 87: case 90: _this.key.up = 1;     break; // up, W, Z
-                case 40: case 83:          _this.key.down = 1;   break; // down, S
-                case 37: case 65: case 81: _this.key.left = 1;   break; // left, A, Q
-                case 39: case 68:          _this.key.right = 1;  break; // right, D
-                case 17: case 67:          _this.key.ctrl = 1;   break; // ctrl, C
-                case 69:                   _this.key.action = 1; break; // E
-                case 32:                   _this.key.space = 1;  break; // space
-                case 16:                   _this.key.shift = 1;  break; // shift
+                case 38: case 87: case 90: this.key.up = 1;     break; // up, W, Z
+                case 40: case 83:          this.key.down = 1;   break; // down, S
+                case 37: case 65: case 81: this.key.left = 1;   break; // left, A, Q
+                case 39: case 68:          this.key.right = 1;  break; // right, D
+                case 17: case 67:          this.key.ctrl = 1;   break; // ctrl, C
+                case 69:                   this.key.action = 1; break; // E
+                case 32:                   this.key.space = 1;  break; // space
+                case 16:                   this.key.shift = 1;  break; // shift
             }
-        }
+        }.bind(this);
         window.top.onkeyup = function(e) {
             e = e || window.event;
             switch( e.keyCode ) {
-                case 38: case 87: case 90: _this.key.up = 0;     break; // up, W, Z
-                case 40: case 83:          _this.key.down = 0;   break; // down, S
-                case 37: case 65: case 81: _this.key.left = 0;   break; // left, A, Q
-                case 39: case 68:          _this.key.right = 0;  break; // right, D
-                case 17: case 67:          _this.key.ctrl = 0;   break; // ctrl, C
-                case 69:                   _this.key.action = 0; break; // E
-                case 32:                   _this.key.space = 0;  break; // space
-                case 16:                   _this.key.shift = 0;  break; // shift
+                case 38: case 87: case 90: this.key.up = 0;     break; // up, W, Z
+                case 40: case 83:          this.key.down = 0;   break; // down, S
+                case 37: case 65: case 81: this.key.left = 0;   break; // left, A, Q
+                case 39: case 68:          this.key.right = 0;  break; // right, D
+                case 17: case 67:          this.key.ctrl = 0;   break; // ctrl, C
+                case 69:                   this.key.action = 0; break; // E
+                case 32:                   this.key.space = 0;  break; // space
+                case 16:                   this.key.shift = 0;  break; // shift
             }
-        }
+        }.bind(this);
     },
     unwrapDegrees:function(r){
         r = r % 360;

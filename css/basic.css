@@ -26,6 +26,8 @@ body .dg.main {
     background-color: none; 
 }
 
+.environment{position:absolute; bottom:10px; right:10px; border:3px solid #74818b; width:64px; height:64px; cursor:pointer;}
+
 /* GUI */
 
 body .dg.main.taller-than-window .close-button {

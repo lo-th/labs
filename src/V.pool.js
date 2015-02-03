@@ -23,34 +23,12 @@ V.SeaPool.prototype = {
     }
 }
 
-/*V.BufferGeo = function(g, rev){
-    if(rev){
-        var mtx = new THREE.Matrix4().makeScale(1, 1, -1);
-        g.applyMatrix(mtx);
-        //g.computeBoundingBox();
-        //g.computeBoundingSphere();
-    }
-    g.mergeVertices();
-    g.computeVertexNormals( true );
-    //g.computeFaceNormals();
-    //g.computeMorphNormals()
-    g.computeTangents();
-    g.verticesNeedUpdate = true;
-
-    g.dynamic = false;
-    var Bufferg = new THREE.BufferGeometry().fromGeometry(g);
-    g.dispose();
-    return Bufferg;
-}*/
-
 V.ProjectUV = function( g, mat ){
     if ( g.boundingBox === null ) g.computeBoundingBox();
     var max = g.boundingBox.max;
     var min = g.boundingBox.min;
     mat.uniforms.offset.value = new THREE.Vector2(0 - min.x, 0 - min.z);
     mat.uniforms.range.value = new THREE.Vector2(max.x - min.x, max.z - min.z);
-    //mat.up('offset', new THREE.Vector2(0 - min.x, 0 - min.z));
-    //mat.up('range', new THREE.Vector2(max.x - min.x, max.z - min.z));
 }
 
 V.TransGeo = function(g, noBuffer){

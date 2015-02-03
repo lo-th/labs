@@ -1,4 +1,4 @@
-var v = new V.View(180, 45, 130);
+var v = new V.View(180, 45, 200);
 v.tell('mesh deform');
 
 var effect = { depth: 20.0, radius: 0.2, radiusbase: 0.2, power: 1.0, wireframe:false };
@@ -7,6 +7,10 @@ var ball = new THREE.Mesh( new THREE.SphereGeometry(1,12,10), new THREE.MeshBasi
 v.scene.add(ball);
 
 var material = new V.Shader('Spherical',{transparent:true, env:THREE.ImageUtils.loadTexture( './images/spherical/e_chrome.jpg')}, false);
+
+var env = new V.Environment();
+env.add(material);
+
 var mesh = new THREE.Mesh( new THREE.PlaneGeometry(160,160, 64, 64), material );
 mesh.geometry.dynamic = true;
 mesh.geometry.applyMatrix(new THREE.Matrix4().makeRotationX(- Math.PI*0.5));

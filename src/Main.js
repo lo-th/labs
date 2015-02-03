@@ -1,8 +1,6 @@
 var LTH = {};
-var isMain;
 
 LTH.rubriques = ['physics-2d', 'physics-3d', 'games', 'shaders', 'experiments', 'others'];
-//LTH.numExemples = [         2,            2,       2,         1,             1,       1 ];
 LTH.option = {
 'physics-2d': [ [], [], []                                      ],
 'physics-3d': [ [], []                                           ],
@@ -15,6 +13,7 @@ LTH.option = {
 LTH.cRubrique = '';
 LTH.cFile = 0;
 var esprima = esprima || {};
+esprima.parse = esprima.parse || {};
 var CodeMirror = CodeMirror || {};
 var GRAD = GRAD || {};
 var history;
@@ -204,10 +203,9 @@ LTH.Main.prototype = {
 	},
 	previewTheme:function(){
 		if(this.previewDoc.body)this.previewDoc.body.className = this.mainClass;
-
 		if(this.previewMain && this.previewMain.v){
 			if(this.day) this.previewMain.v.colorBack(0xd2cec8);
-			else this.previewMain.v.colorBack(0x25292e);//202020);
+			else this.previewMain.v.colorBack(0x25292e);
 		}
 	},
 	previewClearFocus:function(){
@@ -225,8 +223,6 @@ LTH.Main.prototype = {
 		}
 	},
 	initPreview:function(){
-		//this.clearPreview();
-
 		this.preview = this.doc.createElement( 'iframe' );
 		this.preview.className = 'preview';
 		this.preview.src = 'about:blank';
@@ -235,25 +231,9 @@ LTH.Main.prototype = {
 	update:function(value) {
 		
 		if(value!==''){
-			//this.codeLoaded=false;
-
-			//if(this.isFirst){
 			
 			this.clearPreview();
 			this.initPreview();
-
-
-			
-
-
-			//this.tmpcode = value;
-
-			var baseView = "<script src='src/Vue3d.js'></script>";
-			var threeLib = "<script src='js/libs/three.js'></script>";
-			if(isMain){
-			    baseView = "<script src='build/v3d.min.js'></script>";
-			    threeLib = "<script src='js/libs/three.min.js'></script>";
-			}
 
 			// extra libs
 			var options = '';
@@ -269,10 +249,11 @@ LTH.Main.prototype = {
 				"<meta charset='utf-8'>",
 				"<link rel='stylesheet' href='css/consolas.css'>",
 				"<link rel='stylesheet' href='css/basic.css'>",
-				threeLib,
+				"<script src='js/libs/three.min.js'></script>",
+				//"<script src='js/libs/three.js'></script>";
 				"<script src='js/libs/three.post.js'></script>",
 				options,
-				baseView,
+				"<script src='build/v3d.min.js'></script>",
 				"<script id='shader'></script>",
 				"</head><body class='"+this.mainClass+"'>",
 				"<script>",
@@ -293,105 +274,12 @@ LTH.Main.prototype = {
             this.preview.style.display = 'block';
 
 		    this.resize();
-		    var _this = this;
-
-		    this.previewMain.onload = function(){
-		    	
-		        _this.previewTheme();
-		    	//if(_this.mode=='shader'){
-		    	    // _this.previewMain.main = _this;
-		    	    //_this.previewMain.V.Main= _this;
-		    	   // console.log(_this.mode, _this.previewMain.V.Main)
-		    	// }
-		    }
-					//this.previewMain.onload = function(e){_this.frameLoaded()};
-					//this.frameLoaded(value)
-					//setTimeout(function(){_this.frameLoaded(value);},10);
-					
-				//}
-			//} else {
-			//    this.frameLoaded(value);
-			//}
-
-			/*var _this = this;
-			setTimeout(function(){
-				_this.preview.onload = function(e){console.log('loaded'); _this.frameLoaded()}
-			    _this.preview.onerror = function(e){console.log('error')}
-			}, 100);*/
-			
-			/*this.preview.onload = function(e){
-				console.log('loaded')
-				_this.previewMain = _this.preview.contentWindow;
-				if(_this.mode==='shader') _this.previewMain.main = _this;
-				var head = _this.previewDoc.getElementsByTagName('head')[0];
-				
-				var nscript = _this.previewDoc.createElement("script");
-				//nscript.id = 'base';
-				nscript.setAttribute("id", "base");
-				nscript.type = "text/javascript";
-				nscript.charset = "utf-8";
-				nscript.text = value;
-				head.appendChild(nscript);
-
-				_this.preview.style.display = 'block';
-				_this.codeLoaded = true;
-				_this.previewTheme();
-				_this.resize();
-				
-				if(_this.isFirst)_this.isFirst=false;
-				else _this.showModif();
-			}*/
+		    this.previewMain.onload = function(){ this.previewTheme(); }.bind(this);
 			if(this.isFirst) this.isFirst=false;
 			else this.menu.modified();
 		
 		}
 	},
-	/*frameLoaded:function(value){
-		//
-
-		//this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
-		//this.previewMain = this.preview.contentWindow;
-
-		console.log('loaded')
-		//this.previewMain = this.preview.contentWindow;
-		//if(this.mode==='shader') this.previewMain.main = this;
-
-		var head = this.previewDoc.getElementsByTagName('head')[0];
-		var nscript = this.previewDoc.createElement("script");
-			//nscript.id = 'base';
-		//nscript.setAttribute("id", "base");
-		//window.onload = init;
-		nscript.type = "text/javascript";
-		nscript.name = "topScript";
-		nscript.id = "topScript";
-		nscript.charset = "utf-8";
-		nscript.text = value;
-		//head.appendChild(nscript);
-		
-		this.tmpcode = '';
-
-		this.preview.style.display = 'block';
-		this.codeLoaded = true;
-
-		var _this = this;
-		this.previewMain.onload = function(){
-			_this.previewTheme();
-			head.appendChild(nscript);
-			if(_this.mode==='shader') _this.previewMain.main = _this;
-		}
-		
-			
-		if(this.isFirst){
-			this.isFirst=false;
-			//this.previewMain.onload = this.previewMain.init;
-			//this.previewTheme();
-			//this.resize();
-		} else{ 
-			//this.previewMain.clear();
-			//this.previewMain.init();
-			this.menu.modified();
-		}
-	},*/
 	checkCurrent:function(){
 		for(var i=0; i< this.numLesson; i++){
 			if(this.items[i].name==this.currentLesson) this.items[i].style.background = '#881288';
@@ -862,7 +750,7 @@ LTH.Menu.prototype = {
 	            if (entry.isFile) {
 	                this.addFile(e.dataTransfer.items[i].getAsFile());
 	            } else if (entry.isDirectory) {
-	                //console.log('dir', e.dataTransfer.items[i].getAsFile(), entry.fullPath);
+	                console.log('dir', e.dataTransfer.items[i].getAsFile(), entry.fullPath);
 	            }
 	        }
 	    } else{

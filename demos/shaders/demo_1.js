@@ -1,5 +1,3 @@
-V.Main = window.top.main;
-
 var v = new V.View(180, 45, 130);
 v.tell('parallax shader');
 v.initGui(true);
@@ -10,7 +8,7 @@ tx.wrapS = THREE.RepeatWrapping;
 tx.wrapT = THREE.RepeatWrapping;
 tx.needsUpdate = true;
 
-var shader = new V.Shader('Parallax', {heightMap:tx});
+var shader = new V.Shader('Parallax', {heightMap:tx}, true);
 setTimeout(addParam, 100);
 
 loop();

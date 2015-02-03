@@ -1,6 +1,7 @@
 'use strict';
 importScripts('../../js/libs/oimo.min.js');
 
+var f = [0,0,0,0];
 var ar;
 var dr;
 var drn;
@@ -15,11 +16,16 @@ self.onmessage = function(e) {
 		ar = e.data.ar;
 		dr = e.data.dr;
 		drn = e.data.drn;
-		if(world===null) sim.init(e.data);
+
+		if(world==null) sim.init(e.data);
 		else sim.isWorld = true;
+		
 		sim.step();
-		// Send data back to the main thread...
-	    self.postMessage({ w:sim.isWorld, fps:sim.f[3], ar:ar, dr:dr },[ar.buffer]);
+
+		f[1] = Date.now();
+	    if(f[1]-1000>f[0]){ f[0]=f[1]; f[3]=f[2]; f[2]=0; } f[2]++;
+
+	    self.postMessage({ w:sim.isWorld, fps:f[3], ar:ar, dr:dr },[ar.buffer]);
 	}
 }
 
@@ -27,7 +33,6 @@ var W = {};
 
 W.Sim = function(){
 	this.p = 4; // precission
-	this.f = [0,0,0,0]; // fps
 	this.groups = [0xffffffff, 1 << 0, 1 << 1, 1 << 2];
     this.isWorld = false;
     this.bodys = [];
@@ -42,7 +47,7 @@ W.Sim.prototype = {
 		world.worldscale(1);
 	},
 	step:function(){
-		var f = this.f, p = this.p, i, id, b, pos, quat;
+		var p = this.p, i, id, b, pos, quat;
 		world.step();
 		i = this.bodys.length;
 		while(i--){
@@ -62,8 +67,6 @@ W.Sim.prototype = {
 				ar[id+7] = quat.w.toFixed(p)*1;	
 			}
 		}
-		f[1] = Date.now();
-	    if(f[1]-1000>f[0]){ f[0]=f[1]; f[3]=f[2]; f[2]=0; } f[2]++;
 	},
 	clear:function(){
 		world.clear();

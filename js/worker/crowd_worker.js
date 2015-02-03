@@ -1,106 +1,98 @@
 'use strict';
-importScripts('../../js/crowd.js');
+importScripts('../../js/libs/crowd.js');
 
 var f = [0,0,0,0];
-var simulation;
-var agentData;
+var sim = null;
+var ar;
 var tmp;
-
-
 
 self.onmessage = function(e) {
     var m = e.data.m;
-    agentData = e.data.agentData;
-    tmp = e.data.tmp;
+    
 
-    if(tmp){
-        //console.log(tmp.m, tmp.x, tmp.y)
-        if(tmp.m=='add')simulation.addAgent( new RVO.V2(tmp.x, tmp.y), tmp.r )
-    }
+    if(m==='add') sim.addAgent(e.data.obj);
 
+    if(m==='run'){
+        ar = e.data.ar;
 
-    if(m=='init'){
-        simulation = new RVO.Simulation();
-    }
+        if(sim == null) sim = new CROWD.Simulation();
+        else sim.isOk = true;
 
-    if(simulation.isOk){
-        simulation.run();
+        sim.run();
 
-        var i = simulation.agents.length, id, a;
+        var i = sim.agents.length, id, a;
         while(i--){
-            a = simulation.agents[i];
+            a = sim.agents[i];
             id = i*3;
-            agentData[id] = a.position.x;
-            agentData[id+1] = a.position.y;
-            agentData[id+2] = a.orientation;
+            ar[id] = a.position.x;
+            ar[id+1] = a.position.y;
+            ar[id+2] = a.orientation;
         }
 
+        f[1] = Date.now();
+        if(f[1]-1000>f[0]){ f[0]=f[1]; f[3]=f[2]; f[2]=0; } f[2]++;
+
+        self.postMessage({ w:sim.isOk, fps:f[3], ar:ar },[ar.buffer]);
     }
-
-
-    f[1] = Date.now();
-    if(f[1]-1000>f[0]){ f[0]=f[1]; f[3]=f[2]; f[2]=0; } f[2]++;
-
-    self.postMessage({ m:m, fps:f[3], agentData:agentData },[agentData.buffer]);
 }
 
 
-var RVO = {};
+var CROWD = {};
 
-RVO.init = Module.cwrap('init', 'boolean', []);
-RVO.run = Module.cwrap('run', '', ['number']);
-RVO.deleteCrowd = Module.cwrap('deleteCrowd', '', []);
+CROWD.init = Module.cwrap('init', 'boolean', []);
+CROWD.run = Module.cwrap('run', '', ['number']);
+CROWD.deleteCrowd = Module.cwrap('deleteCrowd', '', []);
 
-RVO.allocateMem_X_Y_RAD = Module.cwrap('allocateMem', '', ['number', 'number']);
-RVO.allocateMemResusable = Module.cwrap('allocateMemReusable', '', ['number', 'number']);
+CROWD.allocateMem_X_Y_RAD = Module.cwrap('allocateMem', '', ['number', 'number']);
+CROWD.allocateMemResusable = Module.cwrap('allocateMemReusable', '', ['number', 'number']);
 
-RVO.addObstacle = Module.cwrap('addObstacle', '', ['number', 'number']);
-RVO.processObstacles = Module.cwrap('processObstacles', 'number', []);
-RVO.removeObstacles = Module.cwrap('removeObstacles', 'number', []);
+CROWD.addObstacle = Module.cwrap('addObstacle', '', ['number', 'number']);
+CROWD.processObstacles = Module.cwrap('processObstacles', 'number', []);
+CROWD.removeObstacles = Module.cwrap('removeObstacles', 'number', []);
 
-RVO.addAgent = Module.cwrap('addAgent', '', ['number', 'number']);
-RVO.removeAgent = Module.cwrap('removeAgent', 'number', ['number']);
+CROWD.addAgent = Module.cwrap('addAgent', '', ['number', 'number']);
+CROWD.removeAgent = Module.cwrap('removeAgent', 'number', ['number']);
 
-RVO.addAgentGoal = Module.cwrap('addAgentGoal', '', ['number', 'number', 'number']);
-RVO.addAgentsGoal = Module.cwrap('addAgentsGoal', '', ['number', 'number']);
+CROWD.addAgentGoal = Module.cwrap('addAgentGoal', '', ['number', 'number', 'number']);
+CROWD.addAgentsGoal = Module.cwrap('addAgentsGoal', '', ['number', 'number']);
 
-RVO.addWayPoint = Module.cwrap('addWayPoint', '', ['number', 'number']);
-RVO.recomputeRoadmap = Module.cwrap('recomputeRoadmap', '', []);
+CROWD.addWayPoint = Module.cwrap('addWayPoint', '', ['number', 'number']);
+CROWD.recomputeRoadmap = Module.cwrap('recomputeRoadmap', '', []);
 
-RVO.setTimeStep = Module.cwrap('setTimeStep', '', ['number']);
-RVO.setAgentMaxSpeed = Module.cwrap('setAgentMaxSpeed', '', ['number', 'number']);
-RVO.setAgentRadius = Module.cwrap('setAgentRadius', '', ['number']);
-RVO.setAgentMaxNeighbors = Module.cwrap('setAgentMaxNeighbors', '', ['number']);
-RVO.setAgentNeighborDist = Module.cwrap('setAgentNeighborDist', '', ['number']);
-RVO.setAgentPosition = Module.cwrap('setAgentPosition', '', ['number', 'number']);
-RVO.setAgentPrefVelocity = Module.cwrap('setAgentPrefVelocity', '', ['number', 'number']);
-RVO.setAgentTimeHorizon = Module.cwrap('setAgentTimeHorizon', '', ['number']);
-RVO.setAgentTimeHorizonObst = Module.cwrap('setAgentTimeHorizonObst', '', ['number']);
-RVO.setAgentVelocity = Module.cwrap('setAgentVelocity', '', ['number', 'number']);
-RVO.setAgentUseRoadMap = Module.cwrap('setAgentUseRoadMap', '', ['number', 'number']);
+CROWD.setTimeStep = Module.cwrap('setTimeStep', '', ['number']);
+CROWD.setAgentMaxSpeed = Module.cwrap('setAgentMaxSpeed', '', ['number', 'number']);
+CROWD.setAgentRadius = Module.cwrap('setAgentRadius', '', ['number']);
+CROWD.setAgentMaxNeighbors = Module.cwrap('setAgentMaxNeighbors', '', ['number']);
+CROWD.setAgentNeighborDist = Module.cwrap('setAgentNeighborDist', '', ['number']);
+CROWD.setAgentPosition = Module.cwrap('setAgentPosition', '', ['number', 'number']);
+CROWD.setAgentPrefVelocity = Module.cwrap('setAgentPrefVelocity', '', ['number', 'number']);
+CROWD.setAgentTimeHorizon = Module.cwrap('setAgentTimeHorizon', '', ['number']);
+CROWD.setAgentTimeHorizonObst = Module.cwrap('setAgentTimeHorizonObst', '', ['number']);
+CROWD.setAgentVelocity = Module.cwrap('setAgentVelocity', '', ['number', 'number']);
+CROWD.setAgentUseRoadMap = Module.cwrap('setAgentUseRoadMap', '', ['number', 'number']);
 
-RVO.getTimeStep = Module.cwrap('getTimeStep', 'number', ['number']);
-RVO.getAgentMaxSpeed = Module.cwrap('getAgentMaxSpeed', 'number', ['number']);
-RVO.getAgentRadius = Module.cwrap('getAgentRadius', 'number', ['number']);
-RVO.getAgentMaxNeighbors = Module.cwrap('getAgentMaxNeighbors', 'number', ['number']);
-RVO.getAgentNeighborDist = Module.cwrap('getAgentNeighborDist', 'number', ['number']);
-RVO.getAgentTimeHorizon = Module.cwrap('getAgentTimeHorizon', 'number', ['number']);
-RVO.getAgentTimeHorizonObst = Module.cwrap('getAgentTimeHorizonObst', 'number', ['number']);
-RVO.getAgentPosition = Module.cwrap('getAgentPosition', 'number', ['number']);
-RVO.getAgentPrefVelocity = Module.cwrap('getAgentPrefVelocity', 'number', ['number']);
-RVO.getAgentVelocity = Module.cwrap('getAgentVelocity', 'number', ['number']);
-RVO.getAgentUseRoadMap = Module.cwrap('getAgentUseRoadMap', 'boolean', ['number']);
+CROWD.getTimeStep = Module.cwrap('getTimeStep', 'number', ['number']);
+CROWD.getAgentMaxSpeed = Module.cwrap('getAgentMaxSpeed', 'number', ['number']);
+CROWD.getAgentRadius = Module.cwrap('getAgentRadius', 'number', ['number']);
+CROWD.getAgentMaxNeighbors = Module.cwrap('getAgentMaxNeighbors', 'number', ['number']);
+CROWD.getAgentNeighborDist = Module.cwrap('getAgentNeighborDist', 'number', ['number']);
+CROWD.getAgentTimeHorizon = Module.cwrap('getAgentTimeHorizon', 'number', ['number']);
+CROWD.getAgentTimeHorizonObst = Module.cwrap('getAgentTimeHorizonObst', 'number', ['number']);
+CROWD.getAgentPosition = Module.cwrap('getAgentPosition', 'number', ['number']);
+CROWD.getAgentPrefVelocity = Module.cwrap('getAgentPrefVelocity', 'number', ['number']);
+CROWD.getAgentVelocity = Module.cwrap('getAgentVelocity', 'number', ['number']);
+CROWD.getAgentUseRoadMap = Module.cwrap('getAgentUseRoadMap', 'boolean', ['number']);
 
 
-RVO.Simulation = function () {
+CROWD.Simulation = function () {
     this.size = 6000;
     this.agents = [];
     this.obstacles = [];
-    this.iteration = 1;
-    this.timeStep = 0.3;
+    this.iteration = 1.75;
+    this.timeStep = 0.3;//0166;
     //this.scene = scene;
 
-    if (!RVO.init()) {
+    if (!CROWD.init()) {
         throw new Error("Crowd is not initialized");
         return;
     }
@@ -112,13 +104,13 @@ RVO.Simulation = function () {
 
     this.isOk = true;
 }
-RVO.Simulation.prototype = {
-	constructor: RVO.Simulation,
-	addAgent : function ( position, radius, useRoadMap) {
-        var agent = new RVO.Agent(this, position, radius, useRoadMap);
+CROWD.Simulation.prototype = {
+	constructor: CROWD.Simulation,
+	addAgent : function (obj) {
+        var agent = new CROWD.Agent(this, new CROWD.V2(obj.pos[0] || 0, obj.pos[2] || 0 ) , obj.size[0] || 10, obj.useRoadMap || false );
         this.agents.push(agent);
-        RVO.addAgentGoal(agent.id, 0, 0);
-        RVO.recomputeRoadmap();
+        CROWD.addAgentGoal(agent.id, 0, 0);
+        CROWD.recomputeRoadmap();
         //return agent.getAgentNo();
     },
     addAgentGoal : function (agentId, goal) {
@@ -128,20 +120,20 @@ RVO.Simulation.prototype = {
         this.agents[i].addGoal(goal);
     },
     addAgentsGoal : function (goal) {
-        RVO.addAgentsGoal(goal.x, goal.y);
+        CROWD.addAgentsGoal(goal.x, goal.y);
     },
     addAgentsSelectionGoal : function (goal) {
         for (var i = 0; i < BABYLON.Agent.NumAgents; i++)
             if (this.agents[i].getIsSelected())
-                RVO.addAgentGoal(i, goal.x, goal.y);
+                CROWD.addAgentGoal(i, goal.x, goal.y);
 
-        RVO.recomputeRoadmap();
+        CROWD.recomputeRoadmap();
     },
     computeRoadMap : function () {
-        RVO.recomputeRoadmap();
+        CROWD.recomputeRoadmap();
     },
     addWayPoint : function (v, debug) {
-        var wp = new RVO.WayPoint(v.x, v.y);
+        var wp = new CROWD.WayPoint(v.x, v.y);
     },
     addObstacleByBoundingBox : function (mesh, position, isVisible) {
         var obstacle = new BABYLON.Obstacle();
@@ -154,7 +146,7 @@ RVO.Simulation.prototype = {
         this.obstacles.push(obstacle);
     },
     processObstacles : function () {
-        RVO.processObstacles();
+        CROWD.processObstacles();
     },
     removeObstacle : function (obstacleId) {
         var i = this.getIndexFromId(obstacleId, BABYLON.Obstacle.ObstaclesOrder);
@@ -164,7 +156,7 @@ RVO.Simulation.prototype = {
         this.obstacles[i].remove(i);
         this.obstacles.splice(i, 1);
 
-        RVO.removeObstacles();
+        CROWD.removeObstacles();
 
         if (this.obstacles.length == 0)
             return;
@@ -235,8 +227,8 @@ RVO.Simulation.prototype = {
         }
     },
     run : function () {
-        RVO.run(this.iteration);
-        RVO.X_Y_RAD = new Float32Array(this.dataHeap.buffer, this.dataHeap.byteOffset, this.data.length);
+        CROWD.run(this.iteration);
+        CROWD.X_Y_RAD = new Float32Array(this.dataHeap.buffer, this.dataHeap.byteOffset, this.data.length);
 
         var i = this.agents.length;
         while(i--){
@@ -244,75 +236,75 @@ RVO.Simulation.prototype = {
         }
     },
     deleteCrowd : function () {
-        RVO.deleteCrowd();
+        CROWD.deleteCrowd();
     },
     setTimeStep : function (timeStep) {
         this.timeStep = timeStep;
-        RVO.setTimeStep(this.timeStep);
+        CROWD.setTimeStep(this.timeStep);
     },
     setAgentMaxSpeed : function (agentId, maxSpeed) {
-        RVO.setAgentMaxSpeed(agentId, maxSpeed);
+        CROWD.setAgentMaxSpeed(agentId, maxSpeed);
     },
     setAgentRadius : function (agentId, radius) {
-        RVO.setAgentRadius(agentId, radius);
+        CROWD.setAgentRadius(agentId, radius);
     },
     setAgentMaxNeighbors : function (agentId, maxNeighbors) {
-        RVO.setAgentMaxNeighbors(agentId, maxNeighbors);
+        CROWD.setAgentMaxNeighbors(agentId, maxNeighbors);
     },
     setAgentNeighborDist : function (agentId, neighborDist) {
-        RVO.setAgentNeighborDist(agentId, neighborDist);
+        CROWD.setAgentNeighborDist(agentId, neighborDist);
     },
     setAgentPosition : function (agentId, position) {
-        RVO.setAgentPosition(agentId, position.x, position.y);
+        CROWD.setAgentPosition(agentId, position.x, position.y);
     },
     setAgentPrefVelocity : function (agentId, prefVelocity) {
-        RVO.setAgentPrefVelocity(agentId, prefVelocity.x, prefVelocity.y);
+        CROWD.setAgentPrefVelocity(agentId, prefVelocity.x, prefVelocity.y);
     },
     setAgentTimeHorizon : function (agentId, timeHorizon) {
-        RVO.setAgentTimeHorizon(agentId, timeHorizon);
+        CROWD.setAgentTimeHorizon(agentId, timeHorizon);
     },
     setAgentTimeHorizonObst : function (agentId, timeHorizonObst) {
-        RVO.setAgentTimeHorizonObst(agentId, timeHorizonObst);
+        CROWD.setAgentTimeHorizonObst(agentId, timeHorizonObst);
     },
     setAgentVelocity : function (agentId, velocity) {
-        RVO.setAgentVelocity(agentId, velocity.x, velocity.y);
+        CROWD.setAgentVelocity(agentId, velocity.x, velocity.y);
     },
     getAgentMaxNeighbors : function (agentId) {
-        return RVO.getAgentMaxNeighbors(agentId);
+        return CROWD.getAgentMaxNeighbors(agentId);
     },
     getAgentMaxSpeed : function (agentId) {
-        return RVO.getAgentMaxSpeed(agentId);
+        return CROWD.getAgentMaxSpeed(agentId);
     },
     getAgentNeighborDist : function (agentId) {
-        return RVO.getAgentNeighborDist(agentId);
+        return CROWD.getAgentNeighborDist(agentId);
     },
     getAgentRadius : function (agentId) {
-        return RVO.getAgentRadius(agentId);
+        return CROWD.getAgentRadius(agentId);
     },
     getAgentTimeHorizon : function (agentId) {
-        return RVO.getAgentTimeHorizon(agentId);
+        return CROWD.getAgentTimeHorizon(agentId);
     },
     getAgentTimeHorizonObst : function (agentId) {
-        return RVO.getAgentTimeHorizonObst(agentId);
+        return CROWD.getAgentTimeHorizonObst(agentId);
     },
     getAgentVelocity : function (agentId) {
-        RVO.getAgentVelocity(agentId);
+        CROWD.getAgentVelocity(agentId);
 
         var arr = new Float32Array(this.dataHeap_reusable.buffer, this.dataHeap_reusable.byteOffset, this.data_reusable.length);
-        var v = new RVO.V2(arr[0], arr[1]);
+        var v = new CROWD.V2(arr[0], arr[1]);
         return v;
     },
     getAgentPosition : function (agentId) {
-        RVO.getAgentPosition(agentId);
+        CROWD.getAgentPosition(agentId);
         var arr = new Float32Array(this.dataHeap_reusable.buffer, this.dataHeap_reusable.byteOffset, this.data_reusable.length);
 
-        var v = new RVO.V2(arr[0], arr[1]);
+        var v = new CROWD.V2(arr[0], arr[1]);
         return v;
     },
     getAgentPrefVelocity : function (agentId) {
-        RVO.getAgentPrefVelocity(agentId);
+        CROWD.getAgentPrefVelocity(agentId);
         var arr = new Float32Array(this.dataHeap_reusable.buffer, this.dataHeap_reusable.byteOffset, this.data_reusable.length);
-        var v = new RVO.V2(arr[0], arr[1]);
+        var v = new CROWD.V2(arr[0], arr[1]);
         return v;
     },
     allocateMem_X_Y_RAD : function () {
@@ -323,7 +315,7 @@ RVO.Simulation.prototype = {
         this.dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, nDataBytes);
         this.dataHeap.set(new Uint8Array(this.data.buffer));
 
-        RVO.allocateMem_X_Y_RAD(this.dataHeap.byteOffset, this.data.length);
+        CROWD.allocateMem_X_Y_RAD(this.dataHeap.byteOffset, this.data.length);
     },
     allocateMemReusable : function (size_t) {
         this.data_reusable = new Float32Array(size_t);
@@ -333,7 +325,7 @@ RVO.Simulation.prototype = {
         this.dataHeap_reusable = new Uint8Array(Module.HEAPU8.buffer, dataPtr, nDataBytes);
         this.dataHeap_reusable.set(new Uint8Array(this.data_reusable.buffer));
 
-        RVO.allocateMemResusable(this.dataHeap_reusable.byteOffset, this.data_reusable.length);
+        CROWD.allocateMemResusable(this.dataHeap_reusable.byteOffset, this.data_reusable.length);
     },
     getIndexFromId : function (agentId, arr) {
         var exist = false;
@@ -343,34 +335,34 @@ RVO.Simulation.prototype = {
                 break;
             }
         if (!exist) {
-            throw new Error("Crowd Error Agent || Obstacle id = " + agentId + " unknown from Crowd simulation");
+            throw new Error("Crowd Error Agent || Obstacle id = " + agentId + " unknown from Crowd sim");
             return -1;
         }
         return i;
     }
 }
 
-RVO.V2 = function(x,y){
+CROWD.V2 = function(x,y){
     this.x = x || 0;
     this.y = y || 0;
 };
 
-RVO.Agent = function(simulation, position, radius, useRoadMap){
-    this.simulation = simulation;
+CROWD.Agent = function(sim, position, radius, useRoadMap){
+    this.sim = sim;
 
-    this.position = position || new RVO.V2();
+    this.position = position || new CROWD.V2();
     this.orientation = 0;
-    this.goal = new RVO.V2();
+    this.goal = new CROWD.V2();
     this.useRoadMap = 1;
     this.isSelected = false;
 
 
-    this.id = this.simulation.agents.length;
+    this.id = this.sim.agents.length;
 
     this.radius = radius || 4;
 
-    RVO.addAgent(this.position.x, this.position.y);
-    RVO.setAgentRadius(this.id, this.radius);
+    CROWD.addAgent(this.position.x, this.position.y);
+    CROWD.setAgentRadius(this.id, this.radius);
 
     this.setUseRoadMap(useRoadMap);
 
@@ -378,20 +370,20 @@ RVO.Agent = function(simulation, position, radius, useRoadMap){
     //Agent.NumAgents++;
 }
 
-RVO.Agent.prototype = {
-    constructor: RVO.Agent,
+CROWD.Agent.prototype = {
+    constructor: CROWD.Agent,
     remove : function (index) {
         //this.mesh.dispose();
-        RVO.removeAgent(index);
+        CROWD.removeAgent(index);
         Agent.AgentsOrder.splice(index, 1);
         Agent.NumAgents--;
     },
     addGoal : function (goal) {
-        RVO.addAgentGoal(this.id, goal.x, goal.y);
+        CROWD.addAgentGoal(this.id, goal.x, goal.y);
     },
     setUseRoadMap : function (useRoadmap) {
         this.useRoadMap = useRoadmap;
-        RVO.setAgentUseRoadMap(this.id, this.useRoadMap);
+        CROWD.setAgentUseRoadMap(this.id, this.useRoadMap);
     },
     setAbstractMesh : function (mesh) {
     },
@@ -420,9 +412,9 @@ RVO.Agent.prototype = {
         }*/
     },
     update : function (id) {
-        this.position.x = RVO.X_Y_RAD[id * 3 + 0];
-        this.position.y = RVO.X_Y_RAD[id * 3 + 1];
-        this.orientation = RVO.X_Y_RAD[id * 3 + 2];
+        this.position.x = CROWD.X_Y_RAD[id * 3 + 0];
+        this.position.y = CROWD.X_Y_RAD[id * 3 + 1];
+        this.orientation = CROWD.X_Y_RAD[id * 3 + 2];
     },
     getPosition : function () {
     },
@@ -440,15 +432,15 @@ RVO.Agent.prototype = {
 
 
 
-RVO.Obstacle = function () {
+CROWD.Obstacle = function () {
     this.id = Obstacle.ObstacleNo;
     Obstacle.ObstaclesOrder.push(this.id);
     Obstacle.NumObstacles++;
     Obstacle.ObstacleNo++;
 }
 
-RVO.Obstacle.prototype = {
-    constructor: RVO.Obstacle,
+CROWD.Obstacle.prototype = {
+    constructor: CROWD.Obstacle,
     addByBoundingBox : function (position, isVisible) {
 
         mesh.getBoundingInfo()._update(this.mesh.getWorldMatrix());
@@ -512,6 +504,6 @@ RVO.Obstacle.prototype = {
 
 
 
-RVO.WayPoint = function (x, y) {
-    RVO.addWayPoint(x, y);
+CROWD.WayPoint = function (x, y) {
+    CROWD.addWayPoint(x, y);
 }

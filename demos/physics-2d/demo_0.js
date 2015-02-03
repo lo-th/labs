@@ -18,12 +18,6 @@ function onWorker(){
 	var w = 100/2;
     var h = 50/2;
 
-	
-
-	//v.add({type:'box', mass:1, pos:[0, 0.5, -20], size:[3,1,6]});
-
-	//v.chaine({ points:[ -w,h,  w,h  ], close:true });
-
 	v.chaine({ points:[ -w,h,  w,h, w,-h, -w,-h   ], close:true });
 
 	var x,y;
@@ -41,7 +35,6 @@ function onWorker(){
 function mainMove(){
 	if (select) {
 		select.position.set(v.nav.mouse3d.x, 0, v.nav.mouse3d.z);
-		console.log(v.nav.mouse3d.x, 0, v.nav.mouse3d.z, select.name)
 		v.upAnchor(select);
 	}
 }

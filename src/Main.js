@@ -95,6 +95,8 @@ LTH.Main.prototype = {
 		this.editor = new LTH.CodeEditor(this);
 		this.menu = new LTH.Menu(this);
 
+		//this.fileSystem.loadXML('menu.xml')
+
 		var _this = this;
 	    window.onresize = function(e) {_this.resize(e)};
 	},
@@ -1074,6 +1076,32 @@ LTH.FileSystem = function(main){
 
 LTH.FileSystem.prototype = {
 	constructor: LTH.FileSystem,
+	/*loadXML:function(url){
+		var xhr;
+		if (window.XMLHttpRequest) xhr = new XMLHttpRequest();// Mozilla/Safari
+	    else if (window.ActiveXObject) xhr = new ActiveXObject("Microsoft.XMLHTTP");// IE
+	    xhr.onload = function(e) {
+	    	var xmlDoc = xhr.responseXML;
+	    	var r = xmlDoc.getElementsByTagName("rubrique");
+	    	var a, b;
+	    	for(var i=0;i<r.length;i++){
+	    		a = r[i];
+	    		for(var j=0;j<a.childNodes.length;j++){
+	    			b = a.childNodes[j];
+	    			console.log(b.nodeValue );
+	    		}
+
+	    		//var nbattri = a.attributes.length;
+	    		//var nbenfan = a.childNodes.length;
+	    		//console.log(a.attributes[0].name);
+	    		console.log(a.attributes[0].value);
+
+
+	    	}
+	    }
+	    xhr.open('GET', url, true);
+		xhr.send();
+	},*/
 	load:function(url, isShader){
 		var type = url.substring(url.lastIndexOf(".")+1, url.length);
 		var name = url.substring(url.lastIndexOf("/")+1, url.lastIndexOf(".") );
@@ -1083,7 +1111,7 @@ LTH.FileSystem.prototype = {
 		xhr.onload = function(e) {
 			this.process( name, xhr.responseText, isShader );
 		}.bind(this);
-		xhr.open('GET', "./"+url, true);
+		xhr.open('GET', url, true);
 		xhr.send();
 	},
 	open:function(o, isShader){

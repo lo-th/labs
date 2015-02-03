@@ -1,6 +1,7 @@
 'use strict';
 importScripts('../../js/libs/liquidfun.js');
 
+var f = [0,0,0,0];
 var ar;
 var pr;
 var prn;
@@ -35,14 +36,15 @@ self.onmessage = function(e) {
 		
 		//sim.updateDecal();
 		//	 }
-		if(world===null) sim.init(e.data);
+		if(world==null) sim.init(e.data);
 		else sim.isWorld = true;
+		
 		if(sim.step !== undefined) sim.step();
 
+		f[1] = Date.now();
+	    if(f[1]-1000>f[0]){ f[0]=f[1]; f[3]=f[2]; f[2]=0; } f[2]++;
 
-		// Send data back to the main thread...
-	    self.postMessage({ w:sim.isWorld, fps:sim.f[3], ar:ar, pr:pr, prn:prn },[ar.buffer, pr.buffer]);
-	  //  self.postMessage({ w:sim.isWorld, fps:sim.f[3], ar:ar, dr:dr },[ar.buffer, dr.buffer]);
+	    self.postMessage({ w:sim.isWorld, fps:f[3], ar:ar, pr:pr, prn:prn },[ar.buffer, pr.buffer]);
 	}
 	//
 	
@@ -52,7 +54,6 @@ var W = {};
 
 W.Sim = function(){
 	this.p = 4; // precission
-	this.f = [0,0,0,0]; // fps
 	this.groups = [0xffffffff, 1 << 0, 1 << 1, 1 << 2];
     this.isWorld = false;
     this.bodys = [];
@@ -72,7 +73,7 @@ W.Sim.prototype = {
 		world = new b2World( this.gravity, data.sleep || false );
 	},
 	step:function(){
-		var f = this.f, p = this.p, d = this.d, i, id, b, pos, id2;
+		var p = this.p, d = this.d, i, id, b, pos, id2;
 		world.Step(d[0], d[1], d[2]);
 		i = this.bodys.length;
 		while(i--){
@@ -130,8 +131,7 @@ W.Sim.prototype = {
 	    }
 
 
-		f[1] = Date.now();
-	    if(f[1]-1000>f[0]){ f[0]=f[1]; f[3]=f[2]; f[2]=0; } f[2]++;
+		
 	},
 	clear:function(){
 	    if (world !== null){

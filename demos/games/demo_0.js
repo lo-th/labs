@@ -5,14 +5,18 @@ var oaOption = { only : false, aoClamp : 0.5, lumInfluence : 0.5 }
 var lightOption = { luma : false }
 
 v.tell('The city');
-v.pool.load('world', onload);
-v.ssao();
+var shader = new V.Shader('Ground', {}, false , onShaderload );
 
 loop();
 
 function loop(){
     requestAnimationFrame( loop );
     v.render();
+}
+
+function onShaderload(){
+	v.pool.load('world', onload);
+    v.ssao();
 }
 
 function onload(){
@@ -59,8 +63,7 @@ V.City = function(){
 	this.depthTexture.magFilter = THREE.NearestFilter;
     this.depthTexture.minFilter = THREE.LinearMipMapLinearFilter;
 
-    this.mat = new V.Shader();
-    this.mat.apply(V.Ground);
+    this.mat = shader;
     this.mat.uniforms.tmap.value = tx;
     this.mat.uniforms.tdeep.value = this.depthTexture;
 

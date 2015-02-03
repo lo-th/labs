@@ -4,8 +4,8 @@ var geo, mat, mat2, map, gui, player, gamePhase = 'start';
 
 v.tell('The dungeon');
 v.zone();
-v.ssao(true);
-v.pool.load('wall', onload);
+
+var shader = new V.Shader('Ground', {}, false , onShaderload );
 
 var oaOption = { only : false, aoClamp : 0.5, lumInfluence : 0.5 }
 var lightOption = { luma : false }
@@ -16,39 +16,12 @@ function loop(){
     requestAnimationFrame( loop );
     v.render();
 }
-function mainClick(){
-	if(!map) return;
-	if(gamePhase === 'start') {	
-		if(map.marker.good){
-			map.startPosition.set(map.marker.x, map.getPosY(map.marker.x, map.marker.z), map.marker.z)
-			player.place(map.startPosition);
-			gamePhase = 'target';
-		}
-	}else if(gamePhase === 'target') {
-		if(map.marker.good){
-			player.followPath(map.pathPlayer);
-			map.clearPath();
-			map.startPosition.copy(map.endPosition)
-		    gamePhase = 'moving';
-		}
-	}
+
+function onShaderload(){
+	v.ssao(true);
+	v.pool.load('wall', onload);
 }
-function mainRay(ray){
-	if(!map) return;
-	if(gamePhase === 'moving') return;
-	var x = V.round(ray.x);
-	var z = V.round(ray.z);
-    if(map.testPos(x,z)){
-    	this.map.marker.move(x, 0, z);
-    	if(gamePhase === 'target') {
-    		map.endPosition.x = map.marker.x;
-			map.endPosition.z = map.marker.z;
-			map.findNewPath(100);
-    	}
-    }else{
-		this.map.marker.reset();
-	}
-}
+
 
 function onload(){
 	v.colorBack(0x25292e);
@@ -61,8 +34,7 @@ function onload(){
 	//tx.magFilter = THREE.NearestFilter;
     //tx.minFilter = THREE.LinearMipMapLinearFilter;
 
-    mat = new V.Shader();
-    mat.apply(V.Ground);
+    mat = shader;
     mat.uniforms.tmap.value = tx;
 
     var cc = document.createElement('canvas');
@@ -75,10 +47,9 @@ function onload(){
 	var txtPath = new THREE.Texture(cc);
 	txtPath.needsUpdate = true
 
-    mat2 = new V.Shader();
-    mat2.apply(V.Ground);
+    mat2 = shader.clone();
     mat2.transparent = true;
-    mat2.uniforms.alpha.value = 0.5; 
+    mat2.uniforms.alpha.value = 0.5;
     mat2.uniforms.tmap.value = txtPath;
 
     map = new V.Map();
@@ -695,5 +666,44 @@ V.Player.prototype = {
 	},
 	getPosition:function(){
 		return this.position;
+	}
+}
+
+
+
+
+function mainClick(){
+	if(!map) return;
+	if(gamePhase === 'start') {	
+		if(map.marker.good){
+			map.startPosition.set(map.marker.x, map.getPosY(map.marker.x, map.marker.z), map.marker.z)
+			player.place(map.startPosition);
+			gamePhase = 'target';
+		}
+	}else if(gamePhase === 'target') {
+		if(map.marker.good){
+			player.followPath(map.pathPlayer);
+			map.clearPath();
+			map.startPosition.copy(map.endPosition)
+		    gamePhase = 'moving';
+		}
+	}
+}
+
+
+function mainRay(ray){
+	if(!map) return;
+	if(gamePhase === 'moving') return;
+	var x = V.round(ray.x);
+	var z = V.round(ray.z);
+    if(map.testPos(x,z)){
+    	this.map.marker.move(x, 0, z);
+    	if(gamePhase === 'target') {
+    		map.endPosition.x = map.marker.x;
+			map.endPosition.z = map.marker.z;
+			map.findNewPath(100);
+    	}
+    }else{
+		this.map.marker.reset();
 	}
 }

@@ -8,6 +8,10 @@ tx.needsUpdate = true;
 
 var shader = new V.Shader('Xray', {env:tx, transparent:true, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, wrapping: THREE.ClampToEdgeWrapping, shading: THREE.SmoothShading, depthTest: false,
 	depthWrite: true }, true);
+
+var env = new V.Environment();
+env.add(shader);
+
 setTimeout(addParam, 100);
 
 loop();

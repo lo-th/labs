@@ -9,6 +9,9 @@ var tx = THREE.ImageUtils.loadTexture( './images/spherical/e_chrome.jpg');
 var shader = new V.Shader('Spherical',{transparent:true, env:tx}, true);
 setTimeout(addParam, 100);
 
+var env = new V.Environment();
+env.add(shader);
+
 loop();
 
 function loop(){

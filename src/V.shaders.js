@@ -31,16 +31,16 @@ V.Shader.prototype.init = function(parameters){
     this.setValues( parameters );
 }
 
-V.Shader.prototype.apply = function(shad){
-    this.uniforms = THREE.UniformsUtils.clone( shad.uniforms );
-    this.vertexShader = shad.vs;
-    this.fragmentShader  = shad.fs;
-    //this.needsUpdate = true;
+V.Shader.prototype.apply = function(s){
+    this.uniforms = THREE.UniformsUtils.clone( s.uniforms );
+    this.vertexShader = s.vs;
+    this.fragmentShader = s.fs;
     for ( var key in this.parameters ) {
         if(this.uniforms[key]) this.uniforms[key].value = this.parameters[key];
     }
     this.isActive = true;
     this.visible = true;
+    this.callback();
 }
 
 V.Shader.prototype.loading = function(name) {
@@ -49,16 +49,7 @@ V.Shader.prototype.loading = function(name) {
     else if (window.ActiveXObject) xhr = new ActiveXObject("Microsoft.XMLHTTP");
     xhr.onload = function(e) {
         var s = eval(xhr.responseText);
-        this.uniforms = s.uniforms;
-        this.vertexShader = s.vs;
-        this.fragmentShader  = s.fs;
-        //this.needsUpdate = true;
-        for ( var key in this.parameters ) {
-            if(this.uniforms[key]){ this.uniforms[key].value = this.parameters[key]; console.log(key)}
-        }
-        this.callback();
-        this.isActive = true;
-        this.visible = true;
+        this.apply(s);
     }.bind(this);
     xhr.open('GET', 'shaders/'+name+'.js', true);
     xhr.send();

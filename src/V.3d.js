@@ -1,5 +1,5 @@
-window.onload = up;
-function up(){ window.top.main.previewTheme(); }
+//window.onload = up;
+//function up(){ window.top.main.previewTheme(); }
 
 var canvas, info, debug;
 var THREE, mainClick, mainDown, mainUp, mainMove, mainRay, v, shader;
@@ -30,6 +30,7 @@ V.MeshList = [ 'plane', 'sphere', 'skull', 'skullhigh', 'head', 'woman', 'babe']
 V.Main = null;
 
 V.View = function(h,v,d){
+    window.top.main.previewTheme();
     this.dimentions = {w:window.innerWidth,  h:window.innerHeight, r:window.innerWidth/window.innerHeight };
 
 	this.canvas = canvas;
@@ -77,8 +78,7 @@ V.View = function(h,v,d){
 
     this.isWithSerious = false;
 
-	var _this = this;
-	window.onresize = function(e) {_this.resize(e)};
+	window.onresize = function(e) {this.resize(e)}.bind(this);
 }
 
 V.View.prototype = {

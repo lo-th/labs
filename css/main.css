@@ -21,7 +21,7 @@ html, body {
 /* PREVIEW */
 
 .preview{
-	position:absolute;  border:none; display:none;
+	position:absolute; border:none; display:none;
 	pointer-events:auto; background:none; z-index:0;
 }
 

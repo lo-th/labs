@@ -207,6 +207,7 @@ LTH.Main.prototype = {
 			if(this.day) this.previewMain.v.colorBack(0xd2cec8);
 			else this.previewMain.v.colorBack(0x25292e);
 		}
+		this.preview.style.display = 'block';
 	},
 	previewClearFocus:function(){
 		var allTags=this.previewDoc.getElementsByTagName('*'), i=0, e;
@@ -271,7 +272,7 @@ LTH.Main.prototype = {
 			this.previewDoc.open('text/html', 'replace');
 		    this.previewDoc.write(myContent);
 		    this.previewDoc.close();
-            this.preview.style.display = 'block';
+            //this.preview.style.display = 'block';
 
 		    this.resize();
 		    this.previewMain.onload = function(){ this.previewTheme(); }.bind(this);

@@ -1,3 +1,6 @@
+window.onload = up;
+function up(){ window.top.main.previewTheme(); }
+
 var canvas, info, debug;
 var THREE, mainClick, mainDown, mainUp, mainMove, mainRay, v, shader;
 var V = {};

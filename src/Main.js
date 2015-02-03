@@ -275,7 +275,7 @@ LTH.Main.prototype = {
             //this.preview.style.display = 'block';
 
 		    this.resize();
-		    this.previewMain.onload = function(){ this.previewTheme(); }.bind(this);
+		    //this.previewMain.onload = function(){ this.previewTheme(); }.bind(this);
 			if(this.isFirst) this.isFirst=false;
 			else this.menu.modified();
 		

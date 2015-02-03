@@ -20,7 +20,7 @@ V.SeaPool.prototype = {
             if(end)end();
         }
         loader.parser = THREE.SEA3D.DEFAULT;
-        loader.load( './models/'+name+'.sea' );
+        loader.load( 'models/'+name+'.sea' );
     }
 }
 

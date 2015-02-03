@@ -7,7 +7,7 @@ LTH.option = {
 'games':      [ ['sea3d', 'dat.gui'], ['sea3d', 'dat.gui', 'rot', 'tween'] , ['sea3d', 'tween'] ],
 'shaders':    [ ['sea3d','dat.gui'], ['sea3d','dat.gui'], ['sea3d','dat.gui'], ['sea3d','dat.gui'], ['sea3d','dat.gui']   ],
 'experiments':[ ['serious']                                  ],
-'others':     [ ['dat.gui' ]                                               ]
+'others':     [ ['dat.gui' ] , []                                              ]
 }
 
 LTH.cRubrique = '';
@@ -523,14 +523,10 @@ LTH.Menu.prototype = {
 		this.title.innerHTML = 'LOTH LABS';
 		this.title.className = 'title';
 		this.content.appendChild( this.title );
-		var _this = this;
-		this.logo.onmousedown = function(e){ _this.initHome(e); };
-		this.logo.onmouseover = function(e){
-			if(!_this.isHome) _this.title.innerHTML = 'BACK HOME';
-		};
-		this.logo.onmouseout = function(e){ 
-			if(!_this.isHome) _this.title.innerHTML = LTH.cRubrique.toUpperCase();
-		};
+
+		this.logo.onmousedown = function(e){ this.initHome(e); }.bind(this);
+		this.logo.onmouseover = function(e){ if(!this.isHome) this.title.innerHTML = 'BACK HOME'; }.bind(this);
+		this.logo.onmouseout = function(e){ if(!this.isHome) this.title.innerHTML = LTH.cRubrique.toUpperCase(); }.bind(this);
 	},
 	initHome:function(){
 		this.content.className = 'menu home';
@@ -540,30 +536,18 @@ LTH.Menu.prototype = {
 		LTH.cRubrique = '';//-1;
 		LTH.cFile = 0;
 		this.title.innerHTML = 'LOTH LABS';
-		//this.content.style.width = '100%';
-		//this.content.style.boxShadow = 'none';
 		this.home = this.doc.createElement('div');
 		this.home.style.cssText = "position:absolute; left:10%; top:160px; width:80%; height:400px; text-align:center;";
 		this.content.appendChild( this.home  );
-		var _this = this;
 		var rub;
 		for(var i=0; i<LTH.rubriques.length ; i++){
 			rub = this.doc.createElement('div');
 			rub.className = 'rub';
-			//if(this.main.day) rub.className = 'rub';
-			//else rub.className = 'rub';
-			rub.name = LTH.rubriques[i];//i;
+			rub.name = LTH.rubriques[i];
 			rub.innerHTML = LTH.rubriques[i].toUpperCase();
-			rub.onclick = function(e){ _this.resetHome(e) };
-			rub.onmouseover = function(e){
-				e.target.className = 'rub rubover';
-				//this.style.background=_this.colorModif;
-			};
-			rub.onmouseout = function(e){
-				e.target.className = 'rub';
-				//if(_this.main.day) this.style.background='#202020';
-				//else this.style.background='#d2cec8';
-			};
+			rub.onclick = function(e){ this.resetHome(e) }.bind(this);
+			rub.onmouseover = function(e){ e.target.className = 'rub rubover'; };
+			rub.onmouseout = function(e){ e.target.className = 'rub'; };
 			this.home.appendChild( rub );
 		}
 		this.isHome = true;
@@ -786,7 +770,6 @@ LTH.Menu.prototype = {
 	    reader.readAsDataURL(file);
 	},
 	pushFile:function(name){
-		var _this = this
 		// don't add if same file
 		var i = this.files.length;
 		while(i--){ if(name == this.files[i]) return; }
@@ -807,14 +790,13 @@ LTH.Menu.prototype = {
 	    ic.appendChild( img );
 	    this.zone.appendChild( ic );
 	    ic.name = id;
-	    ic.onclick =  function(e){_this.openFile(e)};
-	    ic.ondblclick =  function(e){_this.openFile(e)};
-	    ic.onmouseover =  function(e){_this.iconOver(e)};
-	    ic.onmouseout =  function(e){_this.unselected(e)};
-	    ic.onmouseup =  function(e){_this.unselected(e)};
-
-	    ic.ondragstart =  function(e){_this.dragstart(e)};
-	    ic.ondragend =  function(e){_this.dragend(e)};
+	    ic.onclick =  function(e){this.openFile(e)}.bind(this);;
+	    ic.ondblclick =  function(e){this.openFile(e)}.bind(this);
+	    ic.onmouseover =  function(e){this.iconOver(e)}.bind(this);
+	    ic.onmouseout =  function(e){this.unselected(e)}.bind(this);
+	    ic.onmouseup =  function(e){this.unselected(e)}.bind(this);
+	    ic.ondragstart = function(e){this.dragstart(e)}.bind(this);
+	    ic.ondragend = function(e){this.dragend(e)}.bind(this);
 	    
 	    this.icons[id]=ic;
 	    this.files[id]=name;
@@ -851,7 +833,8 @@ LTH.Menu.prototype = {
 	},
 	dragstart:function (e){
 		var id = e.target.name;
-		if (e.target.classList.contains('dragout') && this.currentLink!==null) { e.dataTransfer.setData('DownloadURL', this.currentLink.dataset.downloadurl ); }
+		//if (e.target.classList.contains('dragout') && this.currentLink!==null) {  e.dataTransfer.setData('DownloadURL', this.currentLink.dataset.downloadurl ); }
+		if (this.currentLink!==null) {  e.dataTransfer.setData('DownloadURL', this.currentLink.dataset.downloadurl ); }
 	},
 	dragend:function (e){
 		this.resetModified();
@@ -1090,34 +1073,16 @@ LTH.FileSystem = function(main){
 
 LTH.FileSystem.prototype = {
 	constructor: LTH.FileSystem,
-	/*test:function (name){
-		var xhr;
-	    if (window.XMLHttpRequest) xhr = new XMLHttpRequest();// Mozilla/Safari
-	    else if (window.ActiveXObject) xhr = new ActiveXObject("Microsoft.XMLHTTP");// IE
-		xhr.onerror = function () { xhr.abort(); return false;};
-		xhr.onreadystatechange = function() {
-			if(this.readyState == 2) return true;
-			if(this.readyState == 4) xhr.abort();
-		}
-		xhr.open('GET', "../demos/"+name, true);
-		xhr.send(null);
-	},*/
 	load:function(url, isShader){
 		var type = url.substring(url.lastIndexOf(".")+1, url.length);
 		var name = url.substring(url.lastIndexOf("/")+1, url.lastIndexOf(".") );
 		var xhr;
 		if (window.XMLHttpRequest) xhr = new XMLHttpRequest();// Mozilla/Safari
 	    else if (window.ActiveXObject) xhr = new ActiveXObject("Microsoft.XMLHTTP");// IE
-		xhr.open('GET', "./"+url, true);
-		xhr.responseType = 'blob';
-		var _this = this;
 		xhr.onload = function(e) {
-		    var reader = new FileReader();
-		    reader.onload = function(e) {
-		    	_this.process( name, e.target.result, isShader );
-		    }
-		    reader.readAsText(this.response);
-		}
+			this.process( name, xhr.responseText, isShader );
+		}.bind(this);
+		xhr.open('GET', "./"+url, true);
 		xhr.send();
 	},
 	open:function(o, isShader){

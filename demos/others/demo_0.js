@@ -1,11 +1,13 @@
 var v = new V.View(180, 45, 130);
 v.tell('mesh deform');
 
-var effect = { depth: 20.0, radius: 0.2, radiusbase: 0.2, power: 1.0, wireframe:true };
+var effect = { depth: 20.0, radius: 0.2, radiusbase: 0.2, power: 1.0, wireframe:false };
+
 var ball = new THREE.Mesh( new THREE.SphereGeometry(1,12,10), new THREE.MeshBasicMaterial({color:0x33FF00}));
 v.scene.add(ball);
 
-var mesh = new THREE.Mesh( new THREE.PlaneGeometry(160,160, 64, 64), new THREE.MeshBasicMaterial({ color:0x888899, wireframe:true }));
+var material = new V.Shader('Spherical',{transparent:true, env:THREE.ImageUtils.loadTexture( './images/spherical/e_chrome.jpg')}, false);
+var mesh = new THREE.Mesh( new THREE.PlaneGeometry(160,160, 64, 64), material );
 mesh.geometry.dynamic = true;
 mesh.geometry.applyMatrix(new THREE.Matrix4().makeRotationX(- Math.PI*0.5));
 v.base.add(mesh);
@@ -54,7 +56,7 @@ function mainUp(){
 }
 
 function changeWire(){
-     mesh.material.wireframe=effect.wireframe;
+     material.wireframe=effect.wireframe;
 }
 
 function changeRadius(){

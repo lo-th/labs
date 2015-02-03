@@ -22,7 +22,8 @@ function onWorker(){
 	v.addParticle({ radius:0.5});
 }
 
-function mainMove(){
+function mainMove
+(){
 	if (select) {
 		select.position.set(v.nav.mouse3d.x, 0, v.nav.mouse3d.z);
 		v.upAnchor(select);

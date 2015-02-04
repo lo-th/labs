@@ -1,24 +1,20 @@
 var LTH = {};
 
-LTH.rubriques = ['physics-2d', 'physics-3d', 'games', 'shaders', 'experiments', 'others'];
-LTH.option = {
-'physics-2d': [ [], [], []                                      ],
-'physics-3d': [ [], []                                           ],
-'games':      [ ['sea3d', 'dat.gui'], ['sea3d', 'dat.gui', 'rot', 'tween'] , ['sea3d', 'tween'] ],
-'shaders':    [ ['sea3d','dat.gui'], ['sea3d','dat.gui'], ['sea3d','dat.gui'], ['sea3d','dat.gui'], ['sea3d','dat.gui']   ],
-'experiments':[ ['serious']                                  ],
-'others':     [ ['dat.gui' ] , []                                              ]
-}
-
-LTH.cRubrique = '';
+LTH.rubriques = [];
+LTH.demoNames = [];
+LTH.libsNames = [];
+LTH.cRubr = -1;
 LTH.cFile = 0;
+
 var esprima = esprima || {};
 esprima.parse = esprima.parse || {};
 var CodeMirror = CodeMirror || {};
 var GRAD = GRAD || {};
 var history;
 var main;
+
 window.onload = init;
+
 function init(){ main = new LTH.Main(); }
 
 
@@ -45,7 +41,7 @@ function showHideMenu(e){
 		if(c==='menu exemple' || c==='menu exemple Out'){ 
 			main.menu.content.className = 'menu exemple In';
 			main.menu.logo.className = 'logo lmax';
-			main.menu.title.innerHTML = LTH.cRubrique.toUpperCase();
+			main.menu.title.innerHTML = LTH.rubriques[LTH.cRubr].toUpperCase();
 		}
 	}
 }
@@ -84,18 +80,19 @@ LTH.Main = function(){
 	this.previewMain = null;
 
 	this.happ = this.supports_history_api();
-	this.init();
+
+	this.fileSystem = new LTH.FileSystem(this);
+	this.fileSystem.loadXML('menu.xml');
+
+	//this.init();
 }
 
 LTH.Main.prototype = {
 	constructor: LTH.Main,
 	init:function (){
 		this.shader = new LTH.ShaderToy(this);
-		this.fileSystem = new LTH.FileSystem(this);
 		this.editor = new LTH.CodeEditor(this);
 		this.menu = new LTH.Menu(this);
-
-		//this.fileSystem.loadXML('menu.xml')
 
 		var _this = this;
 	    window.onresize = function(e) {_this.resize(e)};
@@ -240,9 +237,9 @@ LTH.Main.prototype = {
 
 			// extra libs
 			var options = '';
-			var ops = LTH.option[LTH.cRubrique][LTH.cFile];
+			var ops = LTH.libsNames[LTH.cRubr][LTH.cFile];
 			var i = ops.length;
-			while(i--) options+="<script src='js/libs/"+ops[i]+".min.js'></script>";
+			while(i--) {if(ops[i]!=='')options+="<script src='js/libs/"+ops[i]+".min.js'></script>";}
 
 	        var myContent = [
 			    "<!DOCTYPE html>",
@@ -519,7 +516,6 @@ LTH.Menu.prototype = {
 	initLogo:function(){
 		this.logo = this.doc.createElement('div');
 		this.logo.className = 'logo';
-		//this.logo.style.cssText = " position:absolute; left:50%; top:15px; margin-left:-60px; width:120px; height:120px; text-align:center; pointer-events:auto; cursor:pointer;";
 		this.content.appendChild( this.logo );
 		this.logo.innerHTML = LTH.Logos('d2cec8');
 		this.title = this.doc.createElement('div');
@@ -529,14 +525,15 @@ LTH.Menu.prototype = {
 
 		this.logo.onmousedown = function(e){ this.initHome(e); }.bind(this);
 		this.logo.onmouseover = function(e){ if(!this.isHome) this.title.innerHTML = 'BACK HOME'; }.bind(this);
-		this.logo.onmouseout = function(e){ if(!this.isHome) this.title.innerHTML = LTH.cRubrique.toUpperCase(); }.bind(this);
+		this.logo.onmouseout = function(e){ if(!this.isHome) this.title.innerHTML = LTH.rubriques[LTH.cRubr].toUpperCase(); }.bind(this);
 	},
 	initHome:function(){
 		this.content.className = 'menu home';
 		this.main.shader.clear();
 		if(this.isMenu) this.resetMenu();
 		if(this.isHome) return;
-		LTH.cRubrique = '';//-1;
+		//LTH.cRubrique = '';//-1;
+		LTH.cRubr = -1;
 		LTH.cFile = 0;
 		this.title.innerHTML = 'LOTH LABS';
 		this.home = this.doc.createElement('div');
@@ -546,7 +543,7 @@ LTH.Menu.prototype = {
 		for(var i=0; i<LTH.rubriques.length ; i++){
 			rub = this.doc.createElement('div');
 			rub.className = 'rub';
-			rub.name = LTH.rubriques[i];
+			rub.name = i;
 			rub.innerHTML = LTH.rubriques[i].toUpperCase();
 			rub.onclick = function(e){ this.resetHome(e) }.bind(this);
 			rub.onmouseover = function(e){ e.target.className = 'rub rubover'; };
@@ -556,7 +553,7 @@ LTH.Menu.prototype = {
 		this.isHome = true;
 	},
 	resetHome:function(e){
-		LTH.cRubrique = e.target.name;
+		LTH.cRubr = e.target.name;
 		this.clearDiv(this.home);
 		this.content.removeChild(this.home);
 		this.isHome = false;
@@ -587,7 +584,7 @@ LTH.Menu.prototype = {
 
 		//var name = LTH.cRubrique;//LTH.rubriques[LTH.cRubrique];
 		var mode = 'basic';
-		if(LTH.cRubrique === "shaders") mode = 'shader';
+		if(LTH.rubriques[LTH.cRubr] === "shaders") mode = 'shader';
 
 		this.main.switchMode(mode);
 		this.main.resize();
@@ -599,15 +596,15 @@ LTH.Menu.prototype = {
 		this.initButton();
 		this.initZone();
 		var name;
-		
-		for(var i=0; i < LTH.option[LTH.cRubrique].length; i++){
-		//for(var i=0; i < LTH.numExemples[LTH.cRubrique]; i++){
-			name = "demo_"+i+'.js';
-			this.pushFile(name);//, '#cccc00');
+		var curr = LTH.demoNames[LTH.cRubr];
+		var lng = curr.length;
+		for(var i=0; i<lng; i++){
+			name = curr[i]+'.js';
+			this.pushFile(name);
 		}
 	    this.currentFile = this.main.startDemo || 0;
 		//this.main.loadFile('demos/'+LTH.rubriques[LTH.cRubrique]+'/'+this.files[this.currentFile]);
-		this.main.loadFile('demos/'+LTH.cRubrique+'/'+this.files[this.currentFile]);
+		this.main.loadFile('demos/'+LTH.rubriques[LTH.cRubr]+'/'+this.files[this.currentFile]);
 	    this.resetIcon();
 	    
 	    this.isMenu = true;
@@ -849,7 +846,7 @@ LTH.Menu.prototype = {
 	    	LTH.cFile = id || 0;
 	    	this.resetModified();
 	        this.currentFile = id;
-	    	this.main.loadFile('demos/'+LTH.cRubrique+'/'+this.files[id]);
+	    	this.main.loadFile('demos/'+LTH.rubriques[LTH.cRubr]+'/'+this.files[id]);
 	    	this.resetIcon();
 	    }
 	},
@@ -1076,7 +1073,7 @@ LTH.FileSystem = function(main){
 
 LTH.FileSystem.prototype = {
 	constructor: LTH.FileSystem,
-	/*loadXML:function(url){
+	loadXML:function(url){
 		var xhr;
 		if (window.XMLHttpRequest) xhr = new XMLHttpRequest();// Mozilla/Safari
 	    else if (window.ActiveXObject) xhr = new ActiveXObject("Microsoft.XMLHTTP");// IE
@@ -1086,22 +1083,22 @@ LTH.FileSystem.prototype = {
 	    	var a, b;
 	    	for(var i=0;i<r.length;i++){
 	    		a = r[i];
-	    		for(var j=0;j<a.childNodes.length;j++){
-	    			b = a.childNodes[j];
-	    			console.log(b.nodeValue );
+	    		LTH.rubriques[i] = a.attributes[0].value;
+	    		LTH.demoNames[i] = [];
+	    		LTH.libsNames[i] = [];
+	    		b = a.getElementsByTagName("demo");
+	    		for(var j=0;j<b.length;j++){
+	    			LTH.demoNames[i][j] = b[j].attributes[0].value;
+	    			LTH.libsNames[i][j] = b[j].attributes[1].value.split("|").map(function(n){return n;});
 	    		}
-
-	    		//var nbattri = a.attributes.length;
-	    		//var nbenfan = a.childNodes.length;
-	    		//console.log(a.attributes[0].name);
-	    		console.log(a.attributes[0].value);
-
-
 	    	}
-	    }
+
+	    	this.main.init();
+
+	    }.bind(this);
 	    xhr.open('GET', url, true);
 		xhr.send();
-	},*/
+	},
 	load:function(url, isShader){
 		var type = url.substring(url.lastIndexOf(".")+1, url.length);
 		var name = url.substring(url.lastIndexOf("/")+1, url.lastIndexOf(".") );

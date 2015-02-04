@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- Voici des commentaires XML -->
+<!-- LOTH MAIN MENU -->
 <menu>
 <rubrique n='physics-2d'>
 	<demo n='demo_0' lib=''></demo>
@@ -9,26 +9,25 @@
 <rubrique n='physics-3d'>
 	<demo n='demo_0' lib=''></demo>
 	<demo n='demo_1' lib=''></demo>
-	<demo n='demo_2' lib=''></demo>
 </rubrique>
 <rubrique n='games'>
-	<demo n='demo_0' lib=''></demo>
-	<demo n='demo_1' lib=''></demo>
-	<demo n='demo_2' lib=''></demo>
+	<demo n='demo_0' lib='sea3d|gui'></demo>
+	<demo n='demo_1' lib='sea3d|gui|rot|tween'></demo>
+	<demo n='demo_2' lib='sea3d|tween'></demo>
 </rubrique>	
 <rubrique n='shaders'>
-	<demo n='demo_0' lib=''></demo>
-	<demo n='demo_1' lib=''></demo>
-	<demo n='demo_2' lib=''></demo>
+	<demo n='demo_0' lib='sea3d|gui'></demo>
+	<demo n='demo_1' lib='sea3d|gui'></demo>
+	<demo n='demo_2' lib='sea3d|gui'></demo>
+	<demo n='demo_3' lib='sea3d|gui'></demo>
+	<demo n='demo_4' lib='sea3d|gui'></demo>
 </rubrique>	
 <rubrique n='experiments'>
-	<demo n='demo_0' lib=''></demo>
-	<demo n='demo_1' lib=''></demo>
-	<demo n='demo_2' lib=''></demo>
+	<demo n='demo_0' lib='serious'></demo>
 </rubrique>
 <rubrique n='others'>
-	<demo n='demo_0' lib=''></demo>
+	<demo n='demo_0' lib='gui'></demo>
 	<demo n='demo_1' lib=''></demo>
-	<demo n='demo_2' lib=''></demo>
+	<demo n='cool'   lib=''></demo>
 </rubrique>
 </menu>

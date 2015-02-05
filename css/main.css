@@ -125,13 +125,13 @@ html, body {
 /* Rubtrique */
 
 .rub{
-	width:128px; height:128px; font-size:14px;  font-weight: bold; cursor:pointer;
-	text-align:center; pointer-events:auto; display:inline-block; border-radius:64px; margin: 20px; padding-top:54px;
+	width:118px; height:118px; font-size:14px;  font-weight: bold; cursor:pointer;
+	text-align:center; pointer-events:auto; display:inline-block; border-radius:64px; margin: 20px; padding-top:50px;
 	
 }
 
 .night .rub   {
-	box-shadow: 1px 1px 4px 4px rgba(0, 0, 0, 0.1);
+	box-shadow: 0px -2px 6px 6px rgba(0, 0, 0, 0.1) inset, 0px -2px 6px 6px rgba(255, 255, 255, 0.03);
 	background:#25292e; color:#d2cec8;
 	-webkit-transition: 0.2s ease-out;
     -moz-transition: 0.2s ease-out;
@@ -139,17 +139,8 @@ html, body {
     transition: 0.2s ease-out;
 }
 
-.day .rub {
-	box-shadow: 1px 1px 4px 4px rgba(0, 0, 0, 0.1);
-	background:#d2cec8; color:#25292e;
-	-webkit-transition: 0.2s ease-out;
-    -moz-transition: 0.2s ease-out;
-    -o-transition: 0.2s ease-out;
-    transition: 0.2s ease-out;  
-}
-
 .night .rubover {
-	box-shadow: -2px -4px 6px 8px rgba(0, 0, 0, 0.3) inset;
+	box-shadow: 0px 3px 6px 6px rgba(255, 255, 255, 0.5) inset, 0px 6px 12px 12px rgba(0, 0, 0, 0.3);
 	background:#d2cec8; color:#25292e;
     -webkit-transition: 0.2s ease-out;
     -moz-transition: 0.2s ease-out;
@@ -157,8 +148,16 @@ html, body {
     transition: 0.2s ease-out;
 }
 
+.day .rub {
+	box-shadow: 0px -2px 6px 6px rgba(255, 255, 255, 0.1) inset, 0px -2px 6px 6px rgba(0, 0, 0, 0.03);
+	background:#d2cec8; color:#25292e;
+	-webkit-transition: 0.2s ease-out;
+    -moz-transition: 0.2s ease-out;
+    -o-transition: 0.2s ease-out;
+    transition: 0.2s ease-out;  
+}
 .day .rubover {
-	box-shadow: -2px -4px 6px 8px rgba(0, 0, 0, 0.3) inset;
+	box-shadow: 0px 3px 6px 6px rgba(0, 0, 0, 0.5) inset, 0px 6px 12px 12px rgba(255, 255, 255, 0.3);
 	background:#25292e; color:#d2cec8;
     -webkit-transition: 0.2s ease-out;
     -moz-transition: 0.2s ease-out;

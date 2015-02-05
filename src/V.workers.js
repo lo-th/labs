@@ -1,3 +1,7 @@
+/**
+ * @author loth / http://lo-th.github.io/labs/
+ */
+
 V.Worker = function(parent, name){
     this.name = name;
     this.root = parent;

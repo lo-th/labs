@@ -1,5 +1,6 @@
-//window.onload = up;
-//function up(){ window.top.main.previewTheme(); }
+/**
+ * @author loth / http://lo-th.github.io/labs/
+ */
 
 var canvas, info, debug;
 var THREE, mainClick, mainDown, mainUp, mainMove, mainRay, v, shader;
@@ -99,7 +100,7 @@ V.View.prototype = {
         // three animation update
     	THREE.AnimationHandler.update( this.clock.getDelta() );
         // render
-        if(this.postEffect!==null){
+        if(this.postEffect!==null && this.postEffect.isActive){
             this.postEffect.render();
         }else{
             this.renderer.render( this.scene, this.nav.camera );
@@ -116,6 +117,11 @@ V.View.prototype = {
     ssao:function(adv){
         this.postEffect = new V.PostEffect(this,'ssao', adv);
     },
+    metaball:function(callback){
+        this.sceneBlob = new THREE.Scene();
+        //this.sceneTop = new THREE.Scene();
+        this.postEffect = new V.PostEffect(this,'metaball', false, callback);
+    },
     deformSsao:function( g, map ){
         this.postEffect.deformSsao( g, map );
     },
@@ -126,8 +132,8 @@ V.View.prototype = {
 		this.renderer.setSize( this.dimentions.w, this.dimentions.h );
 		this.nav.camera.aspect = this.dimentions.r;
 		this.nav.camera.updateProjectionMatrix();
-        if(this.postEffect!==null){
-            this.postEffect.resize();
+        if(this.postEffect!==null && this.postEffect.isActive){
+            this.postEffect.resize(this.dimentions.w, this.dimentions.h);
         }
     },
     colorBack:function(c){
@@ -140,6 +146,7 @@ V.View.prototype = {
         this.z.visible=false;
         this.base.add(this.z);
     },
+    
     addModel:function(mat){
         if(this.basic!==null){ this.scene.remove(this.basic); }
         if(this.model==='plane'){
@@ -188,6 +195,10 @@ V.View.prototype = {
     },
     tell:function(s){
         this.info.innerHTML = s;
+    },
+    addBlob:function(position, radius){
+        var b = new V.Blob(this, position, radius);
+        this.meshs[this.meshs.length] = b;
     },
     add:function(obj){
         var m = new THREE.Mesh( this.geo[obj.type||'box'], this.mat[obj.mat||'base2'] );
@@ -293,6 +304,43 @@ V.View.prototype = {
         }
     }
 }
+
+
+//---------------------------------------------------
+//   BLOBS
+//---------------------------------------------------
+
+V.Blob = function(parent, position, radius){
+    THREE.Object3D.call( this );
+    this.type = 'BLOB';
+    this.root = parent;
+    var geo = this.root.geo.plane;
+    var map = new THREE.MeshBasicMaterial({color:0X000000})
+    this.s1 = new THREE.Mesh(geo,map);
+    var s = radius || 20;
+    s*=2;
+    this.s1.scale.set(s,s,s);
+    this.root.sceneBlob.add(this.s1);
+
+    if(position) this.position.copy(position);
+}
+V.Blob.prototype = Object.create( THREE.Object3D.prototype );
+V.Blob.prototype.constructor = V.Blob;
+V.Blob.prototype._updateMatrix = V.Blob.prototype.updateMatrix;
+V.Blob.prototype.updateMatrix = function() {
+    console.log('up')
+  this._updateMatrix();
+  if (this.customMatrix != null)
+    this.matrix.multiply(this.customMatrix);
+};
+V.Blob.prototype.clear = function(){
+    this.root.sceneBlob.remove( this.s1 );
+}
+V.Blob.prototype.update = function (r) {
+    this.s1.position.copy(this.position);
+    this.s1.rotation.copy(r);
+}
+
 
 //---------------------------------------------------
 //   NAVIGATION

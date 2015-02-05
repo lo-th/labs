@@ -1,5 +1,5 @@
 var v = new V.View(180, 45, 130);
-v.tell('basic shader');
+v.tell('spherical shader');
 v.initGui(true);
 
 var tx = THREE.ImageUtils.loadTexture( './images/spherical/e_chrome.jpg');

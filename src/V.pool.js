@@ -1,3 +1,7 @@
+/**
+ * @author loth / http://lo-th.github.io/labs/
+ */
+
 V.SeaPool = function(){
     this.meshes = {};
 }
@@ -42,8 +46,10 @@ V.TransGeo = function(g, noBuffer){
     //g.colorsNeedUpdate = true;
 
     g.computeFaceNormals();
+    //g.normalizeNormals();
     g.computeVertexNormals(true);
     g.computeTangents() ;
+
 
     //console.log(g.hasTangents) 
 

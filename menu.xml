@@ -11,23 +11,24 @@
 	<demo n='demo_1' lib=''></demo>
 </rubrique>
 <rubrique n='games'>
-	<demo n='demo_0' lib='sea3d|gui'></demo>
-	<demo n='demo_1' lib='sea3d|gui|rot|tween'></demo>
-	<demo n='demo_2' lib='sea3d|tween'></demo>
+	<demo n='city' lib='sea3d|gui'></demo>
+	<demo n='dungeon' lib='sea3d|gui|rot|tween'></demo>
+	<demo n='third_person' lib='sea3d|tween'></demo>
 </rubrique>	
 <rubrique n='shaders'>
-	<demo n='demo_0' lib='sea3d|gui'></demo>
-	<demo n='demo_1' lib='sea3d|gui'></demo>
-	<demo n='demo_2' lib='sea3d|gui'></demo>
-	<demo n='demo_3' lib='sea3d|gui'></demo>
-	<demo n='demo_4' lib='sea3d|gui'></demo>
+	<demo n='basic' lib='sea3d|gui'></demo>
+	<demo n='xray' lib='sea3d|gui'></demo>
+	<demo n='fansy' lib='sea3d|gui'></demo>
+	<demo n='parallax' lib='sea3d|gui'></demo>
+	<demo n='spherical' lib='sea3d|gui'></demo>
+	<demo n='shadowmap' lib='sea3d|gui'></demo>
 </rubrique>	
 <rubrique n='experiments'>
 	<demo n='demo_0' lib='serious'></demo>
 </rubrique>
 <rubrique n='others'>
-	<demo n='demo_0' lib='gui'></demo>
-	<demo n='demo_1' lib=''></demo>
-	<demo n='cool'   lib=''></demo>
+	<demo n='liquid' lib='gui'></demo>
+	<demo n='crowd_test' lib=''></demo>
+	<demo n='metaball' lib=''></demo>
 </rubrique>
 </menu>

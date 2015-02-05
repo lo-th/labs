@@ -1,4 +1,7 @@
-
+/**
+ * @author loth / http://lo-th.github.io/labs/
+ */
+ 
 V.Particle = function(parent, obj){
     this.root = parent;
     var r = obj.radius || 0.25;

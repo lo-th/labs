@@ -1,3 +1,7 @@
+/**
+ * @author loth / http://lo-th.github.io/labs/
+ */
+
 var dat;
 
 V.Gui = function(isWithModel){

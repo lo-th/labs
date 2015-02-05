@@ -5,6 +5,7 @@
 	<demo n='demo_0' lib=''></demo>
 	<demo n='demo_1' lib=''></demo>
 	<demo n='demo_2' lib=''></demo>
+	<demo n='demo_3' lib=''></demo>
 </rubrique>
 <rubrique n='physics-3d'>
 	<demo n='demo_0' lib=''></demo>

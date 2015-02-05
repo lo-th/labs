@@ -19,7 +19,7 @@ function loop(){
 }
 
 function onShader(){
-	console.log('shader loaded');
+	//console.log('shader loaded');
 	var env = new V.Environment();
 	env.add(v.postEffect.meta);
 	var i = 200;

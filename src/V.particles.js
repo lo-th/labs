@@ -4,16 +4,22 @@
  
 V.Particle = function(parent, obj){
     this.root = parent;
-    var r = obj.radius || 0.25;
-    this.geometry = new THREE.Geometry();
-    this.material = new THREE.PointCloudMaterial( { size:r*2, sizeAttenuation: true, map:this.makeSprite(), transparent: true} )
-    this.particles = new THREE.PointCloud( this.geometry, this.material );
-    this.particles.sortParticles = true;
-    this.particles.dynamic = true;
-    var n = obj.n || 0;
-    var i = n;
-    while(i--) this.addV();
-    this.root.scene.add( this.particles );
+    this.mode = this.root.renderMode;
+    this.radius = obj.radius || 0.25;
+
+    if(this.mode == 'metaball'){
+        this.particles = [];
+    }else{
+        this.geometry = new THREE.Geometry();
+        this.material = new THREE.PointCloudMaterial( { size:this.radius*4, sizeAttenuation: true, map:this.makeSprite(), transparent: true} )
+        this.particles = new THREE.PointCloud( this.geometry, this.material );
+        this.particles.sortParticles = true;
+        this.particles.dynamic = true;
+        var n = obj.n || 0;
+        var i = n;
+        while(i--) this.addV();
+        this.root.scene.add( this.particles );
+    }
 }
 V.Particle.prototype = {
     constructor: V.Particle,
@@ -35,29 +41,37 @@ V.Particle.prototype = {
         return tx;
     },
     getLength:function(){
-        return this.particles.geometry.vertices.length;
+        if(this.mode == 'metaball') return this.particles.length;
+        else return this.particles.geometry.vertices.length;
     },
     addNum:function(n){
-        
         var i = n;
         while(i--) this.addV();
-        this.update()
-        //console.log(n,this.particles.geometry.vertices.length )
+        if(this.mode !== 'metaball')this.update();
     },
     addV : function (x,y,z) {
-        var v = new THREE.Vector3(x||0,y||0,z||0);
-        this.particles.geometry.vertices.push( v );
-        this.particles.geometry.dispose();
+        var vec = new THREE.Vector3(x||0,y||0,z||0);
+        if(this.mode == 'metaball'){
+            this.particles.push(v.addBlob(vec, this.radius*4, true));
+        }else{ 
+            this.particles.geometry.vertices.push( vec );
+            this.particles.geometry.dispose();
+        }
     },
     move : function(n, x, y, z){
-        if(this.geometry.vertices[n]){
-            this.geometry.vertices[n].x = x || 0;
-            this.geometry.vertices[n].y = y || 0;
-            this.geometry.vertices[n].z = z || 0;
+        if(this.mode == 'metaball'){
+            this.particles[n].position.set(x,y,z);
+            this.particles[n].update(this.root.nav.camera.rotation);
+        }else{
+            if(this.geometry.vertices[n]){
+                this.geometry.vertices[n].x = x || 0;
+                this.geometry.vertices[n].y = y || 0;
+                this.geometry.vertices[n].z = z || 0;
+            }
         }
     },
     update : function(){
-        this.geometry.verticesNeedUpdate = true;
+        if(this.mode !== 'metaball')this.geometry.verticesNeedUpdate = true;
     }
 }
 

@@ -32,6 +32,7 @@ V.MeshList = [ 'plane', 'sphere', 'skull', 'skullhigh', 'head', 'woman', 'babe']
 V.Main = null;
 
 V.View = function(h,v,d){
+    this.renderMode = '';
     window.top.main.previewTheme();
     this.dimentions = {w:window.innerWidth,  h:window.innerHeight, r:window.innerWidth/window.innerHeight };
 
@@ -115,11 +116,12 @@ V.View.prototype = {
         this.gui = new V.Gui(isWithModel);
     },
     ssao:function(adv){
+        this.renderMode = 'ssao';
         this.postEffect = new V.PostEffect(this,'ssao', adv);
     },
     metaball:function(callback){
+        this.renderMode = 'metaball';
         this.sceneBlob = new THREE.Scene();
-        //this.sceneTop = new THREE.Scene();
         this.postEffect = new V.PostEffect(this,'metaball', false, callback);
     },
     deformSsao:function( g, map ){
@@ -196,9 +198,10 @@ V.View.prototype = {
     tell:function(s){
         this.info.innerHTML = s;
     },
-    addBlob:function(position, radius){
+    addBlob:function(position, radius, isForParticle){
         var b = new V.Blob(this, position, radius);
-        this.meshs[this.meshs.length] = b;
+        if(isForParticle) return b;
+        else this.meshs[this.meshs.length] = b;
     },
     add:function(obj){
         var m = new THREE.Mesh( this.geo[obj.type||'box'], this.mat[obj.mat||'base2'] );

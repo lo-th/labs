@@ -1,4 +1,4 @@
-var v = new V.View(-90, 45, 130);
+var v = new V.View(-90, 25, 50);
 v.tell('The base');
 v.addWorker('liquid', onWorker);
 var select = null;
@@ -14,16 +14,14 @@ function loop(){
 
 function onWorker(){
 	
-	var w = 50/2;
-    var h = 50/2;
+	var w = 25/2;
+    var h = 25/2;
 
-	v.chaine({ points:[-w,h, w,h, w,-h, -w,-h], close:true });
-
-	v.addParticle({ radius:0.5});
+	v.chaine({ points:[-w,h, w,h, w*0.25,-h, -w*0.25,-h], close:true });
+	v.addParticle({ radius:0.25, g_radius:7});
 }
 
-function mainMove
-(){
+function mainMove(){
 	if (select) {
 		select.position.set(v.nav.mouse3d.x, 0, v.nav.mouse3d.z);
 		v.upAnchor(select);

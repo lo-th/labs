@@ -1,11 +1,11 @@
-var v = new V.View(-90, 45, 130);
+var v = new V.View(-90, 25, 50);
 v.tell('The base');
-v.addWorker('liquid', onWorker);
+v.metaball(onShader);
+
 var select = null;
 v.zone();
 v.z.scale.set(300,1,300);
 //v.z.visible = true;
-
 loop();
 
 function loop(){
@@ -13,24 +13,20 @@ function loop(){
     requestAnimationFrame( loop );
 }
 
-function onWorker(){
-
-	var w = 100/2;
-    var h = 50/2;
-
-	v.chaine({ points:[ -w,h,  w,h, w,-h, -w,-h   ], close:true });
-
-	var x,y;
-	var sx,sy,sz;
-	for(var i = 0; i<300; i++){
-		sx = V.rand(1, 2);
-		sz = V.rand(1, 2);
-		x = V.rand(-20, 20);
-		y = V.rand(-20, 20);
-		v.add({type:'box', mass:1, pos:[x, 0.5, y], size:[sx,1,sz]});
-	}
+function onShader(){
+	var env = new V.Environment();
+	env.add(v.postEffect.meta);
+	v.addWorker('liquid', onWorker);
 }
 
+function onWorker(){
+	
+	var w = 25/2;
+    var h = 25/2;
+
+	v.chaine({ points:[-w,h, w,h, w*0.25,-h, -w*0.25,-h], close:true });
+	v.addParticle({ radius:0.4, g_radius:10});
+}
 
 function mainMove(){
 	if (select) {

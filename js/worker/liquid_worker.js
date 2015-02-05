@@ -1,10 +1,11 @@
 'use strict';
 importScripts('../../js/libs/liquidfun.js');
+var Wscale = 10;
 
 var f = [0,0,0,0];
-var ar;
-var pr;
-var prn;
+var ar;// body position
+var pr;// particle position
+var prn;// number of particule
 var dr = [];
 var drn = [];
 var drc = [];// close or not
@@ -26,7 +27,7 @@ self.onmessage = function(e) {
 	if(m==='run'){
 		ar = e.data.ar;
 		pr = e.data.pr;
-		prn = e.data.prn;
+		//prn = e.data.prn;
 		dr = e.data.dr;
 		//if(drn !== e.data.drn){ 
 		drn=e.data.drn; 
@@ -36,7 +37,10 @@ self.onmessage = function(e) {
 		
 		//sim.updateDecal();
 		//	 }
-		if(world==null) sim.init(e.data);
+		if(world==null) {
+			sim.init(e.data);
+			prn = e.data.prn;
+		}
 		else sim.isWorld = true;
 		
 		if(sim.step !== undefined) sim.step();
@@ -46,11 +50,12 @@ self.onmessage = function(e) {
 
 	    self.postMessage({ w:sim.isWorld, fps:f[3], ar:ar, pr:pr, prn:prn },[ar.buffer, pr.buffer]);
 	}
-	//
-	
 }
 
 var W = {};
+
+W.SCALE = 10;
+W.INV_SCALE = 1/W.SCALE;
 
 W.Sim = function(){
 	this.p = 4; // precission
@@ -75,8 +80,10 @@ W.Sim.prototype = {
 	step:function(){
 		var p = this.p, d = this.d, i, id, b, pos, id2;
 		world.Step(d[0], d[1], d[2]);
+		//i = world.bodies.length;//
 		i = this.bodys.length;
 		while(i--){
+			//b = world.bodies[i];
 			b = this.bodys[i];
 			pos = b.GetPosition();
 			id=i*4;
@@ -102,36 +109,36 @@ W.Sim.prototype = {
             if(impulse.Length() < 10) b.SetLinearVelocity(impulse);
             //if(impulse.Length() < 10) b.ApplyForceToCenter(impulse, true);*/
 
-            ar[id] = pos.x.toFixed(p)*1;
-			ar[id+1] = pos.y.toFixed(p)*1;
+            ar[id] = pos.x.toFixed(p)*W.SCALE;
+			ar[id+1] = pos.y.toFixed(p)*W.SCALE;
 			ar[id+2] = -b.GetAngle().toFixed(p)*1;
 
-            oldPos[id2] = ar[id];//pos.x;
-            oldPos[id2+1] = ar[id+1];//pos.y;
+            oldPos[id2] = pos.x;
+            oldPos[id2+1] = pos.y;
 
 
 			//ar[id+3] = b.IsActive();
 
 
 		}
-		// draw particle systems
+		// PARTICLE SYSTEME
 		var ps, p;
-		for (var i = 0, max = world.particleSystems.length; i < max; i++) {
-			ps = world.particleSystems[i];
-	        var p = ps.GetPositionBuffer();
-		    var color = ps.GetColorBuffer();
-		    prn[i] = p.length*0.5;
-		    var maxParticles = p.length, transform = new b2Transform(); 
+		//i = world.particleSystems.length;
+		i = this.ps.length;
+		while(i--){
+			//ps = world.particleSystems[i];
+			ps = this.ps[i];
+	        pos = ps.GetPositionBuffer();
+		    var transform = new b2Transform();
 		    transform.SetIdentity();
-		    for (var j = 0, c = 0; j < maxParticles; j += 2, c += 4) {
-		    	pr[j] = p[j];
-		    	pr[j+1] = p[j+1];
-		       // console.log(ps.radius, p[i], p[i + 1], color[c] * inv255, color[c + 1] * inv255, color[c + 2] * inv255, 3);
+		    var j = prn[i];
+		    while(j--){
+	            id = 2*j;
+		    	pr[id] = pos[id].toFixed(p)*W.SCALE;
+		    	pr[id+1] = pos[id+1].toFixed(p)*W.SCALE;
 		    }
 	    }
 
-
-		
 	},
 	clear:function(){
 	    if (world !== null){
@@ -156,7 +163,7 @@ W.Sim.prototype = {
         fixtureDef.filter.maskBits = obj.config[3] || this.groups[0];
 
         var bodyDef = new b2BodyDef();
-	    bodyDef.position = new b2Vec2(pos[0], pos[2]);
+	    bodyDef.position = new b2Vec2(pos[0]*W.INV_SCALE, pos[2]*W.INV_SCALE);
 	    bodyDef.allowSleep = obj.canSleep || false;
 	    bodyDef.awake = true;
 	    bodyDef.bullet = obj.bullet || false; // prevented from tunneling
@@ -165,11 +172,11 @@ W.Sim.prototype = {
 	    bodyDef.type = fixtureDef.density <= 0.0 ? b2_staticBody : b2_dynamicBody;
 	    
 	    var shape;
-	    if(type==="edge" || type==="line"){shape = new b2EdgeShape; shape.Set(new b2Vec2(size[0], size[1]), new b2Vec2(size[2], size[3])); }
-	    if(type==="box"){shape = new b2PolygonShape; shape.SetAsBoxXY(size[0]*0.5, size[2]*0.5);}
-	    if(type==="poly"){shape = new b2PolygonShape; for(var i=0; i<midd; i++){ shape.vertices.push(new b2Vec2(size[i*2], size[(i*2)+1])); }  }
-	    if(type==="chaine"){shape = new b2ChainShape; for(var i=0; i<midd; i++){ shape.vertices.push(new b2Vec2(size[i*2], size[(i*2)+1])); } shape.CreateLoop();  }
-	    if(type==="circle" || type==="cylinder" || type==="sphere"){shape = new b2CircleShape; shape.radius = size[0]; }
+	    if(type==="edge" || type==="line"){shape = new b2EdgeShape; shape.Set(new b2Vec2(size[0]*W.INV_SCALE, size[1]*W.INV_SCALE), new b2Vec2(size[2]*W.INV_SCALE, size[3]*W.INV_SCALE)); }
+	    if(type==="box"){shape = new b2PolygonShape; shape.SetAsBoxXY((size[0]*W.INV_SCALE)*0.5, (size[2]*W.INV_SCALE)*0.5);}
+	    if(type==="poly"){shape = new b2PolygonShape; for(var i=0; i<midd; i++){ shape.vertices.push(new b2Vec2(size[i*2]*W.INV_SCALE, size[(i*2)+1]*W.INV_SCALE)); }  }
+	    if(type==="chaine"){shape = new b2ChainShape; for(var i=0; i<midd; i++){ shape.vertices.push(new b2Vec2(size[i*2]*W.INV_SCALE, size[(i*2)+1]*W.INV_SCALE)); } shape.CreateLoop();  }
+	    if(type==="circle" || type==="cylinder" || type==="sphere"){shape = new b2CircleShape; shape.radius = size[0]*W.INV_SCALE; }
 
 	    // init shape
 	    fixtureDef.shape = shape;
@@ -184,22 +191,27 @@ W.Sim.prototype = {
 	// PARTICLES
 	addParticle:function(obj){
 		var id = obj.id || this.ps.length;
+		var radius = obj.radius || 0.25;
 		var systemDef = new b2ParticleSystemDef();
-	    systemDef.radius = obj.radius || 0.25;
+	    systemDef.radius = radius*W.INV_SCALE;
 	    systemDef.dampingStrength = obj.damping || 0.2;
 	    this.ps[id] = world.CreateParticleSystem(systemDef);
 	    obj.id = id;
 
-	    this.addGroupe(obj);
+	    this.addGroup(obj);
 	},
-	addGroupe:function(obj){
+	addGroup:function(obj){
+		var pos = obj.pos || {x:0, y:0, z:0};
+		var g_radius = obj.g_radius || 6;
 	    var circle = new b2CircleShape();
-	    circle.position.Set(0, 0);
-	    circle.radius = 6;
+	    circle.position.Set( pos.x*W.INV_SCALE , pos.z*W.INV_SCALE );
+	    circle.radius = g_radius*W.INV_SCALE;
 	    var pgd = new b2ParticleGroupDef();
 	    pgd.shape = circle;
 	    pgd.color.Set(255, 0, 0, 255);
 	    this.ps[obj.id].CreateParticleGroup(pgd);
+	    prn[obj.id] = this.ps[obj.id].GetParticleCount()*0.5;
+	    console.log(prn[obj.id]);
 	},
 	addP:function(obj){
 	   /* var shape = new b2CircleShape;
@@ -253,7 +265,7 @@ W.Sim.prototype = {
         var j = 0
         for(var i=start; i<end; i++ ){
         	h = i*2;
-        	vertices[j] = new b2Vec2( dr[h], dr[h+1] );
+        	vertices[j] = new b2Vec2( dr[h]*W.INV_SCALE, dr[h+1]*W.INV_SCALE );
         	j++;
         }
         // close shape 
@@ -278,47 +290,3 @@ W.Sim.prototype = {
 }
 
 sim = new W.Sim();
-
-
-
-/*
-Q.addParticule = function (){
-    var systemDef = new b2ParticleSystemDef();
-    systemDef.radius = 0.25;//025;
-    systemDef.dampingStrength = 0.2;
-
-    particleSystem = world.CreateParticleSystem(systemDef);
-    pGroup = new b2ParticleGroupDef();
-   // pd.shape = shape;
-    //var group = particleSystem.CreateParticleGroup(pd);
-}
-
-Q.addP = function(obj){
-    //var shape = new b2CircleShape;
-    //shape.position = new b2Vec2(obj.pos[0], obj.pos[1]);
-    //shape.radius = 0.25/4;//obj.size[0];
-    var pd = new b2ParticleDef(); //b2ParticleGroupDef;
-    //pd.flags =  b2_elasticParticle;//b2_viscousParticle
-    pd.position = new b2Vec2(obj.pos[0], obj.pos[1]);//.Set(obj.pos[0], obj.pos[1]);
-    //pd.group = pGroup
-    //pd.shape = shape;
-    particleSystem.CreateParticle(pd)
-  //  var group = particleSystem.CreateParticleGroup(pd);
-    //
-//this.particleSystem.DestroyParticlesInShape(shape, xf);
-
-}*/
-
-/*Q.addParticule();
-
-    var i = data.blobsN;
-    while(i--){
-        s = data.blobsSize[i];
-        x = -2 + Math.random()*4;
-        y = -2 + Math.random()*4;
-        Q.addP({size:[s], pos:[x,y]})
-    }
-
-    var count = particleSystem.GetParticleCount();
-    console.log(count)
-*/

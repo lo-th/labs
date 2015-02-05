@@ -30,7 +30,7 @@ V.Worker = function(parent, name){
             max = 1000;
             max2 = 100;
             max3 = 10;
-            max4 = 1000;
+            max4 = 8000;
             nValue = 4;
             nValue2 = 2;
             this.update = this.upLiquid;
@@ -56,9 +56,9 @@ V.Worker = function(parent, name){
     this.ar = new V.AR32(max*nValue);
     this.dr = new V.AR32(max2*nValue2);
     this.pr = new V.AR32(max4*nValue2);
-    this.drn = new V.AR8(max3);
-    this.drc = new V.AR8(max3);
-    this.prn = new V.AR8(max3);
+    this.drn = new V.AR32(max3);
+    this.drc = new V.AR32(max3);
+    this.prn = new V.AR32(max3);
 
     
     

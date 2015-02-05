@@ -8,6 +8,7 @@ V.Particle = function(parent, obj){
     this.radius = obj.radius || 0.25;
 
     if(this.mode == 'metaball'){
+        this.rotation = this.root.nav.camera.rotation;
         this.particles = [];
     }else{
         this.geometry = new THREE.Geometry();
@@ -61,7 +62,7 @@ V.Particle.prototype = {
     move : function(n, x, y, z){
         if(this.mode == 'metaball'){
             this.particles[n].position.set(x,y,z);
-            this.particles[n].update(this.root.nav.camera.rotation);
+            this.particles[n].update(this.rotation);//this.root.nav.camera.rotation);
         }else{
             if(this.geometry.vertices[n]){
                 this.geometry.vertices[n].x = x || 0;

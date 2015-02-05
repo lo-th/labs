@@ -20,12 +20,10 @@ function onShader(){
 }
 
 function onWorker(){
-	
-	var w = 25/2;
-    var h = 25/2;
-
-	v.chaine({ points:[-w,h, w,h, w*0.25,-h, -w*0.25,-h], close:true });
-	v.addParticle({ radius:0.4, g_radius:10});
+	var w = 25*0.5;
+    var h = 25*0.5;
+	v.chaine({ points:[ w,h, w*0.25,-h, -w*0.25,-h, -w,h], close:false });
+	v.addParticle({ radius:0.4, g_radius:10, pos:[0, 0, 20]});
 }
 
 function mainMove(){

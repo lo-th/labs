@@ -201,10 +201,10 @@ W.Sim.prototype = {
 	    this.addGroup(obj);
 	},
 	addGroup:function(obj){
-		var pos = obj.pos || {x:0, y:0, z:0};
+		var pos = obj.pos || [0,0,0];//{x:0, y:0, z:0};
 		var g_radius = obj.g_radius || 6;
 	    var circle = new b2CircleShape();
-	    circle.position.Set( pos.x*W.INV_SCALE , pos.z*W.INV_SCALE );
+	    circle.position.Set( pos[0]*W.INV_SCALE , pos[2]*W.INV_SCALE );
 	    circle.radius = g_radius*W.INV_SCALE;
 	    var pgd = new b2ParticleGroupDef();
 	    pgd.shape = circle;

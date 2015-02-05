@@ -77,7 +77,10 @@ V.PostEffect.prototype = {
                 var h = this.root.dimentions.h;
                 this.glowParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, stencilBufer: false };
                 
-                
+                this.rootTarget = new THREE.WebGLRenderTarget(  w, h, this.glowParameters );
+                this.renderModelRoot = new THREE.RenderPass( this.root.scene, this.root.nav.camera );
+                this.rootcomposer = new THREE.EffectComposer( this.root.renderer, this.rootTarget );
+                this.rootcomposer.addPass( this.renderModelRoot );
 
                 this.glowTargetxy = new THREE.WebGLRenderTarget(  w, h, this.glowParameters );
                 this.renderModelGlowxy = new THREE.RenderPass( this.root.sceneBlob, this.root.nav.camera, this.blobxy );
@@ -92,6 +95,7 @@ V.PostEffect.prototype = {
                 this.renderTarget = new THREE.WebGLRenderTarget(w, h, this.glowParameters );
 
                 this.meta = new THREE.ShaderPass( this.metaball );
+                this.meta.uniforms.mapping.value = this.rootcomposer.renderTarget2;
                 this.meta.uniforms.tDiffuseXY.value = this.glowcomposerxy.renderTarget2;
                 this.meta.uniforms.tDiffuseMin.value = this.glowcomposer.renderTarget2;
                 this.meta.uniforms.size.value.set( w, h );
@@ -141,6 +145,7 @@ V.PostEffect.prototype = {
             var i = R.meshs.length, m
             while(i--){ m=R.meshs[i]; if(m.type=='BLOB') m.update(r); }
             //R.scene.overrideMaterial = this.blobmin;
+            this.rootcomposer.render();
             this.glowcomposerxy.render();
             this.glowcomposer.render();
             //

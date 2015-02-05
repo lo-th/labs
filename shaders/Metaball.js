@@ -16,7 +16,9 @@ seriousMap:  { type:'t', value: null },
 seriousType : { type:'i', value:0 },
 seriousSize : { type:'v2', value: new THREE.Vector2(1024,1024) },
 
-useLight :   { type:'i', value: 0 },
+useBlur :   { type:'i', value: 1 },
+
+useLight :   { type:'i', value: 1 },
 lightColor:  { type:'c', value: new THREE.Color(0x323436) },
 lightOrbit:  { type:'v3', value: new THREE.Vector3(-45,45,60)},
 lightAnim :  { type:'v2', value: new THREE.Vector2(0.0,0.0) },
@@ -36,7 +38,7 @@ size:        { type:'v2', value: new THREE.Vector2(512,512) },
 mapSize:     { type:'v2', value: new THREE.Vector2(1024,1024) },
 mapType:     { type:'i', value: 1 },
 
-reflectionFactor: { type:'f', value: 1.0 },
+reflectionFactor: { type:'f', value: 0.6 },
 refractionRatio: { type:'f', value: 0.98 }
 },
 fs: [
@@ -53,6 +55,7 @@ fs: [
 'uniform vec2 seriousSize;',
 
 'uniform int mapType;',
+'uniform int useBlur;',
 
 'uniform float reflectionFactor;',
 'uniform float refractionRatio;',
@@ -100,10 +103,17 @@ fs: [
 '}',
 
 'void main() {',
-'    vec2 b = vec2(1.0/size.x, 1.0/size.y);',
-//'    vec4 texel = blurred(tDiffuse, vUv, b);',
-'    vec4 texel = blurred(tDiffuseXY, vUv, b);',
-'    vec4 texelMin = blurred(tDiffuseMin, vUv, b);',
+'    vec2 b;',
+'    vec4 texel;',
+'    vec4 texelMin;',
+'    if(useBlur == 1){',
+'        b = vec2(1.0/size.x, 1.0/size.y);',
+'        texel = blurred(tDiffuseXY, vUv, b);',
+'        texelMin = blurred(tDiffuseMin, vUv, b);',
+'    } else {',
+'        texel = texture2D(tDiffuseXY, vUv);',
+'        texelMin = texture2D(tDiffuseMin, vUv);',
+'    }',
 '    float aspR = size.x/size.y;',
 '    vec2 uvMap = (vUv);',
 '    vec4 map;',
@@ -158,6 +168,7 @@ fs: [
 '	     reflectMap = texture2D( env, calculatedNormal );',
 '    }',
 
+'    vec4 baseScene = texture2D( mapping, vUv );',
 '    vec4 refractColor = vec4(refractMap.xyz*a, 1.0*a);',
 '    vec4 reflectColor = vec4(reflectMap.xyz*a, 1.0*a);',
 
@@ -165,7 +176,8 @@ fs: [
 '	     gl_FragColor = vec4(map.xyz*(1.0-a), map.a*(1.0-a));',
 '	     gl_FragColor += mix( refractColor, reflectColor, clamp( reflectionFactor, 0.0, 1.0 ) );',
 '    }else{',
-'	     gl_FragColor = mix( refractColor, reflectColor, clamp( reflectionFactor, 0.0, 1.0 ) );',
+'        gl_FragColor = baseScene;',
+'	     gl_FragColor += mix( refractColor, reflectColor, clamp( reflectionFactor, 0.0, 1.0 ) );',
 '    }',
 
 '    if( useLight == 1 ) {',
@@ -210,7 +222,7 @@ fs: [
 //'	     vec4 old = gl_FragColor;',
 //'	     gl_FragColor = mix( old, topmap, topmap.a );', 
 //'    }',
-//'     gl_FragColor=reflectColor;',
+//'     gl_FragColor = texture2D( mapping, vUv );',
 '}'
 ].join('\n'),
 vs: [

@@ -12,7 +12,7 @@ V.Particle = function(parent, obj){
         this.particles = [];
     }else{
         this.geometry = new THREE.Geometry();
-        this.material = new THREE.PointCloudMaterial( { size:this.radius*4, sizeAttenuation: true, map:this.makeSprite(), transparent: true} )
+        this.material = new THREE.PointCloudMaterial( { size:this.radius*3.5, sizeAttenuation: true, map:this.makeSprite(), transparent: true, alphaTest : 0.6  } )//depthTest:true, depthWrite:false
         this.particles = new THREE.PointCloud( this.geometry, this.material );
         this.particles.sortParticles = true;
         this.particles.dynamic = true;
@@ -28,15 +28,18 @@ V.Particle.prototype = {
         var canvas = document.createElement('canvas');
         canvas.width=canvas.height=32;
 
-        var context = canvas.getContext('2d');
+        var ctx = canvas.getContext('2d');
         var centerX = canvas.width * 0.5;
         var centerY = canvas.height * 0.5;
         var radius = 16;
 
-        context.beginPath();
-        context.fillStyle = '#FF0000';
-        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-        context.fill();
+        ctx.beginPath();
+        var grd=ctx.createRadialGradient(centerX,centerX,5,centerX,centerX,radius);
+        grd.addColorStop(0,"#FFFFFF");
+        grd.addColorStop(1,"#DDDDDD");
+        ctx.fillStyle = grd;//'#FFFFFF';
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+        ctx.fill();
         var tx = new THREE.Texture(canvas);
         tx.needsUpdate = true;
         return tx;

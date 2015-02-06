@@ -237,7 +237,8 @@ V.View.prototype = {
     	mat['none'] = new THREE.MeshBasicMaterial( { transparent:true, opacity:0, fog:false, depthTest:false, depthWrite:false});
         mat['zone'] = new THREE.MeshBasicMaterial( { color:0X00FF00, transparent:true, opacity:0.1, fog:false, depthTest:false, depthWrite:false});
     	mat['base'] = new THREE.MeshBasicMaterial( { color:0X000000 });
-        mat['anchor'] = new THREE.MeshBasicMaterial( { color:0XFF3300 });
+        mat['anchor'] = new THREE.MeshBasicMaterial( { color:0XFF0073 });
+        mat['chaine'] = new THREE.LineBasicMaterial({ color: 0xFF0073, transparent:true, opacity:0.3 });
         mat['Sanchor'] = new THREE.MeshBasicMaterial( { color:0XFFFFFF });
         mat['base2'] = new THREE.MeshBasicMaterial( { color:0X00FF00, map:THREE.ImageUtils.loadTexture( 'images/grid1.jpg' ) });
     	this.mat = mat;
@@ -257,7 +258,6 @@ V.View.prototype = {
     chaine:function(obj){
         var close = obj.close || false;
         var id = this.lines.length;
-        var material = new THREE.LineBasicMaterial({ color: 0xFF6611 });
         var geometry = new THREE.Geometry();
         var l = obj.points.length*0.5, n, pos;
         for(var i=0; i<l; i++){
@@ -267,7 +267,7 @@ V.View.prototype = {
             this.addAnchor(pos, id, i, close);
         }
         if(obj.close) geometry.vertices.push(new THREE.Vector3(obj.points[0], 0, obj.points[1]));
-        var line = new THREE.Line(geometry, material);
+        var line = new THREE.Line(geometry, this.mat.chaine);
         this.scene.add(line);
         //line.geometry.dynamic = true;
 
@@ -276,7 +276,8 @@ V.View.prototype = {
         if(this.w) this.w.chaine(obj);
     },
     addAnchor:function(p, id, n, closed){
-        var m = new THREE.Mesh(this.geo.box, this.mat.anchor);
+        var m = new THREE.Mesh(this.geo.sphere, this.mat.anchor);
+        m.scale.set(0.5, 0.5, 0.5);
         m.position.copy(p);
         if(closed) m.name = 'ca'+id+'_'+n;
         else m.name = 'oa'+id+'_'+n;

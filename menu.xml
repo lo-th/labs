@@ -2,14 +2,14 @@
 <!-- LOTH MAIN MENU -->
 <menu>
 <rubrique n='physics-2d'>
-	<demo n='demo_0' lib=''></demo>
-	<demo n='demo_1' lib=''></demo>
-	<demo n='demo_2' lib=''></demo>
-	<demo n='demo_3' lib=''></demo>
+	<demo n='base_box' lib=''></demo>
+	<demo n='base_circle' lib=''></demo>
+	<demo n='base_particle' lib=''></demo>
+	<demo n='adv_liquid' lib=''></demo>
 </rubrique>
 <rubrique n='physics-3d'>
-	<demo n='demo_0' lib=''></demo>
-	<demo n='demo_1' lib=''></demo>
+	<demo n='base_box' lib=''></demo>
+	<demo n='base_sphere' lib=''></demo>
 </rubrique>
 <rubrique n='games'>
 	<demo n='city' lib='sea3d|gui'></demo>

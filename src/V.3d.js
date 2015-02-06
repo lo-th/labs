@@ -1,6 +1,9 @@
-/**
- * @author loth / http://lo-th.github.io/labs/
- */
+/**   _     _   _     
+*    | |___| |_| |__
+*    | / _ \  _|    |
+*    |_\___/\__|_||_|
+*    @author LoTh / http://lo-th.github.io/labs/
+*/
 
 var canvas, info, debug;
 var THREE, mainClick, mainDown, mainUp, mainMove, mainRay, v, shader;
@@ -203,6 +206,21 @@ V.View.prototype = {
         if(isForParticle) return b;
         else this.meshs[this.meshs.length] = b;
     },
+    addSolid:function(obj){
+        var m = new THREE.Mesh( this.geo[obj.type||'box'], this.mat.solid );
+        
+        obj.pos = obj.pos || [0,0,0];
+        obj.size = obj.size || [1,1,1];
+        m.scale.set(obj.size[0],obj.size[1],obj.size[2]);
+        m.position.set(obj.pos[0],obj.pos[1],obj.pos[2]);
+        m.rotation.set(0,0,0);
+        //m.geometry.computeBoundingBox();
+        this.scene.add(m);
+        //m.visible = false;
+        var g = new THREE.BoxHelper(m);
+        g.material = this.mat.chaine;
+        this.scene.add(g);
+    },
     add:function(obj){
         var m = new THREE.Mesh( this.geo[obj.type||'box'], this.mat[obj.mat||'base2'] );
         obj.pos = obj.pos || [0,0,0];
@@ -241,6 +259,7 @@ V.View.prototype = {
         mat['chaine'] = new THREE.LineBasicMaterial({ color: 0xFF0073, transparent:true, opacity:0.3 });
         mat['Sanchor'] = new THREE.MeshBasicMaterial( { color:0XFFFFFF });
         mat['base2'] = new THREE.MeshBasicMaterial( { color:0X00FF00, map:THREE.ImageUtils.loadTexture( 'images/grid1.jpg' ) });
+        mat['solid'] = new THREE.MeshBasicMaterial( { color:0XFF0073, transparent:true, opacity:0.1,  depthWrite:false });
     	this.mat = mat;
     },
     addWorker:function(name, fun){

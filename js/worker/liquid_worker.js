@@ -1,6 +1,5 @@
 'use strict';
 importScripts('../../js/libs/liquidfun.js');
-var Wscale = 10;
 
 var f = [0,0,0,0];
 var ar;// body position

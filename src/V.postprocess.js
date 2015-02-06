@@ -1,6 +1,9 @@
-/**
- * @author loth / http://lo-th.github.io/labs/
- */
+/**   _     _   _     
+*    | |___| |_| |__
+*    | / _ \  _|    |
+*    |_\___/\__|_||_|
+*    @author LoTh / http://lo-th.github.io/labs/
+*/
 
 V.PostEffect = function(parent, name, adv, callback){
     this.shaderLoaded = 0;

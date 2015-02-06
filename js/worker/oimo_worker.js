@@ -44,7 +44,7 @@ W.Sim.prototype = {
 		this.d = data.d || [0.01667, 8, 2];
 		world = new OIMO.World( this.d[0], this.d[2], this.d[1] );
 		world.gravity = new OIMO.Vec3(0, -10, 0);
-		world.worldscale(1);
+		world.worldscale(10);
 	},
 	step:function(){
 		var p = this.p, i, id, b, pos, quat;
@@ -71,12 +71,19 @@ W.Sim.prototype = {
 	clear:function(){
 		world.clear();
 	},
-	room:function (s){
-		new OIMO.Body({ type:'box', size:[s.w,s.m,s.d], pos:[ 0,-s.m*0.5, 0      ], world:world });
+	room:function (obj){
+		var s = obj.size;
+		var p = obj.pos;
+		var id, n = obj.n;
+		while(n--){
+			id = n*3;
+			new OIMO.Body({ type:'box', size:[s[id],s[id+1],s[id+2]], pos:[p[id],p[id+1],p[id+2]], world:world });
+		}
+		/*new OIMO.Body({ type:'box', size:[s.w,s.m,s.d], pos:[ 0,-s.m*0.5, 0      ], world:world });
 		new OIMO.Body({ type:"box", size:[s.w,s.h,s.m], pos:[ 0, s.h*0.5,-s.d*0.5], world:world });
 	    new OIMO.Body({ type:"box", size:[s.w,s.h,s.m], pos:[ 0, s.h*0.5, s.d*0.5], world:world });
 	    new OIMO.Body({ type:"box", size:[s.m,s.h,s.d], pos:[-s.w*0.5, s.h*0.5,0 ], world:world });
-	    new OIMO.Body({ type:"box", size:[s.m,s.h,s.d], pos:[ s.w*0.5, s.h*0.5,0 ], world:world });
+	    new OIMO.Body({ type:"box", size:[s.m,s.h,s.d], pos:[ s.w*0.5, s.h*0.5,0 ], world:world });*/
 	},
 	add:function(obj){
 		obj.world = world;

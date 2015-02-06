@@ -1,6 +1,9 @@
-/**
- * @author loth / http://lo-th.github.io/labs/
- */
+/**   _     _   _     
+*    | |___| |_| |__
+*    | / _ \  _|    |
+*    |_\___/\__|_||_|
+*    @author LoTh / http://lo-th.github.io/labs/
+*/
 
 V.Worker = function(parent, name){
     this.name = name;
@@ -177,6 +180,29 @@ V.Worker.prototype = {
     },
     postOimo:function(){
         this.w.postMessage({m:'run', m2:this.msg, drn:this.drn, drc:this.drc, ar:this.ar, dr:this.dr},[this.ar.buffer]);
+    },
+    room:function (o){
+        var wpos = (o.h*0.5)-o.m;
+        var s = [
+            o.w-o.m,o.m,o.d-o.m,
+            o.w+o.m,o.h,o.m,  
+            o.w+o.m,o.h,o.m,  
+            o.m,o.h,o.d-o.m,  
+            o.m,o.h,o.d-o.m
+        ];
+        var p = [ 
+            0,-o.m*0.5,0,
+            0, wpos,-o.d*0.5,
+            0, wpos, o.d*0.5,
+            -o.w*0.5, wpos,0,
+            o.w*0.5, wpos,0
+        ];
+        this.w.postMessage({m:'room', obj:{n:5, size:s, pos:p} });
+        var n = 5, id;
+        while(n--){
+            id = n*3;
+            v.addSolid({ type:'box', size:[s[id],s[id+1],s[id+2]], pos:[p[id],p[id+1],p[id+2]] });
+        }
     },
 
 

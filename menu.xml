@@ -27,8 +27,8 @@
 	<demo n='shadowmap' lib='sea3d|gui'></demo>
 </rubrique>	
 <rubrique n='experiments'>
-	<demo n='demo_0' lib='serious'></demo>
 	<demo n='terrain' lib='terrain'></demo>
+	<demo n='demo_0' lib='serious'></demo>
 </rubrique>
 <rubrique n='others'>
 	<demo n='liquid' lib='gui'></demo>

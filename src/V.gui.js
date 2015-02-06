@@ -57,7 +57,9 @@ V.Environment.prototype = {
         canvas.width = canvas.height = 64;
         env.appendChild( canvas );
         this.envcontext = canvas.getContext('2d');
-        env.onclick = function(){this.load()}.bind(this);
+        //env.onclick = function(){this.load()}.bind(this);
+        env.onmousedown = function(){this.load()}.bind(this);
+        env.onmouseup = function(){window.top.focus();};
         document.body.appendChild( env );
         this.load();
     },
@@ -75,6 +77,7 @@ V.Environment.prototype = {
             while(i--){if(this.shaders[i].isActive) this.shaders[i].uniforms.env.value = this.environment;}
         }.bind(this);
         img.src = 'images/spherical/'+this.envLists[this.nEnv];
+        
     },
     add:function(mat){
         this.shaders.push(mat);

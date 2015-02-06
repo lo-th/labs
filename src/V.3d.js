@@ -450,6 +450,8 @@ V.Nav.prototype = {
         if (typeof mainDown == 'function') { mainDown(); }
         e.preventDefault();
         e.stopPropagation();
+        //document.body.contentEditable=true
+        window.top.focus();
     },
     onMouseUp:function(e){
         this.mouse.down = false;
@@ -505,6 +507,7 @@ V.Nav.prototype = {
     // ACTIVE KEYBOARD
     bindKeys:function(){
         window.top.onkeydown = function(e) {
+        //window.top.onkeydown = function(e) {
             e = e || window.event;
             switch ( e.keyCode ) {
                 case 38: case 87: case 90: this.key.up = 1;     break; // up, W, Z
@@ -518,6 +521,7 @@ V.Nav.prototype = {
             }
         }.bind(this);
         window.top.onkeyup = function(e) {
+       // window.top.onkeyup = function(e) {
             e = e || window.event;
             switch( e.keyCode ) {
                 case 38: case 87: case 90: this.key.up = 0;     break; // up, W, Z

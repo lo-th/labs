@@ -4,7 +4,8 @@ v.nav.bindKeys();
 var key;
 var x = 0;
 var y = 0;
-
+var env = new V.Environment();
+var envUp = false;
 var terrain = new TERRAIN.Generate(v)
 
 loop();
@@ -13,6 +14,7 @@ function loop(){
     key = v.nav.key;
     requestAnimationFrame( loop );
     if(terrain.fullLoaded){
+        if(!envUp) addEnv();
         if (key.up) {x++; up();}
         if (key.down) {x--; up();}
         if (key.left) {y++; up();}
@@ -23,4 +25,9 @@ function loop(){
 
 function up(){
     terrain.move(x,y, v.clock.getDelta());
+}
+
+function addEnv(){
+    envUp = true;
+    env.add(terrain.mlib.terrain);
 }

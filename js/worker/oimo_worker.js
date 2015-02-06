@@ -36,6 +36,9 @@ W.Sim = function(){
 	this.groups = [0xffffffff, 1 << 0, 1 << 1, 1 << 2];
     this.isWorld = false;
     this.bodys = [];
+
+    this.start_blob = -1;
+    this.end_blob = -1;
 }
 
 W.Sim.prototype = {
@@ -60,11 +63,13 @@ W.Sim.prototype = {
 				ar[id+1] = pos.x.toFixed(p)*1;
 				ar[id+2] = pos.y.toFixed(p)*1;
 				ar[id+3] = pos.z.toFixed(p)*1;
-				quat = b.getQuaternion();
-				ar[id+4] = quat.x.toFixed(p)*1;
-				ar[id+5] = quat.y.toFixed(p)*1;
-				ar[id+6] = quat.z.toFixed(p)*1;
-				ar[id+7] = quat.w.toFixed(p)*1;	
+				if(id < this.start_blob || id > this.end_blob){
+					quat = b.getQuaternion();
+					ar[id+4] = quat.x.toFixed(p)*1;
+					ar[id+5] = quat.y.toFixed(p)*1;
+					ar[id+6] = quat.z.toFixed(p)*1;
+					ar[id+7] = quat.w.toFixed(p)*1;	
+				}
 			}
 		}
 	},
@@ -79,16 +84,18 @@ W.Sim.prototype = {
 			id = n*3;
 			new OIMO.Body({ type:'box', size:[s[id],s[id+1],s[id+2]], pos:[p[id],p[id+1],p[id+2]], world:world });
 		}
-		/*new OIMO.Body({ type:'box', size:[s.w,s.m,s.d], pos:[ 0,-s.m*0.5, 0      ], world:world });
-		new OIMO.Body({ type:"box", size:[s.w,s.h,s.m], pos:[ 0, s.h*0.5,-s.d*0.5], world:world });
-	    new OIMO.Body({ type:"box", size:[s.w,s.h,s.m], pos:[ 0, s.h*0.5, s.d*0.5], world:world });
-	    new OIMO.Body({ type:"box", size:[s.m,s.h,s.d], pos:[-s.w*0.5, s.h*0.5,0 ], world:world });
-	    new OIMO.Body({ type:"box", size:[s.m,s.h,s.d], pos:[ s.w*0.5, s.h*0.5,0 ], world:world });*/
 	},
 	add:function(obj){
+		var id = this.bodys.length;
 		obj.world = world;
 		obj.move = true;
-		this.bodys[this.bodys.length] = new OIMO.Body(obj);
+		if(obj.type=='blob'){
+			if(this.start_blob==-1) this.start_blob=id;
+			this.end_blob = id;
+		    obj.type = 'sphere';
+		}
+		this.bodys[id] = new OIMO.Body(obj);
+
 	}
 }
 

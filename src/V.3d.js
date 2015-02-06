@@ -53,6 +53,8 @@ V.View = function(h,v,d){
     this.z = null;
 
     this.scene = new THREE.Scene();
+    this.sceneBlob = new THREE.Scene();
+
     this.nav = new V.Nav(this,h,v,d);
     this.base = new THREE.Group();
     this.content = new THREE.Group();
@@ -124,7 +126,6 @@ V.View.prototype = {
     },
     metaball:function(callback){
         this.renderMode = 'metaball';
-        this.sceneBlob = new THREE.Scene();
         this.postEffect = new V.PostEffect(this,'metaball', false, callback);
     },
     deformSsao:function( g, map ){
@@ -207,30 +208,34 @@ V.View.prototype = {
         else this.meshs[this.meshs.length] = b;
     },
     addSolid:function(obj){
-        var m = new THREE.Mesh( this.geo[obj.type||'box'], this.mat.solid );
-        
+        var m = new THREE.Mesh( this.geo[obj.type||'box'], this.mat.base );
         obj.pos = obj.pos || [0,0,0];
         obj.size = obj.size || [1,1,1];
         m.scale.set(obj.size[0],obj.size[1],obj.size[2]);
         m.position.set(obj.pos[0],obj.pos[1],obj.pos[2]);
         m.rotation.set(0,0,0);
-        //m.geometry.computeBoundingBox();
         this.scene.add(m);
-        //m.visible = false;
+        m.visible = false;
         var g = new THREE.BoxHelper(m);
-        g.material = this.mat.chaine;
+        g.material = this.mat[obj.mat||'chaine']
         this.scene.add(g);
     },
     add:function(obj){
-        var m = new THREE.Mesh( this.geo[obj.type||'box'], this.mat[obj.mat||'base2'] );
+        var m;
         obj.pos = obj.pos || [0,0,0];
         obj.size = obj.size || [1,1,1];
-        m.scale.set(obj.size[0],obj.size[1],obj.size[2]);
-        m.position.set(obj.pos[0],obj.pos[1],obj.pos[2]);
-        m.rotation.set(0,0,0);
-        this.scene.add(m);
+        if(obj.type=='blob'){
+            var position = new THREE.Vector3(obj.pos[0],obj.pos[1],obj.pos[2])
+            m = new V.Blob(this, position, obj.size[0]*4);
+            this.sceneBlob.add(m);
+        }else{
+            m = new THREE.Mesh( this.geo[obj.type||'box'], this.mat[obj.mat||'base2'] );
+            m.scale.set(obj.size[0],obj.size[1],obj.size[2]);
+            m.position.set(obj.pos[0],obj.pos[1],obj.pos[2]);
+            m.rotation.set(0,0,0);
+            this.scene.add(m);
+        }
         this.meshs[this.meshs.length] = m;
-
         if(this.w) this.w.add(obj);
     },
     addParticle:function(obj){
@@ -259,7 +264,7 @@ V.View.prototype = {
         mat['chaine'] = new THREE.LineBasicMaterial({ color: 0xFF0073, transparent:true, opacity:0.3 });
         mat['Sanchor'] = new THREE.MeshBasicMaterial( { color:0XFFFFFF });
         mat['base2'] = new THREE.MeshBasicMaterial( { color:0X00FF00, map:THREE.ImageUtils.loadTexture( 'images/grid1.jpg' ) });
-        mat['solid'] = new THREE.MeshBasicMaterial( { color:0XFF0073, transparent:true, opacity:0.1,  depthWrite:false });
+        mat['solid'] = new THREE.MeshBasicMaterial( { color:0XFF0073, transparent:true, opacity:0.05,  depthWrite:false });
     	this.mat = mat;
     },
     addWorker:function(name, fun){
@@ -349,19 +354,20 @@ V.Blob = function(parent, position, radius){
 }
 V.Blob.prototype = Object.create( THREE.Object3D.prototype );
 V.Blob.prototype.constructor = V.Blob;
-V.Blob.prototype._updateMatrix = V.Blob.prototype.updateMatrix;
-V.Blob.prototype.updateMatrix = function() {
-    console.log('up')
+//V.Blob.prototype._updateMatrix = V.Blob.prototype.updateMatrix;
+/*V.Blob.prototype.updateMatrix = function() {
+  //  console.log('up')
   this._updateMatrix();
   if (this.customMatrix != null)
     this.matrix.multiply(this.customMatrix);
-};
+};*/
 V.Blob.prototype.clear = function(){
     this.root.sceneBlob.remove( this.s1 );
 }
 V.Blob.prototype.update = function (r) {
     this.s1.position.copy(this.position);
-    this.s1.rotation.copy(r);
+    //this.s1.rotation.copy(r);
+    this.s1.quaternion.copy(r);
 }
 
 

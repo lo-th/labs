@@ -144,7 +144,7 @@ V.PostEffect.prototype = {
         }
         if(this.name == 'metaball'){
 
-            var r = R.nav.camera.rotation;
+            var r = R.nav.camera.quaternion;
             var i = R.meshs.length, m
             while(i--){ m=R.meshs[i]; if(m.type=='BLOB') m.update(r); }
             //R.scene.overrideMaterial = this.blobmin;

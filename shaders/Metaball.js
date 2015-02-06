@@ -18,7 +18,7 @@ seriousSize : { type:'v2', value: new THREE.Vector2(1024,1024) },
 
 useBlur :   { type:'i', value: 1 },
 
-useLight :   { type:'i', value: 1 },
+useLight :   { type:'i', value: 0 },
 lightColor:  { type:'c', value: new THREE.Color(0x323436) },
 lightOrbit:  { type:'v3', value: new THREE.Vector3(-45,45,60)},
 lightAnim :  { type:'v2', value: new THREE.Vector2(0.0,0.0) },

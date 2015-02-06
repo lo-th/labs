@@ -63,8 +63,6 @@ V.Worker = function(parent, name){
     this.drc = new V.AR32(max3);
     this.prn = new V.AR32(max3);
 
-    
-    
     this.d = [16.667, 0, 0];
     this.isReady = false;
     this.fps = 0;
@@ -171,7 +169,7 @@ V.Worker.prototype = {
             id = i*8;
             if(this.ar[id]){
                 m[i].position.set( this.ar[id+1], this.ar[id+2], this.ar[id+3] );
-                m[i].quaternion.set( this.ar[id+4], this.ar[id+5], this.ar[id+6], this.ar[id+7] );
+                if(m.type!=='BLOB') m[i].quaternion.set( this.ar[id+4], this.ar[id+5], this.ar[id+6], this.ar[id+7] );
             }
         }
 
@@ -198,11 +196,10 @@ V.Worker.prototype = {
             o.w*0.5, wpos,0
         ];
         this.w.postMessage({m:'room', obj:{n:5, size:s, pos:p} });
-        var n = 5, id;
-        while(n--){
-            id = n*3;
-            v.addSolid({ type:'box', size:[s[id],s[id+1],s[id+2]], pos:[p[id],p[id+1],p[id+2]] });
-        }
+                
+        v.addSolid({ type:'box', size:[o.w-o.m,o.h-o.m,o.d-o.m], pos:[ 0,wpos+o.m*0.5,0] });
+        v.addSolid({ type:'box', size:[o.w+o.m,o.h,o.d+o.m], pos:[ 0,wpos,0]});
+        
     },
 
 

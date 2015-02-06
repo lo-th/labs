@@ -11,7 +11,7 @@ V.Particle = function(parent, obj){
     this.radius = obj.radius || 0.25;
 
     if(this.mode == 'metaball'){
-        this.rotation = this.root.nav.camera.rotation;
+        this.rotation = this.root.nav.camera.quaternion;
         this.particles = [];
     }else{
         this.geometry = new THREE.Geometry();

@@ -1,6 +1,6 @@
 var timedEffects = [];
 var isSerious = false;
-var noiseTexture, seriously, simplex, noiseTarget;
+var noiseTexture, seriously, simplex, noiseTarget, glitch, chroma, vignette;
 var v = new V.View(110, 65, 130);
 v.tell('seriously');
 v.pool.load('tv', onload);
@@ -15,30 +15,6 @@ function loop(){
     }
     v.renderer.setRenderTarget(noiseTexture);
     v.render();
-}
-
-function onload(){
-    var m = v.pool.meshes.tv;
-    m.tv.scale.set(4,4,-4);
-    m.screen.scale.set(4,4,-4);
-    m.border.scale.set(4,4,-4);
-
-    var cc = new THREE.Group();
-    cc.add(m.tv);
-    cc.add(m.screen);
-    cc.add(m.border);
-
-    cc.position.y = -10;
-
-    v.scene.add(cc);
-
-    var tx = THREE.ImageUtils.loadTexture( 'images/tv.jpg')
-    tx.flipY = false;
-    m.tv.material = new THREE.MeshBasicMaterial( { map:tx });
-    m.border.material = new THREE.MeshBasicMaterial( { color:0x292421 });
-    m.screen.material = new THREE.MeshBasicMaterial( { color:0XFFFFFF });
-
-    initSerious(m.screen.material);
 }
 
 function initSerious(mat){
@@ -56,8 +32,40 @@ function initSerious(mat){
     simplex.noiseScale = 30;
     timedEffects.push(simplex);
 
+    vignette = seriously.effect('vignette');
+    vignette.source = simplex;
+
+    //chroma = seriously.effect('chroma');
+    //chroma.source = reformat;
+
+    glitch = seriously.effect('tvglitch');
+    glitch.verticalSync = 0;
+    glitch.source = vignette;
+    timedEffects.push(glitch)
+
     noiseTarget = seriously.target(noiseTexture, { canvas:v.canvas });
-    noiseTarget.source = simplex;
+    noiseTarget.source = glitch;
 
     seriously.go();
+}
+
+function onload(){
+    var m = v.pool.meshes.tv;
+    m.tv.scale.set(4,4,-4);
+    m.screen.scale.set(4,4,-4);
+    m.border.scale.set(4,4,-4);
+
+    var cc = new THREE.Group();
+    cc.add(m.tv);
+    cc.add(m.screen);
+    cc.add(m.border);
+    cc.position.y = -10;
+    v.scene.add(cc);
+
+    var tx = THREE.ImageUtils.loadTexture( 'images/tv.jpg')
+    tx.flipY = false;
+    m.tv.material = new THREE.MeshBasicMaterial( { map:tx });
+    m.border.material = new THREE.MeshBasicMaterial( { color:0x292421 });
+    m.screen.material = new THREE.MeshBasicMaterial( { color:0XFFFFFF });
+    initSerious(m.screen.material);
 }

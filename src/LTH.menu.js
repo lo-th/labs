@@ -5,6 +5,7 @@ LTH.logoTimer = null;
 
 LTH.Menu = function(main){
 	this.baseColor = "d2cec8";
+	this.baseColorOver = "FF0073";
 	this.main = main;
 	this.doc = document;
 
@@ -63,6 +64,54 @@ LTH.Menu.prototype = {
 		this.logo.onmousedown = function(e){ this.initHome(e); }.bind(this);
 		this.logo.onmouseover = function(e){ if(!this.isHome) this.title.innerHTML = 'BACK HOME'; }.bind(this);
 		this.logo.onmouseout = function(e){ if(!this.isHome) this.title.innerHTML = LTH.rubriques[LTH.cRubr].toUpperCase(); }.bind(this);
+
+		this.miniLogos();
+	},
+	miniLogos:function(){
+		this.micrologo = this.doc.createElement('div');
+		this.micrologo.className = 'minilogoOut';
+		this.content.appendChild( this.micrologo );
+		this.iconsOut = [];
+		var i = 4;
+		while(i--){
+			this.iconsOut[i] = this.doc.createElement('div');
+			this.iconsOut[i].className = 'mmmlogo';
+			this.iconsOut[i].name = i;
+			var iner = document.createElement('div');
+			iner.style.cssText = 'position:relative; left:0px; top:0px; width:36px; height:36px; pointer-events:none;';
+			this.iconsOut[i].appendChild( iner );
+			iner.innerHTML = LTH.IconMini(this.baseColor, i);
+			//this.iconsOut[i].type="button";
+			this.iconsOut[i].onclick = function(e){ this.openLink(e.target.name) }.bind(this);
+			this.iconsOut[i].onmouseover = function(e){ 
+				var child = this.iconsOut[e.target.name].childNodes;
+				child[0].innerHTML = LTH.IconMini(this.baseColorOver, e.target.name); 
+			}.bind(this);
+			this.iconsOut[i].onmouseout = function(e){ 
+				var child = this.iconsOut[e.target.name].childNodes;
+				child[0].innerHTML = LTH.IconMini(this.baseColor, e.target.name);
+			}.bind(this);
+			this.micrologo.appendChild( this.iconsOut[i] );
+		}
+		this.micrologo.style.display = 'none';
+	},
+	redrawMini:function(){
+		var i = 4;
+		while(i--){
+			this.iconsOut[i].childNodes[0].innerHTML = LTH.IconMini(this.baseColor, i);
+		}
+	},
+	openLink:function(n){
+		var url;
+		switch(n){
+			case 0: url = 'https://twitter.com/3dflashlo'; break;
+			case 1: url = 'https://github.com/lo-th'; break;
+			case 2: url = 'https://plus.google.com/u/0/114170447432405103307'; break;
+			case 3: url = 'https://www.linkedin.com/pub/lo-th/27/202/b3/en'; break;
+			case 4: url = 'https://www.facebook.com/laurent.thillet'; break;
+		}
+		var win = window.open(url, '_blank');
+		win.focus();
 	},
 	stopBlink:function(){
 		clearTimeout(LTH.logoTimer);
@@ -82,6 +131,8 @@ LTH.Menu.prototype = {
 		this.content.className = 'menu home';
 
 		this.blinkOpen(this);
+
+		this.micrologo.style.display = 'block';
 
 		this.main.shader.clear();
 		if(this.isMenu) this.resetMenu();
@@ -107,6 +158,7 @@ LTH.Menu.prototype = {
 	},
 	resetHome:function(e){
 		this.stopBlink();
+		this.micrologo.style.display = 'none';
 
 		LTH.cRubr = e.target.name;
 		this.clearDiv(this.home);
@@ -225,6 +277,7 @@ LTH.Menu.prototype = {
 		}
 		this.resetIcon(true);
 		this.main.switchStyle();
+		this.redrawMini();
 	},
 	verticlaHorizon:function(){
 		if(this.main.viewType=='vertical'){

@@ -164,3 +164,11 @@ html, body {
     -o-transition: 0.2s ease-out;
     transition: 0.2s ease-out;
 }
+
+.minilogoOut{
+	position:absolute; right:25px; top:25px; width:220px; height:36px; text-align: right; pointer-events:none;
+}
+
+.mmmlogo{
+	width:36px; height:36px; display:inline-block; margin-left:6px; pointer-events:auto;
+}

@@ -1,5 +1,5 @@
 var v = new V.View(90, 45, 130);
-v.tell('infinite terrain<br><br> Move with keyboard');
+v.tell('infinite terrain<br><br>Move with keyboard<br>Shift to run');
 v.nav.bindKeys();
 var key;
 var x = 0;

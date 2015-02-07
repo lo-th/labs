@@ -1,10 +1,14 @@
 /**
  * @author loth / http://lo-th.github.io/labs/
  */
+LTH.logoTimer = null;
 
 LTH.Menu = function(main){
+	this.baseColor = "d2cec8";
 	this.main = main;
 	this.doc = document;
+
+	//this.logoTimer = null;
 
 	this.content = this.doc.createElement('div');
 	this.content.className = 'menu';
@@ -50,7 +54,7 @@ LTH.Menu.prototype = {
 		this.logo = this.doc.createElement('div');
 		this.logo.className = 'logo';
 		this.content.appendChild( this.logo );
-		this.logo.innerHTML = LTH.Logos('d2cec8');
+		this.logo.innerHTML = LTH.Logos(this.baseColor);
 		this.title = this.doc.createElement('div');
 		this.title.innerHTML = 'LOTH LABS';
 		this.title.className = 'title';
@@ -60,10 +64,25 @@ LTH.Menu.prototype = {
 		this.logo.onmouseover = function(e){ if(!this.isHome) this.title.innerHTML = 'BACK HOME'; }.bind(this);
 		this.logo.onmouseout = function(e){ if(!this.isHome) this.title.innerHTML = LTH.rubriques[LTH.cRubr].toUpperCase(); }.bind(this);
 	},
+	stopBlink:function(){
+		clearTimeout(LTH.logoTimer);
+		this.logo.innerHTML = LTH.Logos(this.baseColor);
+	},
+	blinkOpen:function(t){
+	    t.logo.innerHTML = LTH.Logos(t.baseColor, false);
+	    LTH.logoTimer = setTimeout(t.blinkClose, 3000, t);
+	},
+	blinkClose:function(t){
+		t.logo.innerHTML = LTH.Logos(t.baseColor, true); 
+		LTH.logoTimer = setTimeout( t.blinkOpen, 150, t);
+	},
 	initHome:function(){
 		this.doc.body.onmousemove = function(e){return false;};
 	
 		this.content.className = 'menu home';
+
+		this.blinkOpen(this);
+
 		this.main.shader.clear();
 		if(this.isMenu) this.resetMenu();
 		if(this.isHome) return;
@@ -87,6 +106,8 @@ LTH.Menu.prototype = {
 		this.isHome = true;
 	},
 	resetHome:function(e){
+		this.stopBlink();
+
 		LTH.cRubr = e.target.name;
 		this.clearDiv(this.home);
 		this.content.removeChild(this.home);
@@ -97,6 +118,7 @@ LTH.Menu.prototype = {
 		e.preventDefault();
 	},
 	resetMenu:function(){
+
 		this.main.editor.clear();
 		if(this.main.mode==='shader'){
 			this.main.editorVertex.clear();
@@ -224,20 +246,24 @@ LTH.Menu.prototype = {
 	},
 	isDay:function(){
 		//this.img2.src = './images/logo_w.gif';
-		this.logo.innerHTML = LTH.Logos('25292e');
+		this.baseColor = "25292e";
+		this.logo.innerHTML = LTH.Logos(this.baseColor);
 		this.main.day = true;
 		this.main.mainClass = 'day';
 		this.doc.body.className = 'day';
+		
 		this.colorSelect = '#25292e';
 		this.colorOver = 'rgba(0,0,0,0.3)';
 	},
 	isNight:function (){
 		//this.img2.src = './images/logo.gif';
-		this.logo.innerHTML = LTH.Logos('d2cec8');
+		this.baseColor = "d2cec8";
+		this.logo.innerHTML = LTH.Logos(this.baseColor);
 		this.main.day = false;
 		this.main.mainClass = 'night';
 		this.doc.body.className = 'night';
 		this.colorSelect = '#d2cec8';
+		
 		this.colorOver = 'rgba(255,255,255,0.3)';
 	},
 	zoneDragOver:function(){

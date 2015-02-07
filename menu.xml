@@ -28,7 +28,7 @@
 </rubrique>	
 <rubrique n='experiments'>
 	<demo n='terrain' lib='terrain|gui'></demo>
-	<demo n='demo_0' lib='serious'></demo>
+	<demo n='seriously' lib='sea3d|serious'></demo>
 </rubrique>
 <rubrique n='others'>
 	<demo n='liquid' lib='gui'></demo>

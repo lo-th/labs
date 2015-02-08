@@ -546,6 +546,12 @@ V.Nav.prototype = {
         if (r > 180) r -= 360;
         if (r < -180) r += 360;
         return r;
+    },
+    unwrapRadian : function(r){
+        r = r % V.TwoPI;
+        if (r > Math.PI) r -= V.TwoPI;
+        if (r < -Math.PI) r += V.TwoPI;
+        return r;
     }
 }
 

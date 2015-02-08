@@ -1,18 +1,14 @@
 var timedEffects = [];
 var isSerious = false;
-var noiseTexture, seriously, simplex, noiseTarget, glitch, chroma, vignette;
+var noiseTexture, seriously, simplex, noiseTarget, glitch, chroma, vignette, blend;
 var b1, b2, actif = '', prevy=0, prevr = 0;
-var v = new V.View(110, 65, 130);
-v.tell('seriously');
+var v = new V.View(110, 65, 100);
+v.tell('seriously<br><br>Move tv button bro !');
 v.pool.load('tv', onload);
 
-
-
-v.zone({s:200, type:'plane', pos:[19,12.5,10]});
-v.zone({s:10, type:'plane', pos:[19,17.5,14]});
-v.zone({s:10, type:'plane', pos:[19,7.5,14]});
-
-
+v.zone({s:200, type:'plane', pos:[19,8.5,10]});
+v.zone({s:10, type:'plane', pos:[19,13.5,14]});
+v.zone({s:10, type:'plane', pos:[19,3.5,14]});
 
 loop();
 
@@ -41,8 +37,6 @@ function initSerious(mat){
     simplex.noiseScale = 30;
     timedEffects.push(simplex);
 
-    
-
     var reformat = seriously.transform('reformat');
 	reformat.width = 1024;
 	reformat.height = 800;
@@ -59,10 +53,17 @@ function initSerious(mat){
     glitch = seriously.effect('tvglitch');
     glitch.verticalSync = 0;
     glitch.source = vignette;
-    timedEffects.push(glitch)
+    timedEffects.push(glitch);
+
+    blend = seriously.effect('blend');
+    blend.bottom = simplex;
+	blend.top = glitch;
+	blend.opacity = 0;
+	blend.mode = 'blend';
+
 
     noiseTarget = seriously.target(noiseTexture, { canvas:v.canvas });
-    noiseTarget.source = glitch;
+    noiseTarget.source = blend;
 
     seriously.go();
 }
@@ -79,7 +80,7 @@ function onload(){
     cc.add(m.screen);
     cc.add(m.border);
     cc.add(m.ground);
-    cc.position.y = -10;
+    cc.position.y = -14;
     v.scene.add(cc);
 
     var tx = THREE.ImageUtils.loadTexture( 'images/tv.jpg');
@@ -111,7 +112,7 @@ function importImage(url, dest){
 function mainDown(){
 	down = true;
 	if(v.nav.selectName == 'zone1'){ actif = 'b1'; prevy=v.nav.mouse3d.y; prevr=b1.rotation.y; }
-	else if(v.nav.selectName == 'zone2'){ actif = 'b2'; prevy=v.nav.mouse3d.y; prevr=b1.rotation.y; }
+	else if(v.nav.selectName == 'zone2'){ actif = 'b2'; prevy=v.nav.mouse3d.y; prevr=b2.rotation.y; }
 	else actif = '';
 
 	if(actif!=='') v.nav.mouse.move = false;
@@ -121,8 +122,13 @@ function mainDown(){
 function mainMove(){
 	if (actif!=='') {
 		var r = ((v.nav.mouse3d.y-prevy)*5)*V.ToRad;
-		if(actif == 'b1') b1.rotation.y = r + prevr;
-		if(actif == 'b2') b2.rotation.y = r + prevr;
+		if(actif == 'b1') {b1.rotation.y = r + prevr; blend.opacity = V.abs(v.nav.unwrapRadian(b1.rotation.y)*0.5);}
+		if(actif == 'b2') {
+			b2.rotation.y = r + prevr;
+			var val = V.abs(v.nav.unwrapRadian(b2.rotation.y)*0.5);
+			glitch.distortion = val;
+			glitch.verticalSync = val;
+		}
 	}
 }
 

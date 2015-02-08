@@ -1,6 +1,7 @@
 var timedEffects = [];
 var isSerious = false;
 var noiseTexture, seriously, simplex, noiseTarget, glitch, chroma, vignette;
+var b1, b2;
 var v = new V.View(110, 65, 130);
 v.tell('seriously');
 v.pool.load('tv', onload);
@@ -54,18 +55,31 @@ function onload(){
     m.tv.scale.set(4,4,-4);
     m.screen.scale.set(4,4,-4);
     m.border.scale.set(4,4,-4);
+    m.ground.scale.set(4,4,-4);
 
     var cc = new THREE.Group();
     cc.add(m.tv);
     cc.add(m.screen);
     cc.add(m.border);
+    cc.add(m.ground);
     cc.position.y = -10;
     v.scene.add(cc);
 
-    var tx = THREE.ImageUtils.loadTexture( 'images/tv.jpg')
+     
+
+    var tx = THREE.ImageUtils.loadTexture( 'images/tv.jpg');
+    var tx2 = THREE.ImageUtils.loadTexture( 'images/tvground.jpg');
     tx.flipY = false;
-    m.tv.material = new THREE.MeshBasicMaterial( { map:tx });
+    tx2.flipY = false;
+
+    var tvmat = new THREE.MeshBasicMaterial( { map:tx });
+    m.tv.material = tvmat;
+    b1 = m.tv.children[1];
+    b2 = m.tv.children[0];
+    b1.material = tvmat;
+    b2.material = tvmat;
     m.border.material = new THREE.MeshBasicMaterial( { color:0x292421 });
     m.screen.material = new THREE.MeshBasicMaterial( { color:0XFFFFFF });
+    m.ground.material = new V.Shader('MapShad', {tmap:tx2});
     initSerious(m.screen.material);
 }

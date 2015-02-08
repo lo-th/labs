@@ -8,9 +8,8 @@ var ball = new THREE.Mesh( new THREE.SphereGeometry(2,12,10), new THREE.MeshBasi
 v.scene.add(ball);
 ball.position.x=20;
 
-v.zone();
-v.z.scale.set(300,1,300);
-//v.z.visible = true;
+v.zone({s:300});
+
 loop();
 
 function loop(){

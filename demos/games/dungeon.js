@@ -110,8 +110,9 @@ V.Map.prototype = {
 	constructor: V.Map,
 	init:function(){
 		this.clear();
-		v.z.scale.set(this.size.w,1,this.size.h);
-		v.z.position.set(this.size.w*0.5,0,this.size.h*0.5);
+		
+		v.zones[0].scale.set(this.size.w,1,this.size.h);
+		v.zones[0].position.set(this.size.w*0.5,0,this.size.h*0.5);
 
 		this.map = new V.AR8(this.size.w*this.size.h);
 		this.depth = new V.AR8(this.size.w*this.size.h);

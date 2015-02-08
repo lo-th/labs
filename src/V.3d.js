@@ -51,6 +51,7 @@ V.View = function(h,v,d){
     this.clock = new THREE.Clock();
 
     this.z = null;
+    this.zones = [];
 
     this.scene = new THREE.Scene();
     this.sceneBlob = new THREE.Scene();
@@ -145,14 +146,19 @@ V.View.prototype = {
     colorBack:function(c){
     	if(this.postEffect!==null) this.renderer.setClearColor( c, 1 );
     },
-    zone:function(){
-        this.z = new THREE.Mesh( this.geo.ground, this.mat.zone );
-        this.z.name = 'zone';
-        this.z.scale.set(1,1,1);
-        this.z.visible=false;
-        this.base.add(this.z);
+    zone:function(obj){
+        obj = obj || {};
+        var id = this.zones.length;
+        var p = obj.pos || [0,0,0];
+        var s = obj.s || 1;
+        var m = new THREE.Mesh( this.geo[obj.type || 'ground'], this.mat.zone );
+        m.name = 'zone' + id;
+        m.scale.set(s,s,s);
+        m.position.set(p[0], p[1], p[2]);
+        m.visible= obj.v || false;
+        this.base.add(m);
+        this.zones[id] = m;
     },
-    
     addModel:function(mat){
         if(this.basic!==null){ this.scene.remove(this.basic); }
         if(this.model==='plane'){

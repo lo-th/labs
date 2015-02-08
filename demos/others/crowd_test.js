@@ -4,9 +4,7 @@ v.tell('crowd simulation<br><br>click to add agent !');
 var ball = new THREE.Mesh( new THREE.SphereGeometry(2,12,10), new THREE.MeshBasicMaterial({color:0xFF3300}));
 v.scene.add(ball);
 
-v.zone();
-v.z.scale.set(500,1,500);
-//v.z.visible = true;
+v.zone({s:500});
 
 v.addWorker('crowd', onWorker);
 loop();

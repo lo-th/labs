@@ -2,9 +2,7 @@ var v = new V.View(-90, 45, 130);
 v.tell('The base');
 v.addWorker('liquid', onWorker);
 var select = null;
-v.zone();
-v.z.scale.set(300,1,300);
-//v.z.visible = true;
+v.zone({s:300});
 
 loop();
 

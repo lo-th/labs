@@ -3,9 +3,7 @@ v.tell('The base');
 v.metaball(onShader);
 
 var select = null;
-v.zone();
-v.z.scale.set(300,1,300);
-//v.z.visible = true;
+v.zone({s:300});
 loop();
 
 function loop(){

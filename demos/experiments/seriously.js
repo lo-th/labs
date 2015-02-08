@@ -1,10 +1,18 @@
 var timedEffects = [];
 var isSerious = false;
 var noiseTexture, seriously, simplex, noiseTarget, glitch, chroma, vignette;
-var b1, b2;
+var b1, b2, actif = '', prevy=0, prevr = 0;
 var v = new V.View(110, 65, 130);
 v.tell('seriously');
 v.pool.load('tv', onload);
+
+
+
+v.zone({s:200, type:'plane', pos:[19,12.5,10]});
+v.zone({s:10, type:'plane', pos:[19,17.5,14]});
+v.zone({s:10, type:'plane', pos:[19,7.5,14]});
+
+
 
 loop();
 
@@ -33,8 +41,17 @@ function initSerious(mat){
     simplex.noiseScale = 30;
     timedEffects.push(simplex);
 
-    vignette = seriously.effect('vignette');
-    vignette.source = simplex;
+    
+
+    var reformat = seriously.transform('reformat');
+	reformat.width = 1024;
+	reformat.height = 800;
+	reformat.mode = 'distort';
+	importImage('mire.jpg', reformat);
+
+
+	vignette = seriously.effect('vignette');
+    vignette.source = reformat;
 
     //chroma = seriously.effect('chroma');
     //chroma.source = reformat;
@@ -65,8 +82,6 @@ function onload(){
     cc.position.y = -10;
     v.scene.add(cc);
 
-     
-
     var tx = THREE.ImageUtils.loadTexture( 'images/tv.jpg');
     var tx2 = THREE.ImageUtils.loadTexture( 'images/tvground.jpg');
     tx.flipY = false;
@@ -82,4 +97,36 @@ function onload(){
     m.screen.material = new THREE.MeshBasicMaterial( { color:0XFFFFFF });
     m.ground.material = new V.Shader('MapShad', {tmap:tx2});
     initSerious(m.screen.material);
+}
+
+function importImage(url, dest){
+	var img = document.createElement("IMG");
+	img.src = "images/"+url;
+	img.onload = function(e){  
+		//return img;
+		dest.source = img;
+	}
+}
+
+function mainDown(){
+	down = true;
+	if(v.nav.selectName == 'zone1'){ actif = 'b1'; prevy=v.nav.mouse3d.y; prevr=b1.rotation.y; }
+	else if(v.nav.selectName == 'zone2'){ actif = 'b2'; prevy=v.nav.mouse3d.y; prevr=b1.rotation.y; }
+	else actif = '';
+
+	if(actif!=='') v.nav.mouse.move = false;
+	else v.nav.mouse.move = true;
+}
+
+function mainMove(){
+	if (actif!=='') {
+		var r = ((v.nav.mouse3d.y-prevy)*5)*V.ToRad;
+		if(actif == 'b1') b1.rotation.y = r + prevr;
+		if(actif == 'b2') b2.rotation.y = r + prevr;
+	}
+}
+
+function mainUp(){
+	actif='';
+	v.nav.mouse.move = true;
 }

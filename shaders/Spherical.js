@@ -8,6 +8,8 @@ uniforms:{
     useRim: {type: 'f', value: 0.5},
     rimPower: {type: 'f', value: 2},
     useExtraRim: {type: 'i', value: 0},
+    repeat:{type:'v2', value:new THREE.Vector2(1.0,1.0) },
+    reflection: {type: 'f', value: 1.0},
 },
 fs:[
 'uniform sampler2D env;',
@@ -18,6 +20,8 @@ fs:[
 'uniform float useRim;',
 'uniform float rimPower;',
 'uniform int useExtraRim;',
+'uniform vec2 repeat;',
+'uniform float reflection;',
 
 //'uniform vec3 color;',
 'varying vec2 vN;',
@@ -41,8 +45,8 @@ THREE.ShaderChunk[ "logdepthbuf_pars_fragment" ],
     'float alpha = opacity;',
 
     'if(useMap == 1){',
-        'vec3 mapping = texture2D( map, vU ).rgb;',
-        "alpha *= texture2D( map, vU ).a;",
+        'vec3 mapping = texture2D( map, vU * repeat ).rgb;',
+        //"alpha *= texture2D( map, vU * repeat ).a;",
         'base *= mapping;',
     '}',
 
@@ -61,9 +65,13 @@ THREE.ShaderChunk[ "logdepthbuf_pars_fragment" ],
 
     // environment
     'vec3 ev = texture2D( env, vN ).rgb;',
-    'base *= ev;',
+    'ev *= base;',
+    //'base *= ev;',
+
+    'gl_FragColor.xyz = mix( base.xyz, ev.xyz, reflection );',
+    'gl_FragColor.a = alpha;',
     
-    'gl_FragColor = vec4( base, alpha );',
+    //'gl_FragColor = vec4( base, alpha );',
 
     THREE.ShaderChunk[ "logdepthbuf_fragment" ],
     //THREE.ShaderChunk[ "map_fragment" ],

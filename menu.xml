@@ -17,6 +17,7 @@
 	<demo n='city' lib='sea3d|gui'></demo>
 	<demo n='dungeon' lib='sea3d|gui|rot|tween'></demo>
 	<demo n='third_person' lib='sea3d|tween'></demo>
+	<demo n='third_person2' lib='sea3d|tween'></demo>
 </rubrique>	
 <rubrique n='shaders'>
 	<demo n='basic' lib='sea3d|gui'></demo>

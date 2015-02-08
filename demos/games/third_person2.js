@@ -523,14 +523,14 @@ V.Player.prototype = {
 
 }
 
-var modelName = 'bob';
+var modelName = 'droid';
 
 player = new V.Player();
 v.pool.load('basic', onload);
 
 function onload(){
 	player.miniMap.add(v.pool.meshes.basic.collision);
-	var mapp = THREE.ImageUtils.loadTexture( 'images/terrain/diffuse1.jpg');
+	var mapp = THREE.ImageUtils.loadTexture( 'images/terrain/level2.jpg');
 	mapp.wrapS = mapp.wrapT = THREE.RepeatWrapping;
 	mapp.repeat.set( 16, 16 );
 	//mapp.needsUpdate = true;

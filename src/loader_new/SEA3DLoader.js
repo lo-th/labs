@@ -1821,7 +1821,7 @@ THREE.SEA3D.prototype.getMorpher = function(sea, geo) {
 			vertex[k++] = new THREE.Vector3(
 				geo.vertex[j] + node.vertex[j++], 
 				geo.vertex[j] + node.vertex[j++], 
-				-(geo.vertex[j] + node.vertex[j++])
+				geo.vertex[j] + node.vertex[j++]
 			);
 		
 		morphs[node.name] = i;

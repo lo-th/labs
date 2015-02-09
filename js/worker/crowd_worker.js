@@ -28,8 +28,8 @@ self.onmessage = function(e) {
             id = i*3;
             ar[id] = a.position.x;
             ar[id+1] = a.position.y;
-            ar[id+2] = a.orientation;
-            //ar[id+2] = a.getOrientation();//Math.atan2(a.oldPosition.x-a.position.x, a.oldPosition.y-a.position.y);
+            //ar[id+2] = a.orientation;
+            ar[id+2] = a.getOrientation();//Math.atan2(a.oldPosition.x-a.position.x, a.oldPosition.y-a.position.y);
          
         }
 
@@ -363,6 +363,10 @@ CROWD.Simulation.prototype = {
     }
 }
 
+CROWD.PI = Math.PI;
+CROWD.TwoPI = 2.0 * Math.PI;
+
+
 CROWD.V2 = function(x,y){
     this.x = x || 0;
     this.y = y || 0;
@@ -415,11 +419,11 @@ CROWD.Agent.prototype = {
         CROWD.setAgentUseRoadMap(this.id, this.useRoadMap);
       //  CROWD.recomputeRoadmap();
     },
-    setAbstractMesh : function (mesh) {
+    /*setAbstractMesh : function (mesh) {
     },
     setMesh : function (mesh) {
         this.mesh = mesh;
-    },
+    },*/
     setType : function (type) {
         this.type = type;
     },
@@ -427,11 +431,34 @@ CROWD.Agent.prototype = {
         this.position = v;
     },
     getOrientation : function () {
-        this.orientation = Math.atan2(this.goal.x-this.position.x, this.goal.y-this.position.y);
+        //this.orientation = Math.atan2(this.goal.x-this.position.x, this.goal.y-this.position.y);
+        var v = this.getVelocity();
+       // var r = this.unwrapRadian(Math.atan2 (v.x , v.y));
+        var r = Math.atan2 (v.x , v.y);
+        //var tr = ( r-this.orientation)*0.1;
+        this.orientation = r;
+        //this.orientation += tr;
+        //this.orientation = this.lerp(this.orientation, r, 0.66)
         return this.orientation;
+    },
+    unwrapRadian : function(r){
+        r = r % CROWD.TwoPI;
+        if (r > CROWD.PI) r -= CROWD.TwoPI;
+        if (r < -CROWD.PI) r += CROWD.TwoPI;
+        return r;
+    },
+    lerp : function (a, b, percent) { 
+        return a + (b - a) * percent;
     },
     setOrientation : function (angle) {
         this.orientation = angle;
+    },
+    getVelocity : function (agentId) {
+        CROWD.getAgentVelocity(this.id);
+
+        var arr = new Float32Array(this.sim.dataHeap_reusable.buffer, this.sim.dataHeap_reusable.byteOffset, this.sim.data_reusable.length);
+        var v = new CROWD.V2(arr[0], arr[1]);
+        return v;
     },
     //setIsSelected : function (isSelected) {
     //    this.isSelected = isSelected;

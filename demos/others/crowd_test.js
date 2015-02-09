@@ -2,12 +2,14 @@ var v = new V.View(180, 45, 200);
 v.tell('crowd simulation<br><br>click to add agent !');
 
 var model1, model2;
-
+var workerOn = false;
 var ball = new THREE.Mesh( new THREE.SphereGeometry(2,12,10), new THREE.MeshBasicMaterial({color:0xFF3300}));
 v.scene.add(ball);
 var env = new V.Environment();
 var envbase = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
 v.zone({s:500});
+v.zone({s:20, v:true});
+v.zone({s:20, v:true, pos:[0,0,30]})
 //v.pool.load('boblow', onload);
 v.pool.load('heros', onload);
 
@@ -52,10 +54,15 @@ function addClone(x,y,z){
 	v.meshs[v.meshs.length] = m;
 
 	// push to worker
-	v.w.add({type:'box', pos:[x, 0, z], size:[2,6,2]});
+	var obj = {type:'box', pos:[x, 0, z], size:[2,6,2]}
+	v.w.post({m:'add', obj:obj});
 }
 
 function onWorker(){
+	v.w.post({m:'obstacle', obj:{type:'box', pos:[0,0,0], size:[20,10,20]}})
+	v.w.post({m:'obstacle', obj:{type:'box', pos:[0,0,30], size:[20,10,20]}})
+
+	workerOn = true;
 }
 
 function mainDown(){
@@ -67,4 +74,5 @@ function mainDown(){
 
 function mainMove(){
 	ball.position.set(v.nav.mouse3d.x, 0, v.nav.mouse3d.z);
+	if(workerOn)v.w.post({m:'goal', obj:{ x:v.nav.mouse3d.x, y:v.nav.mouse3d.z}})
 }

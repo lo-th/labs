@@ -99,6 +99,7 @@ V.Worker.prototype = {
     // CROWD ---------------------------------------------
 
     upCrowd:function(e){
+        if(e.data.w && !this.isReady) this.isReady = true;
         this.fps = e.data.fps;
         this.ar = e.data.ar;
 
@@ -108,7 +109,7 @@ V.Worker.prototype = {
             id = i*3;
             m[i].position.x = this.ar[id];
             m[i].position.z = this.ar[id+1];
-            m[i].rotation.y = this.ar[id+2];
+            m[i].rotation.y = this.ar[id+2]-V.PI90;
         }
 
         this.computeTime();

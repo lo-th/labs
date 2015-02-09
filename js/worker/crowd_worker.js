@@ -11,6 +11,8 @@ self.onmessage = function(e) {
     
 
     if(m==='add') sim.addAgent(e.data.obj);
+    if(m==='obstacle') sim.addObstacle(e.data.obj);
+    if(m==='goal') sim.setGoal(e.data.obj);
 
     if(m==='run'){
         ar = e.data.ar;
@@ -27,6 +29,8 @@ self.onmessage = function(e) {
             ar[id] = a.position.x;
             ar[id+1] = a.position.y;
             ar[id+2] = a.orientation;
+            //ar[id+2] = a.getOrientation();//Math.atan2(a.oldPosition.x-a.position.x, a.oldPosition.y-a.position.y);
+         
         }
 
         f[1] = Date.now();
@@ -98,6 +102,7 @@ CROWD.Simulation = function () {
     }
 
     this.setTimeStep(1);
+    this.setPrecision(1);
 
     this.allocateMem_X_Y_RAD();
     this.allocateMemReusable(2);
@@ -108,15 +113,31 @@ CROWD.Simulation.prototype = {
 	constructor: CROWD.Simulation,
 	addAgent : function (obj) {
         var agent = new CROWD.Agent(this, new CROWD.V2(obj.pos[0] || 0, obj.pos[2] || 0 ) , obj.size[0] || 10, obj.useRoadMap || false );
-        this.agents.push(agent);
-        CROWD.addAgentGoal(agent.id, 0, 0);
-        CROWD.recomputeRoadmap();
+        //agent.setGoal(0,0);
+        //this.agents.push(agent);
+        //CROWD.addAgentGoal(agent.id, 0, 0);
+        //CROWD.recomputeRoadmap();
         //return agent.getAgentNo();
     },
+    addObstacle : function(obj){
+        var obstacle = new CROWD.Obstacle( this, obj );
+        this.processObstacles();
+
+       
+    },
+    setGoal:function(obj){
+        CROWD.addAgentsGoal(obj.x, obj.y);
+        CROWD.recomputeRoadmap();
+    },
+
+
+
+
+
+
     addAgentGoal : function (agentId, goal) {
         var i = this.getIndexFromId(agentId, BABYLON.Agent.AgentsOrder);
-        if (i == -1)
-            return;
+        if (i == -1) return;
         this.agents[i].addGoal(goal);
     },
     addAgentsGoal : function (goal) {
@@ -135,7 +156,7 @@ CROWD.Simulation.prototype = {
     addWayPoint : function (v, debug) {
         var wp = new CROWD.WayPoint(v.x, v.y);
     },
-    addObstacleByBoundingBox : function (mesh, position, isVisible) {
+    /*addObstacleByBoundingBox : function (mesh, position, isVisible) {
         var obstacle = new BABYLON.Obstacle();
         obstacle.addByBoundingBox(mesh, position, isVisible);
         this.obstacles.push(obstacle);
@@ -144,7 +165,7 @@ CROWD.Simulation.prototype = {
         var obstacle = new BABYLON.Obstacle();
         obstacle.addByClosedPolygon(arr, this.scene, debug);
         this.obstacles.push(obstacle);
-    },
+    },*/
     processObstacles : function () {
         CROWD.processObstacles();
     },
@@ -351,11 +372,11 @@ CROWD.Agent = function(sim, position, radius, useRoadMap){
     this.sim = sim;
 
     this.position = position || new CROWD.V2();
+    this.oldPosition = position || new CROWD.V2();
     this.orientation = 0;
     this.goal = new CROWD.V2();
-    this.useRoadMap = 1;
-    this.isSelected = false;
-
+    this.useRoadMap = 0;
+    //this.isSelected = false;
 
     this.id = this.sim.agents.length;
 
@@ -364,10 +385,12 @@ CROWD.Agent = function(sim, position, radius, useRoadMap){
     CROWD.addAgent(this.position.x, this.position.y);
     CROWD.setAgentRadius(this.id, this.radius);
 
-    this.setUseRoadMap(useRoadMap);
+    this.setUseRoadMap(this.useRoadMap);
 
     //Agent.AgentsNo++;
     //Agent.NumAgents++;
+
+    this.sim.agents.push(this);
 }
 
 CROWD.Agent.prototype = {
@@ -378,12 +401,19 @@ CROWD.Agent.prototype = {
         Agent.AgentsOrder.splice(index, 1);
         Agent.NumAgents--;
     },
+    setGoal:function(x,y){
+        this.goal.x = x; 
+        this.goal.y = y;
+        CROWD.addAgentGoal(this.id, this.goal.x, this.goal.y);
+    },
     addGoal : function (goal) {
+        
         CROWD.addAgentGoal(this.id, goal.x, goal.y);
     },
     setUseRoadMap : function (useRoadmap) {
         this.useRoadMap = useRoadmap;
         CROWD.setAgentUseRoadMap(this.id, this.useRoadMap);
+      //  CROWD.recomputeRoadmap();
     },
     setAbstractMesh : function (mesh) {
     },
@@ -396,11 +426,15 @@ CROWD.Agent.prototype = {
     setPosition : function (v) {
         this.position = v;
     },
+    getOrientation : function () {
+        this.orientation = Math.atan2(this.goal.x-this.position.x, this.goal.y-this.position.y);
+        return this.orientation;
+    },
     setOrientation : function (angle) {
         this.orientation = angle;
     },
-    setIsSelected : function (isSelected) {
-        this.isSelected = isSelected;
+    //setIsSelected : function (isSelected) {
+    //    this.isSelected = isSelected;
 
         /*var mat = new BABYLON.StandardMaterial("", this.mesh.getScene());
         if (this.isSelected) {
@@ -410,13 +444,14 @@ CROWD.Agent.prototype = {
         } else {
             this.mesh.material = this.matOriginal;
         }*/
-    },
+    //},
     update : function (id) {
         this.position.x = CROWD.X_Y_RAD[id * 3 + 0];
         this.position.y = CROWD.X_Y_RAD[id * 3 + 1];
         this.orientation = CROWD.X_Y_RAD[id * 3 + 2];
     },
     getPosition : function () {
+        return this.position;
     },
     getIsSelected : function () {
         return this.isSelected;
@@ -432,35 +467,60 @@ CROWD.Agent.prototype = {
 
 
 
-CROWD.Obstacle = function () {
-    this.id = Obstacle.ObstacleNo;
-    Obstacle.ObstaclesOrder.push(this.id);
-    Obstacle.NumObstacles++;
-    Obstacle.ObstacleNo++;
+CROWD.Obstacle = function (sim, obj) {
+    this.sim = sim;
+    this.id = this.sim.obstacles.length;//Obstacle.ObstacleNo;
+
+     this.dataHeap = null;
+     this.data = null;
+
+    obj = obj || {};
+    obj.type = obj.type || 'box';
+
+    if(obj.type == 'box'){
+        this.addByBoundingBox(obj);
+    }else{
+        this.addByClosedPolygon(obj);
+    }
+    //Obstacle.ObstaclesOrder.push(this.id);
+    //Obstacle.NumObstacles++;
+    //Obstacle.ObstacleNo++;
+    this.sim.obstacles.push(this);
 }
 
 CROWD.Obstacle.prototype = {
     constructor: CROWD.Obstacle,
-    addByBoundingBox : function (position, isVisible) {
+    addByBoundingBox : function (obj) {
+        var pos = obj.pos || [1,0,1];
+        var size = obj.size || [20,20,20];
 
-        mesh.getBoundingInfo()._update(this.mesh.getWorldMatrix());
-        var bbox = mesh.getBoundingInfo().boundingBox;
-        var min = bbox.minimumWorld;
-        var max = bbox.maximumWorld;
+        var x = pos[0];
+        var y = pos[2];
+        var mw = size[0]*0.5;
+        var mh = size[2]*0.5;
 
-        this.data = new Float32Array([max.x, max.z, min.x, max.z, min.x, min.z, max.x, min.z]);
+        //var min = {x:x+mw, z:y+mh }
+        //var max = {x:x-mh, z:y-mh }
+
+        //var min = {x:-20, z:-20 }
+        //var max = {x:20, z:20 }
+
+        this.data = new Float32Array([x+mw, y+mh, x-mw, y+mh, x-mw, y-mh, x+mw, y-mh]);
+        //this.data = new Float32Array([max.x, max.z, min.x, max.z, min.x, min.z, max.x, min.z]);
+      
         this.allocateMem();
-
         this.addToSimulation();
-
         _free(this.dataHeap.byteOffset);
+
+        //console.log('box added', this.data)
     },
-    addByClosedPolygon : function (arr, scene, debug) {
+    addByClosedPolygon : function (obj) {
         var index = 0;
+       //  this.data = new Float32Array([x-mw, y+mh, x+mw, y+mh, x+mw, y-mh, x-mw, y-mh]);
         this.data = new Float32Array(arr.length * 2);
-        for (var i = 0; i < arr.length; i++) {
-            this.data[index++] = arr[i].x;
-            this.data[index++] = arr[i].y;
+        for (var i = 0; i < obj.arr.length; i++) {
+            this.data[index++] = obj.arr[i].x;
+            this.data[index++] = obj.arr[i].y;
         }
 
         this.allocateMem();
@@ -469,30 +529,32 @@ CROWD.Obstacle.prototype = {
 
         _free(this.dataHeap.byteOffset);
 
-        var lines = [];
+       // var lines = [];
 
-        if (debug) {
+/*        if (debug) {
             for (var i = 0; i < arr.length; i++) {
                 lines[i] = new BABYLON.Vector3(arr[i].x, 0, arr[i].y);
             }
 
             lines.push(new BABYLON.Vector3(arr[0].x, 0, arr[0].y));
             this.mesh = BABYLON.Mesh.CreateLines("lines", lines, scene);
-        }
+        }*/
     },
     rebuild : function () {
         this.allocateMem();
-        this.addToSimulation();
+        //this.addToSimulation();
         _free(this.dataHeap.byteOffset);
     },
     remove : function (index) {
-        if (this.mesh)
-            this.mesh.dispose();
+       // if (this.mesh) this.mesh.dispose();
         Obstacle.ObstaclesOrder.splice(index, 1);
         Obstacle.NumObstacles--;
     },
     addToSimulation : function () {
-        BABYLON.CrowdPlugin.addObstacle(this.dataHeap.byteOffset, this.data.length);
+        CROWD.addObstacle(this.dataHeap.byteOffset, this.data.length);
+        //CROWD.processObstacles();
+        //CROWD.recomputeRoadmap();
+        //BABYLON.CrowdPlugin.addObstacle(this.dataHeap.byteOffset, this.data.length);
     },
     allocateMem : function () {
         var nDataBytes = this.data.length * this.data.BYTES_PER_ELEMENT;

@@ -29,7 +29,7 @@
 </rubrique>	
 <rubrique n='experiments'>
 	<demo n='terrain' lib='terrain|gui'></demo>
-	<demo n='seriously' lib='sea3d|serious'></demo>
+	<demo n='seriously' lib='sea3dn|serious'></demo>
 	<!--<demo n='human' lib='sea3dn|gui|tween'></demo> -->
 </rubrique>
 <rubrique n='others'>

@@ -333,8 +333,9 @@ V.View.prototype = {
             //console.log(pid*2, (pid*2)+1)
             this.w.dr[pid*2] = obj.position.x;
             this.w.dr[(pid*2)+1] = obj.position.z;
-            this.w.msg = 'updecal';
-           // this.w.post({m:'updecal'})
+           // this.w.msg = 'updecal';
+            //this.w.post({m:'updecal'})
+            this.w.updateDecal();
         }
     }
 }

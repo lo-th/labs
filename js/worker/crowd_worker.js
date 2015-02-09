@@ -92,7 +92,7 @@ CROWD.Simulation = function () {
     this.size = 6000;
     this.agents = [];
     this.obstacles = [];
-    this.iteration = 1.75;
+    this.iteration = 1//.75;
     this.timeStep = 0.3;//0166;
     //this.scene = scene;
 
@@ -370,7 +370,29 @@ CROWD.TwoPI = 2.0 * Math.PI;
 CROWD.V2 = function(x,y){
     this.x = x || 0;
     this.y = y || 0;
-};
+}
+
+CROWD.V2.prototype = {
+    constructor: CROWD.V2,
+    length: function () {
+        return Math.sqrt( this.x * this.x + this.y * this.y );
+    },
+    lerp: function ( v, alpha ) {
+        this.x += ( v.x - this.x ) * alpha;
+        this.y += ( v.y - this.y ) * alpha;
+        return this;
+    },
+    angle: function(v) {
+        return Math.atan2(v.y - this.y, v.x - this.x);
+    },
+    orient: function(){
+        return Math.atan2(this.x , this.y);
+        /*var s = 10;
+        var vp = new CROWD.V2(this.x * s, this.y * s);
+        return Math.atan2(vp.x - this.x , vp.y - this.y);*/
+    }
+}
+
 
 CROWD.Agent = function(sim, position, radius, useRoadMap){
     this.sim = sim;
@@ -431,12 +453,15 @@ CROWD.Agent.prototype = {
         this.position = v;
     },
     getOrientation : function () {
+        var oldOr = this.orientation;
         //this.orientation = Math.atan2(this.goal.x-this.position.x, this.goal.y-this.position.y);
-        var v = this.getVelocity();
+       // var v = ;
        // var r = this.unwrapRadian(Math.atan2 (v.x , v.y));
-        var r = Math.atan2 (v.x , v.y);
+       /// var r = Math.atan2 (v.x , v.y);
         //var tr = ( r-this.orientation)*0.1;
-        this.orientation = r;
+        var ne = this.getVelocity().orient()//this.unwrapRadian(this.getVelocity().orient());
+        this.orientation = this.lerp(oldOr, ne, this.sim.timeStep);//r;
+        // this.orientation = oldOr + Math.cos(this.sim.timeStep) * (ne-oldOr);
         //this.orientation += tr;
         //this.orientation = this.lerp(this.orientation, r, 0.66)
         return this.orientation;

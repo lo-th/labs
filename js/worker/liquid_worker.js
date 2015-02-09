@@ -17,25 +17,15 @@ var inv255 = .003921569;
 
 self.onmessage = function(e) {
 	var m = e.data.m;
-	var m2 = e.data.m2;
 
-	if(m==='add')  sim.add(e.data.obj);
 	if(m==='addParticle') sim.addParticle(e.data.obj);
-	//if(m==='updecal') sim.updateDecal();
+	if(m==='updecal') sim.updateDecal(e.data);
+	if(m==='add')  sim.add(e.data.obj);
 
 	if(m==='run'){
 		ar = e.data.ar;
 		pr = e.data.pr;
-		//prn = e.data.prn;
-		dr = e.data.dr;
-		//if(drn !== e.data.drn){ 
-		drn=e.data.drn; 
-		drc=e.data.drc; 
 
-		if(m2==='updecal') sim.updateDecal();
-		
-		//sim.updateDecal();
-		//	 }
 		if(world==null) {
 			sim.init(e.data);
 			prn = e.data.prn;
@@ -57,7 +47,7 @@ W.SCALE = 10;
 W.INV_SCALE = 1/W.SCALE;
 
 W.Sim = function(){
-	this.p = 4; // precission
+	this.p = 3; // precission
 	this.groups = [0xffffffff, 1 << 0, 1 << 1, 1 << 2];
     this.isWorld = false;
     this.bodys = [];
@@ -120,6 +110,7 @@ W.Sim.prototype = {
 
 
 		}
+
 		// PARTICLE SYSTEME
 		var ps, p;
 		//i = world.particleSystems.length;
@@ -226,7 +217,11 @@ W.Sim.prototype = {
 
 
 	// DECAL CHAINE
-	updateDecal:function(){
+	updateDecal:function(obj){
+		dr=obj.dr; 
+		drn=obj.drn; 
+		drc=obj.drc;
+
     	var max = drn.length;
     	 //console.log(drn[0]);
     	var n, oldNum = 0;
@@ -243,7 +238,6 @@ W.Sim.prototype = {
 		this.decals[n] = null;
     },
     actualizDecale:function(n, start, end){
-        //console.log(dr[0])
     	var id;
     	var fixtureDef = new b2FixtureDef();
         fixtureDef.density = this.configDecals[0];
@@ -254,14 +248,8 @@ W.Sim.prototype = {
         // creation de la nouvelle chaine
         var shape = new b2ChainShape();
         var vertices = shape.vertices;
-        /*var i = end-start;
-        while(i--){
-        	id = (start+i)*2;
-        	vertices[i] = new b2Vec2( dr[id], dr[id+1] );
-        }*/
 
-        var h;
-        var j = 0
+        var h, j = 0
         for(var i=start; i<end; i++ ){
         	h = i*2;
         	vertices[j] = new b2Vec2( dr[h]*W.INV_SCALE, dr[h+1]*W.INV_SCALE );
@@ -278,7 +266,6 @@ W.Sim.prototype = {
             var body = world.CreateBody(bodyDef);
             body.CreateFixtureFromDef(fixtureDef);
             this.decals[n] = body;
-            //console.log('addnew');
         }else{
         	this.decals[n].DestroyFixture(this.decals[n].fixtures[0]);
         	this.decals[n].CreateFixtureFromDef(fixtureDef);

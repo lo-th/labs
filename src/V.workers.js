@@ -154,7 +154,8 @@ V.Worker.prototype = {
 
     },
     postLiquid:function(){
-        this.w.postMessage({m:'run', m2:this.msg, drn:this.drn, drc:this.drc, dr:this.dr, ar:this.ar, pr:this.pr, prn:this.prn},[this.ar.buffer, this.pr.buffer]);
+        //this.w.postMessage({m:'run', m2:this.msg, drn:this.drn, drc:this.drc, dr:this.dr, ar:this.ar, pr:this.pr, prn:this.prn},[this.ar.buffer, this.pr.buffer]);
+        this.w.postMessage({m:'run', prn:this.prn, ar:this.ar, pr:this.pr },[this.ar.buffer, this.pr.buffer]);
     },
 
 
@@ -180,6 +181,7 @@ V.Worker.prototype = {
     postOimo:function(){
         this.w.postMessage({m:'run', m2:this.msg, drn:this.drn, drc:this.drc, ar:this.ar, dr:this.dr},[this.ar.buffer]);
     },
+
     room:function (o){
         var wpos = (o.h*0.5)-o.m;
         var s = [
@@ -200,11 +202,7 @@ V.Worker.prototype = {
                 
         v.addSolid({ type:'box', size:[o.w-o.m,o.h-o.m,o.d-o.m], pos:[ 0,wpos+o.m*0.5,0] });
         v.addSolid({ type:'box', size:[o.w+o.m,o.h,o.d+o.m], pos:[ 0,wpos,0]});
-        
     },
-
-
-
 
     add:function(obj){
         this.w.postMessage({m:'add', obj:obj});
@@ -221,13 +219,17 @@ V.Worker.prototype = {
         var l = obj.points.length * 0.5;
         this.drn[0] = l;
         var n;
-        for(var i=0; i<l; i++){
+        var i = l;
+        while(i--){
             n = i*2;
             this.dr[n] = obj.points[n];
             this.dr[n+1] = obj.points[n+1];
         }
-       // this.post({m:'updecal'})
-        this.msg = 'updecal';
+
+        this.updateDecal();
+    },
+    updateDecal:function(){
+        this.post({m:'updecal', dr:this.dr, drn:this.drn, drc:this.drc });
     }
 }
 

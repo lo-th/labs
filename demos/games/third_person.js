@@ -281,6 +281,7 @@ V.Player = function( debug ){
     this.cfg = { speed:0.025, maxSpeed:0.25, g:9.8, posY:0, maxJump:4, maxHeight:4 };
 
     this.miniMap = new V.Minimap( this.revers, debug );
+
 }
 
 V.Player.prototype = {
@@ -296,6 +297,7 @@ V.Player.prototype = {
 
         while(i--){
             name = this.hero.animations[i].name;
+            console.log(name)
             this.weights[name] = 0;
             if(name=='idle') this.weights[name] = 1;
             this.hero.animations[i].play( 0, this.weights[name] );
@@ -554,7 +556,7 @@ function onload(){
 }
 
 function onloadNext(){
-	var model = v.pool.meshes[modelName][modelName];
+	var model = v.pool.meshes[modelName][modelName].clone();
 	
 	var map = model.material.map;
 	var size = 0.023, morph = false;

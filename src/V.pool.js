@@ -24,6 +24,8 @@ V.SeaPool.prototype = {
         }.bind(this);
         loader.parser = THREE.SEA3D.DEFAULT;
         loader.load( 'models/'+name+'.sea' );
+        //loader.invertZ = true;
+        //loader.flipZ = true;
     }
 }
 

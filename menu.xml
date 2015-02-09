@@ -16,7 +16,7 @@
 <rubrique n='games'>
 	<demo n='city' lib='sea3d|gui'></demo>
 	<demo n='dungeon' lib='sea3d|gui|rot|tween'></demo>
-	<demo n='third_person' lib='sea3d|tween'></demo>
+	<demo n='third_person' lib='sea3dn|tween'></demo>
 	<demo n='third_person2' lib='sea3d|tween'></demo>
 </rubrique>	
 <rubrique n='shaders'>
@@ -30,10 +30,11 @@
 <rubrique n='experiments'>
 	<demo n='terrain' lib='terrain|gui'></demo>
 	<demo n='seriously' lib='sea3d|serious'></demo>
+	<!--<demo n='human' lib='sea3dn|gui|tween'></demo> -->
 </rubrique>
 <rubrique n='others'>
 	<demo n='liquid' lib='gui'></demo>
-	<demo n='crowd_test' lib=''></demo>
+	<demo n='crowd_test' lib='sea3dn'></demo>
 	<demo n='metaball' lib=''></demo>
 </rubrique>
 </menu>

@@ -1,0 +1,5 @@
+[
+	"src/loader/SEA3D.js",
+	"src/loader/SEA3DLoader.js",
+	"src/loader/SEA3DLZMA.js"
+]

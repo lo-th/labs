@@ -20,7 +20,7 @@ uniforms:{
     reflection: {type: 'f', value: 1.0},
 },
 fs:[
-'precision highp float;',
+//'precision highp float;',
 'uniform sampler2D env;',
 'uniform sampler2D map;',
 'uniform sampler2D normalMap;',
@@ -133,7 +133,7 @@ THREE.ShaderChunk[ "logdepthbuf_pars_fragment" ],
 '}'
 ].join("\n"),
 vs:[
-'precision highp float;',
+//'precision highp float;',
 'attribute vec4 tangent;',
 'uniform int useNormal;',
 //THREE.ShaderChunk[ "map_pars_vertex" ],

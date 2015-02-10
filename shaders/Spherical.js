@@ -69,7 +69,7 @@ THREE.ShaderChunk[ "logdepthbuf_pars_fragment" ],
 
     'if(useMap == 1){',
         'vec3 mapping = texture2D( map, vU * repeat ).rgb;',
-        //"alpha *= texture2D( map, vU * repeat ).a;",
+        'alpha *= texture2D( map, vU * repeat ).a;',
         'base *= mapping;',
     '}',
 

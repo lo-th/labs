@@ -7,55 +7,43 @@ v.tell('third person');
 v.nav.bindKeys();
 var env = new V.Environment();
 var envbase = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
-var fullLoaded = false;
+	
 
 loop();
 
 function loop(){
     requestAnimationFrame( loop );
-    if(player){
-        player.update( v.clock.getDelta() );
-        if(fullLoaded){
-            //console.log(player.obj.position.y)
-            if(player.obj.position.y>2){player.miniMap.meshs[0].visible=false;player.miniMap.meshs[1].visible=true; }
-            else{player.miniMap.meshs[0].visible=true;player.miniMap.meshs[1].visible=false; }
-        }
-    }
+    if(player)player.update( v.clock.getDelta() );
     v.render();
 }
 
 V.deepShader={
     attributes:{},
     uniforms:{ 
-        color: {type: 'c', value: new THREE.Color(0x444444)},
-    	deep: {type: 'f', value:10.0}
+    	deep: {type: 'f', value: 0.03904}
     },
     fs:[
-        //'precision lowp float;',
-        'uniform vec3 color;',
-        'varying vec3 vc;',
-        'void main(void) { gl_FragColor = vec4(vc, 1.0); }'
+        'precision lowp float;',
+        'varying vec4 vc;',
+        'void main(void) { gl_FragColor = vc; }'
     ].join("\n"),
     vs:[
         'uniform float deep;',
-        'varying vec3 vc;',
+        'varying float dy;',
+        'varying vec4 vc;',
         'void main(void) {',
             'gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
-            'float dy = (position.y+3.27)*12.3;',//((position.y+3.27)*deep);',
-            'vc = vec3( dy / 255., dy / 255., dy / 255.);',
-            //'if(position.y>0.){ vc = vec3( dy / 255., dy / 255., dy / 255.);}',//else{vc = vec3(0,0,-dy);}',
+            'dy = position.y*deep;',
+            'if(position.y>0.){vc = vec4(dy,dy,dy, 1.0);}else{vc = vec4(0,0,-dy, 1.0);}',
         '}'
     ].join("\n")
 };
 
 V.Minimap = function(debug){
-    this.meshs = [];
 	this.debug = debug || false;
     this.ar8 = typeof Uint8Array!="undefined"?Uint8Array:Array;
     this.miniSize = { w:64, h:64, f:0.25 };
     this.cc = {r:255, g:0, b:0, a:255}; 
-
-    this.camy = 50;
 
     this.miniGlCanvas = document.createElement('canvas');
     this.miniTop = document.createElement('canvas');
@@ -101,11 +89,11 @@ V.Minimap.prototype = {
         this.renderer.setClearColor( 0xff0000, 1 );
         this.scene = new THREE.Scene();
 
-        var w = 2;//6;// 500*this.miniSize.f;
-        this.camera = new THREE.OrthographicCamera( -w , w , w , -w , 0.1, this.camy*4 );
+        var w = 3;//6;// 500*this.miniSize.f;
+        this.camera = new THREE.OrthographicCamera( -w , w , w , -w , 0.1, 400 );
         this.camera.position.x = 0;
         this.camera.position.z = 0;
-        this.camera.position.y = this.camy;
+        this.camera.position.y = 100;
         this.camera.lookAt( new THREE.Vector3(0,0,0) );
 
         this.player = new THREE.Object3D();
@@ -129,13 +117,12 @@ V.Minimap.prototype = {
         mesh.position.set(0,0,0);
         this.scene.add(mesh);
     },
-    add:function(mesh, s, decal){
+    add:function(mesh){
         //var mesh = new THREE.Mesh( geo, );
         mesh.material = this.deepShader;
-        mesh.scale.set(s,s,-s);
-        mesh.position.set(0,decal,0);
+        mesh.scale.set(1,1,-1);
+        mesh.position.set(0,0,0);
         this.scene.add(mesh);
-        this.meshs[this.meshs.length] = mesh;
     },
     updatePosition:function(x,y,z){
         this.player.position.x = x;
@@ -541,55 +528,31 @@ V.Player.prototype = {
 var modelName = 'bob';
 
 player = new V.Player();
-v.pool.load('museum', onload);
+v.pool.load('basic', onload);
 
 function onload(){
-    var sc = 1.23;
-    var decal = 3.27*sc;
-	player.miniMap.add(v.pool.meshes.museum.floor_0, sc, decal);
-    player.miniMap.add(v.pool.meshes.museum.floor_1, sc, decal);
+	player.miniMap.add(v.pool.meshes.basic.collision);
+	var mapp = THREE.ImageUtils.loadTexture( 'images/terrain/diffuse1.jpg');
+	mapp.wrapS = mapp.wrapT = THREE.RepeatWrapping;
+	mapp.repeat.set( 16, 16 );
+	//mapp.needsUpdate = true;
 
-    player.miniMap.meshs[1].visible=false;
+	var material0 = new V.Shader('Spherical', { map:mapp, env:envbase, useMap:1, repeat:new THREE.Vector2(20.0,20.0), reflection:0.2 });
 
-    var tx0 = THREE.ImageUtils.loadTexture( 'images/museum/facade.png');
-    var tx1 = THREE.ImageUtils.loadTexture( 'images/museum/escalator.png');
-    var tx2 = THREE.ImageUtils.loadTexture( 'images/museum/floor.png');
-    var tx3 = THREE.ImageUtils.loadTexture( 'images/museum/bigwall.png');
-    tx0.flipY = false;
-    tx1.flipY = false;
-    tx2.flipY = false;
-    tx3.flipY = false;
+    env.add(material0);
+	var m = v.pool.meshes.basic.hh
+	m.material = material0;
+	m.scale.set(1,1,-1);
+	v.scene.add(m);
 
-    var material0 = new V.Shader('Spherical', { map:tx0, env:envbase, useMap:1, reflection:0.2, transparent:false });
-    var material1 = new V.Shader('Spherical', { map:tx1, env:envbase, useMap:1, reflection:0.2, transparent:false });
-    var material2 = new V.Shader('Spherical', { map:tx2, env:envbase, useMap:1, reflection:0.2 });
-    var material3 = new V.Shader('Spherical', { map:tx3, env:envbase, useMap:1, reflection:0.2 });
-    var material4 = new V.Shader('Spherical', { map:tx0, env:envbase, useMap:1, reflection:0.2, transparent:true, side:THREE.DoubleSide });
-    var material5 = new V.Shader('Spherical', { map:tx1, env:envbase, useMap:1, reflection:0.2, transparent:true,  side:THREE.DoubleSide });
-    
-
-    var names = ['facade', 'elevator','facade_w','elevator_w','floor','bigwall','Object065'];
-    var i = names.length, m, name;
-    while(i--){
-        name = names[i];
-        m = v.pool.meshes.museum[names[i]];
-        m.scale.set(sc,sc,-sc);
-        m.position.y = decal;
-        v.scene.add(m);
-
-        if(m.name == "facade"){ m.material = material0; }
-        if(m.name == "elevator"){ m.material = material1; }
-        if(m.name == "facade_w"){ m.material = material4; }
-        if(m.name == "elevator_w"){ m.material = material5;}
-
-        if(m.name == "floor"){ m.material = material2;  }
-        if(m.name == "bigwall"){ m.material = material3;  }
-
-    }
+	var material2 = new V.Shader('Spherical', {color:new THREE.Color(0x440066), env:envbase, opacity:0.3, transparent:true, reflection:0.8 });
+    env.add(material2);
+	var m = v.pool.meshes.basic.sea;
+	m.material = material2;
+	m.scale.set(1,1,-1);
+	v.scene.add(m);
 
 	v.pool.load(modelName, onloadNext);
-
-    fullLoaded = true;
 }
 
 function onloadNext(){

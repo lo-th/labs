@@ -39,11 +39,19 @@ V.View = function(h,v,d){
     window.top.main.previewTheme();
     this.dimentions = {w:window.innerWidth,  h:window.innerHeight, r:window.innerWidth/window.innerHeight };
 
+    // memory support
+    /*this.isWithMemory = true;
+    if (window.performance) this.performance = window.performance;
+    if(!this.performance.memory) {this.performance.memory = { usedJSHeapSize : 0 };}
+    if( this.performance.memory.totalJSHeapSize === 0 ){ this.isWithMemory = false; }*/
+    this.mem = "";
+
 	this.canvas = canvas;
     this.debug = debug;
     this.info = info;
 
     this.renderer = new THREE.WebGLRenderer({canvas:canvas, precision: "mediump", antialias:true, alpha: true, stencil:false });
+    //this.renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha: true });
     this.renderer.setSize( this.dimentions.w, this.dimentions.h );
     this.renderer.setClearColor( 0x000000, 0 );
     this.renderer.autoClear = false;
@@ -116,7 +124,21 @@ V.View.prototype = {
         var f = this.f;
         f[0] = Date.now();
         if (f[0]-1000 > f[1]){ f[1] = f[0]; f[3] = f[2]; f[2] = 0; } f[2]++;
-        this.debug.innerHTML ='three ' + f[3] + ' fps'+ this.deb;
+
+        /*if(this.isWithMemory){
+            this.mem = this.bytesToSize(this.performance.memory.usedJSHeapSize, 2)+ " ";
+        }*/
+
+        //this.debug.innerHTML =this.mem + 'THREE ' + f[3] + ' FPS'+ this.deb;
+        this.debug.innerHTML ='THREE ' + f[3] + this.deb;
+    },
+    bytesToSize : function ( bytes, nFractDigit ){
+        var sizes = ['bytes', 'kb', 'mb', 'gb', 'tb'];
+        if (bytes == 0) return 'n/a';
+        nFractDigit = nFractDigit !== undefined ? nFractDigit : 0;
+        var precision   = Math.pow(10, nFractDigit);
+        var i       = Math.floor(Math.log(bytes) / Math.log(1024));
+        return Math.round(bytes*precision / Math.pow(1024, i))/precision + ' ' + sizes[i];
     },
     initGui:function(isWithModel){
         this.gui = new V.Gui(isWithModel);

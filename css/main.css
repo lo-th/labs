@@ -10,13 +10,13 @@ html, body {
     height:100%;
     background:#25292e;
     color:#d2cec8;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    /*text-shadow: 1px 1px 1px rgba(0,0,0,0.3);*/
     overflow:hidden;
     /*pointer-events:none;*/
 }
 
 .night { background:#25292e; color:#d2cec8; }
-.day { background:#d2cec8; color:#25292e; }
+.day { background:#d2cec8; color:#25292e; text-shadow: 1px 1px 1px rgba(0,0,0,0.3);}
 
 /* PREVIEW */
 
@@ -84,7 +84,7 @@ html, body {
 }
 
 .ic{
-	display:block; width:158px; height:30px;  cursor:pointer; pointer-events:auto;
+	display:block; width:158px; height:30px; cursor:pointer; pointer-events:auto;
 }
 
 .night .icover {background:#393f45;}
@@ -146,6 +146,7 @@ html, body {
     -moz-transition: 0.2s ease-out;
     -o-transition: 0.2s ease-out;
     transition: 0.2s ease-out;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
 }
 
 .day .rub {

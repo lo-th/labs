@@ -77,7 +77,7 @@ V.Worker.prototype = {
     },
     computeTime:function(){
 
-        this.root.deb = ' | '+this.name +' '+ this.fps + ' fps ';
+        this.root.deb = ' | '+this.name.toUpperCase()+' '+ this.fps;// + ' FPS ';
 
         var d = this.d;
         d[1] = d[0]-(Date.now()-d[2]);

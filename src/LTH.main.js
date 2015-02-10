@@ -196,11 +196,19 @@ LTH.Main.prototype = {
 	},
 	clearPreview:function(){
 		if(this.preview !== null){
+			this.previewDoc.open('text/html', 'replace');
+		    this.previewDoc.write('');
+		    this.previewDoc.close();
+		    //console.log(this.previewDoc);
+		    //this.preview.src = 'about:blank';
+		    //this.previewDoc.innerHTML = '';
+		    this.doc.getElementById( 'preview' ).setAttribute( 'src', '' );
 			this.doc.body.removeChild(this.preview);
-			this.preview = null;
+			
 			this.previewDoc = null;
 			this.previewMain = null;
-			
+			this.preview = null;
+
 			console.clear();
 		}
 	},
@@ -208,6 +216,7 @@ LTH.Main.prototype = {
 		this.preview = this.doc.createElement( 'iframe' );
 		this.preview.className = 'preview';
 		this.preview.src = 'about:blank';
+		this.preview.id = 'preview';
 	    this.doc.body.appendChild(this.preview);
 	},
 	update:function(value) {
@@ -215,6 +224,7 @@ LTH.Main.prototype = {
 		if(value!==''){
 			
 			this.clearPreview();
+			//if(this.preview==null)
 			this.initPreview();
 
 			// extra libs
@@ -254,6 +264,9 @@ LTH.Main.prototype = {
 		    this.previewDoc.write(myContent);
 		    this.previewDoc.close();
             //this.preview.style.display = 'block';
+
+            //var myIFrame = document.getElementById('preview');
+            //console.log(myIFrame)
 
 		    this.resize();
 		    //this.previewMain.onload = function(){ this.previewTheme(); }.bind(this);

@@ -36,5 +36,7 @@
 	<demo n='liquid' lib='gui'></demo>
 	<demo n='crowd_test' lib='sea3dn'></demo>
 	<demo n='metaball' lib=''></demo>
+	<demo n='superdroid' lib='sea3dn'></demo>
+	<demo n='dante' lib='sea3dn'></demo>
 </rubrique>
 </menu>

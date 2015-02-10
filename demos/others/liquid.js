@@ -43,6 +43,7 @@ function loop(){
     mesh.geometry.verticesNeedUpdate = true;    
     mesh.geometry.computeVertexNormals( true );
     mesh.geometry.normalsNeedUpdate = true;
+    mesh.geometry.computeTangents() ;
     v.render();
 }
 

@@ -405,6 +405,7 @@ V.Blob.prototype.update = function (r) {
 //---------------------------------------------------
 
 V.Nav = function(parent, h, v, d){
+    this.isRevers = false;
     this.cammode = 'normal';
     this.EPS = 0.000001;
 	this.root = parent;
@@ -449,6 +450,10 @@ V.Nav.prototype = {
         this.orbit();
         this.camera.position.lerp(this.position, 0.3);
         this.camera.lookAt(this.target);
+    },
+    revers:function(){
+        this.isRevers = true;
+        this.camera.scale.x = -1; 
     },
     orbit:function(){
         var p = this.position;
@@ -509,7 +514,8 @@ V.Nav.prototype = {
     onMouseMove:function(e){
         if (this.mouse.down && this.mouse.move && !this.lockView) {
     		this.cursor.change('move');
-            this.cam.horizontal = ((e.clientX - this.mouse.ox) * 0.3) + this.mouse.h;
+            if(this.isRevers) this.cam.horizontal = -((e.clientX - this.mouse.ox) * 0.3) + this.mouse.h;
+            else this.cam.horizontal = ((e.clientX - this.mouse.ox) * 0.3) + this.mouse.h;
             this.cam.vertical = (-(e.clientY - this.mouse.oy) * 0.3) + this.mouse.v;
             if (this.cam.vertical < 0){ this.cam.vertical = 0; }
             this.moveCamera();

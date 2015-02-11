@@ -30,13 +30,15 @@
 <rubrique n='experiments'>
 	<demo n='terrain' lib='terrain|gui'></demo>
 	<demo n='seriously' lib='sea3dn|serious'></demo>
-	<!--<demo n='human' lib='sea3dn|gui|tween'></demo> -->
+	<demo n='crowd_test' lib='sea3dn'></demo>
+	<demo n='human' lib='sea3dn|gui|tween'></demo>
 </rubrique>
 <rubrique n='others'>
 	<demo n='liquid' lib='gui'></demo>
-	<demo n='crowd_test' lib='sea3dn'></demo>
+	
 	<demo n='metaball' lib=''></demo>
 	<demo n='superdroid' lib='sea3dn'></demo>
 	<demo n='dante' lib='sea3dn'></demo>
+	<demo n='sam' lib='sea3dn'></demo>
 </rubrique>
 </menu>

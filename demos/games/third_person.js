@@ -553,7 +553,7 @@ function onload(){
 
     var tx0 = THREE.ImageUtils.loadTexture( 'images/museum/facade.png');
     var tx1 = THREE.ImageUtils.loadTexture( 'images/museum/escalator.png');
-    var tx2 = THREE.ImageUtils.loadTexture( 'images/museum/floor.png');
+    var tx2 = THREE.ImageUtils.loadTexture( 'images/museum/floor.jpg');
     var tx3 = THREE.ImageUtils.loadTexture( 'images/museum/bigwall.png');
     tx0.flipY = false;
     tx1.flipY = false;
@@ -566,9 +566,15 @@ function onload(){
     var material3 = new V.Shader('Spherical', { map:tx3, env:envbase, useMap:1, reflection:0.2 });
     var material4 = new V.Shader('Spherical', { map:tx0, env:envbase, useMap:1, reflection:0.2, transparent:true, side:THREE.DoubleSide });
     var material5 = new V.Shader('Spherical', { map:tx1, env:envbase, useMap:1, reflection:0.2, transparent:true,  side:THREE.DoubleSide });
-    
 
-    var names = ['facade', 'elevator','facade_w','elevator_w','floor','bigwall','Object065'];
+    env.add(material0);
+    env.add(material1);
+    env.add(material2);
+    env.add(material3);
+    env.add(material4);
+    env.add(material5);
+    
+    var names = ['facade', 'elevator','facade_w','elevator_w','floor','bigwall'];
     var i = names.length, m, name;
     while(i--){
         name = names[i];
@@ -603,7 +609,6 @@ function onloadNext(){
 	env.add(material);
 
 	model.material = material;
-	
 
 	player.addHero(model, size, modelName);
 }

@@ -405,6 +405,7 @@ V.Blob.prototype.update = function (r) {
 //---------------------------------------------------
 
 V.Nav = function(parent, h, v, d){
+    this.cammode = 'normal';
     this.EPS = 0.000001;
 	this.root = parent;
 
@@ -433,14 +434,20 @@ V.Nav = function(parent, h, v, d){
     this.root.canvas.onmouseout = function(e) {this.onMouseUp(e)}.bind( this );
     this.root.canvas.onmouseup = function(e) {this.onMouseUp(e)}.bind( this );
     this.root.canvas.onmousewheel = function(e) {this.onMouseWheel(e)}.bind( this );
-    this.root.canvas.onDOMMouseScroll = function(e) {this.onMouseWheel(e)}.bind( this );
+    //this.root.canvas.onDOMMouseScroll = function(e) {this.onMouseWheel(e)}.bind( this );
+    this.root.canvas.addEventListener('DOMMouseScroll', function(e){this.onMouseWheel(e)}.bind( this ), false );
 }
 
 V.Nav.prototype = {
 	constructor: V.Nav,
 	moveCamera:function(){
-        this.orbit()
+        this.orbit();
         this.camera.position.copy(this.position);
+        this.camera.lookAt(this.target);
+    },
+    moveSmooth:function(){
+        this.orbit();
+        this.camera.position.lerp(this.position, 0.3);
         this.camera.lookAt(this.target);
     },
     orbit:function(){
@@ -453,6 +460,16 @@ V.Nav.prototype = {
         p.y = d * Math.cos(phi);
         p.z = d * Math.sin(phi) * Math.sin(theta);
         p.add(this.target);
+    },
+    mode:function(){
+        if(this.cammode == 'normal'){
+            this.cammode = 'fps';
+            this.cam.distance = 0.1;
+        }else{
+            this.cammode = 'normal';
+            this.cam.distance = 20;
+        }
+        this.moveSmooth();
     },
     move:function(v){
         this.target.copy(v);
@@ -505,14 +522,16 @@ V.Nav.prototype = {
         e.stopPropagation();
     },
     onMouseWheel:function(e){
-    	e.preventDefault();
+        if(this.cammode=='fps') return;
         var delta = 0;
         if(e.wheelDeltaY){delta=e.wheelDeltaY*0.01;}
         else if(e.wheelDelta){delta=e.wheelDelta*0.05;}
         else if(e.detail){delta=-e.detail*1.0;}
         this.cam.distance -= delta;
-        if(this.cam.distance<2)this.cam.distance = 2;
+        if(this.cam.distance<0.5)this.cam.distance = 0.5;
         this.moveCamera();
+        e.preventDefault();
+        e.stopPropagation();
     },
     rayTest:function(e){
     	this.rayVector.x = ( this.mouse.x / this.root.dimentions.w ) * 2 - 1;

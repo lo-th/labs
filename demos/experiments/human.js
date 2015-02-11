@@ -1,7 +1,7 @@
 var v = new V.View(180, 45, 130);
 v.tell('human');
 v.pool.load('dianna', onload, true);
-var head, body, suit, mathead, matbody, matSuit, matCils, matEyeL_lo, matTeethLower, matTeethUpper;
+var head, body, suit, mathead, matbody, matSuit, matCils, matEyeL_lo, matTeethLower, matTeethUpper, matSock, matTongue;
 var bodyBones = {};
 var headBones = {};
 
@@ -42,12 +42,16 @@ function onload(){
     var tx3 = THREE.ImageUtils.loadTexture( 'images/dianna/eye_cont.png');
     var tx4 = THREE.ImageUtils.loadTexture( 'images/dianna/teethLow.png');
     var tx5 = THREE.ImageUtils.loadTexture( 'images/dianna/teethUp.png');
+    var tx6 = THREE.ImageUtils.loadTexture( 'images/dianna/sock.jpg');
+    var tx7 = THREE.ImageUtils.loadTexture( 'images/dianna/tongue.jpg');
     tx0.flipY = false;
     tx1.flipY = false;
     tx2.flipY = false;
     tx3.flipY = false;
     tx4.flipY = false;
     tx5.flipY = false;
+    tx6.flipY = false;
+    tx7.flipY = false;
 
 
     matHead = new V.Shader('Spherical', {map:tx1, skinning:true, morphTargets:true, env:envbase, useMap:1, reflection:0.4});
@@ -57,6 +61,9 @@ function onload(){
     matEyeL_lo = new V.Shader('Spherical', {map:tx3, morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true});
     matTeethLower = new V.Shader('Spherical', {map:tx4, morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true});
     matTeethUpper = new V.Shader('Spherical', {map:tx5, morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true});
+    matSock = new V.Shader('Spherical', {map:tx4, morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true});
+    matTongue = new V.Shader('Spherical', {map:tx5, morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true});
+
 
     env.add(matHead);
     env.add(matBody);
@@ -69,7 +76,8 @@ function onload(){
     v.pool.meshes.dianna.eyeL_lo.material = matEyeL_lo;
     v.pool.meshes.dianna.teethLower.material = matTeethLower;
     v.pool.meshes.dianna.teethUpper.material = matTeethUpper;
-    //v.pool.meshes.dianna.cils.material = matCils;
+    v.pool.meshes.dianna.sock.material = matSock;
+    v.pool.meshes.dianna.tongue.material = matTongue;
 
     for(var j=0; j<body.skeleton.bones.length; j++){
         var bone = body.skeleton.bones[j]

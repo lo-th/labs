@@ -55,7 +55,7 @@ V.Minimap = function(debug){
     this.miniSize = { w:64, h:64, f:0.25 };
     this.cc = {r:255, g:0, b:0, a:255}; 
 
-    this.camy = 50;
+    this.camy = 30;
 
     this.miniGlCanvas = document.createElement('canvas');
     this.miniTop = document.createElement('canvas');
@@ -554,11 +554,13 @@ function onload(){
     var tx0 = THREE.ImageUtils.loadTexture( 'images/museum/facade.png');
     var tx1 = THREE.ImageUtils.loadTexture( 'images/museum/escalator.png');
     var tx2 = THREE.ImageUtils.loadTexture( 'images/museum/floor.jpg');
-    var tx3 = THREE.ImageUtils.loadTexture( 'images/museum/bigwall.png');
+    var tx3 = THREE.ImageUtils.loadTexture( 'images/museum/bigwall.jpg');
+    var tx4 = THREE.ImageUtils.loadTexture( 'images/museum/floor2.jpg');
     tx0.flipY = false;
     tx1.flipY = false;
     tx2.flipY = false;
     tx3.flipY = false;
+    tx4.flipY = false;
 
     var material0 = new V.Shader('Spherical', { map:tx0, env:envbase, useMap:1, reflection:0.2, transparent:false });
     var material1 = new V.Shader('Spherical', { map:tx1, env:envbase, useMap:1, reflection:0.2, transparent:false });
@@ -566,6 +568,7 @@ function onload(){
     var material3 = new V.Shader('Spherical', { map:tx3, env:envbase, useMap:1, reflection:0.2 });
     var material4 = new V.Shader('Spherical', { map:tx0, env:envbase, useMap:1, reflection:0.2, transparent:true, side:THREE.DoubleSide });
     var material5 = new V.Shader('Spherical', { map:tx1, env:envbase, useMap:1, reflection:0.2, transparent:true,  side:THREE.DoubleSide });
+    var material6 = new V.Shader('Spherical', { map:tx4, env:envbase, useMap:1, reflection:0.2 });
 
     env.add(material0);
     env.add(material1);
@@ -573,8 +576,9 @@ function onload(){
     env.add(material3);
     env.add(material4);
     env.add(material5);
+    env.add(material6);
     
-    var names = ['facade', 'elevator','facade_w','elevator_w','floor','bigwall'];
+    var names = ['facade', 'elevator','facade_w','elevator_w','floor','bigwall', 'floor2'];
     var i = names.length, m, name;
     while(i--){
         name = names[i];
@@ -589,6 +593,7 @@ function onload(){
         if(m.name == "elevator_w"){ m.material = material5;}
 
         if(m.name == "floor"){ m.material = material2;  }
+        if(m.name == "floor2"){ m.material = material6;  }
         if(m.name == "bigwall"){ m.material = material3;  }
 
     }

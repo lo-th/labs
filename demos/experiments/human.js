@@ -47,6 +47,8 @@ function onload(){
     var tx7 = THREE.ImageUtils.loadTexture( 'images/dianna/tongue.jpg');
     var tx8 = THREE.ImageUtils.loadTexture( 'images/dianna/teethLow_n.jpg');
     var tx9 = THREE.ImageUtils.loadTexture( 'images/dianna/teethUp_n.jpg');
+    var tx10 = THREE.ImageUtils.loadTexture( 'images/dianna/head_n.jpg');
+    var tx11 = THREE.ImageUtils.loadTexture( 'images/dianna/body_n.jpg');
 
     tx0.flipY = false;
     tx1.flipY = false;
@@ -58,10 +60,12 @@ function onload(){
     tx7.flipY = false;
     tx8.flipY = false;
     tx9.flipY = false;
+    tx10.flipY = false;
+    tx11.flipY = false;
 
-    matHead = new V.Shader('Spherical', {map:tx1, skinning:true, morphTargets:true, env:envbase, useMap:1, reflection:0.4});
-    matBody = new V.Shader('Spherical', {map:tx0, skinning:true, morphTargets:false, env:envbase, useMap:1, reflection:0.4});
-    matSuit = new V.Shader('Spherical', {map:tx0, skinning:true, morphTargets:false, env:envbase, useMap:1, reflection:0.8});
+    matHead = new V.Shader('Spherical', {map:tx1, normalMap:tx10, skinning:true, morphTargets:true, env:envbase, useMap:1, useNormal:1, reflection:0.2});
+    matBody = new V.Shader('Spherical', {map:tx0, normalMap:tx11, skinning:true, morphTargets:false, env:envbase, useMap:1, useNormal:1, reflection:0.2});
+    matSuit = new V.Shader('Spherical', {map:tx0, normalMap:tx11, skinning:true, morphTargets:false, env:envbase, useMap:1, useNormal:1, reflection:0.8});
     matCils = new V.Shader('Spherical', {map:tx2, morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true});
     matEyeL_lo = new V.Shader('Spherical', {map:tx3, morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true});
     matTeethLower = new V.Shader('Spherical', {map:tx4, normalMap:tx8, morphTargets:true, env:envbase, useMap:1, useNormal:1, reflection:0.5, transparent:true});

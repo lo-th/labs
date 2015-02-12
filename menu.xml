@@ -40,5 +40,6 @@
 	<demo n='superdroid' lib='sea3dn'></demo>
 	<demo n='dante' lib='sea3dn'></demo>
 	<demo n='sam' lib='sea3dn'></demo>
+	<demo n='eye' lib=''></demo>
 </rubrique>
 </menu>

@@ -273,9 +273,12 @@ V.View.prototype = {
         if(this.w) this.w.addParticle(obj);
     },
     initGeo:function(){
+        var sph = new THREE.SphereGeometry(1,34,28);
+        sph.computeTangents();
+
     	var geo = {};
 		geo['sphere'] = new THREE.BufferGeometry().fromGeometry(new THREE.SphereGeometry(1,12,10));
-        geo['sphereHigh'] = new THREE.BufferGeometry().fromGeometry(new THREE.SphereGeometry(1,34,28));
+        geo['sphereHigh'] = sph;//new THREE.BufferGeometry().fromGeometry(sph);//new THREE.SphereGeometry(1,34,28);//new THREE.BufferGeometry().fromGeometry(new THREE.SphereGeometry(1,34,28));
 		geo['box'] = new THREE.BufferGeometry().fromGeometry(new THREE.BoxGeometry(1,1,1));
 		geo['cylinder'] = new THREE.BufferGeometry().fromGeometry(new THREE.CylinderGeometry(1,1,1,12,1));
 	    geo['plane'] = new THREE.PlaneBufferGeometry(1,1);

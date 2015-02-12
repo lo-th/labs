@@ -31,7 +31,7 @@ cornea_bump_amount:		{ type: 'f', value: 0.10 },	// Adjust cornea normals to fak
 cornea_bump_radius_mult:{ type: 'f', value: 0.90 },	// Multiply the radius of the cornea bump beyond the iris
 iris_normal_offset:		{ type: 'f', value: 0.001 },	// Offset the edge of the cornea for the cornea bump
 cornea_density:			{ type: 'f', value: 0.001 },	// Add fog to the cornea
-bump_texture:			{ type: 'f', value: 0.30 },	// Bump Texture value
+bump_texture:			{ type: 'f', value: 0.50 },	// Bump Texture value
 catshape:				{ type: 'i', value: 0 	 },	// Cat eye shape
 col_texture:			{ type: 'i', value: 1 	 },
 reflection:			{ type: 'f', value: 0.4 	 }
@@ -279,8 +279,8 @@ fs: [
 	'vec3 envTex = sphericalRefl( texEnvRfl, oReflect );',
 
 	'vec3 ev = texture2D( env, vN ).xyz;',
-	'ev += envTex;',
-	'envTex = mix( envTex, ev, reflection );',
+	//'ev += envTex;',
+	'envTex = mix( envTex, ev+envTex, reflection );',
 
 
 	//'vec3 envTex = vec3(0.5,0.5,0.5 );',
@@ -340,7 +340,7 @@ fs: [
 			//'vec3 sphericalDiff = vec3(1.,1.,1. );',
 			//'vec3 sphericalDiff = ev+eyeTex;',
 			'vec3 col = vec3(.9,.9,.9 );',
-			'vec3 sphericalDiff = mix( col, ev+(eyeTex*0.7), reflection );',
+			'vec3 sphericalDiff = mix( col, ev+(eyeTex*0.3), reflection );',
 			//'vec3 sphericalDiffCatarax = pow( sphericalRefl( texEnvDif,  oNormal  ), vec3(2.0)) * vec3( 0.8, 0.79, 0.77);',
 			//'vec3 sphericalDiffCatarax = pow( sphericalRefl( texEnvRfl,  oNormal  ), vec3(2.0)) * vec3( 0.8, 0.79, 0.77);',
 			//'vec3 sphericalDiffCatarax =  mix( eyeTex, ev+eyeTex, 1.0 );',

@@ -34,7 +34,7 @@ cornea_density:			{ type: 'f', value: 0.001 },	// Add fog to the cornea
 bump_texture:			{ type: 'f', value: 0.30 },	// Bump Texture value
 catshape:				{ type: 'i', value: 0 	 },	// Cat eye shape
 col_texture:			{ type: 'i', value: 1 	 },
-reflection:			{ type: 'f', value: 0.6 	 }
+reflection:			{ type: 'f', value: 0.4 	 }
 },
 fs: [
 //'precision highp float;',
@@ -88,15 +88,7 @@ fs: [
 
 '#define PI 3.14159265358979323846264',
 
-'float intersectSphere',
-'(',
-	'vec3 ray_origin,',
-	'vec3 ray_dir,',
-	'vec3 sphere_center,',
-	'float sphere_rad,',
-	'float trace_dir',
-')',
-'{',
+'float intersectSphere(vec3 ray_origin, vec3 ray_dir, vec3 sphere_center, float sphere_rad, float trace_dir){',
 	'vec3 disp = ray_origin - sphere_center;',
 	'float B = dot(disp, ray_dir);',
 	'float C = dot(disp, disp) - sphere_rad * sphere_rad;',
@@ -107,15 +99,7 @@ fs: [
 // GL_OES_standard_derivatives needs to be enabled for dFdx dFdy functions in normalMapComp() to work
 '#extension GL_OES_standard_derivatives : enable',
 
-'vec3 normalMapComp',
-'(',
-	'sampler2D normalMap,',
-	'vec2 inUV,',
-	'vec3 eye_pos,',
-	'vec3 surf_norm,',
-	'float normalScale',
-')',
-'{',
+'vec3 normalMapComp( sampler2D normalMap, vec2 inUV, vec3 eye_pos, vec3 surf_norm, float normalScale){',
 	'vec3 q0 = dFdx( eye_pos.xyz );',
 	'vec3 q1 = dFdy( eye_pos.xyz );',
 	'vec2 st0 = dFdx( inUV.st );',
@@ -131,14 +115,13 @@ fs: [
 	'return normalize( tsn * mapN );',
 '}',
 
-'vec3 sphericalRefl( sampler2D panoTex, vec3 vReflect)',
-'{',
+'vec3 sphericalRefl( sampler2D panoTex, vec3 vReflect){',
 	'float yaw = .5 + atan( vReflect.z, vReflect.x ) / ( 2.0 * PI );',
 	'float pitch = .5 + atan( vReflect.y, length( vReflect.xz ) ) / ( PI );',
 	'return texture2D( panoTex, vec2( yaw, pitch ) ).rgb;',
 '}',
-'void main()',
-'{',
+
+'void main(){',
 	// Eye Shader credits:
 	// v.1 S.Bertout CG to RSL
 	// v.2 A.Vill RSL
@@ -293,9 +276,14 @@ fs: [
 	// Reflections
 	'vec3 fNormalSpec = normalMapComp( texEyeNrm, vec2( eye_U, eye_V ), -vPosition, oNormal, bump_texture * (1.0-cornea_mask) );',
 	'vec3 oReflect = normalize( reflect( oView, fNormalSpec ) );',
-	//'vec3 envTex = sphericalRefl( texEnvRfl, oReflect );',
+	'vec3 envTex = sphericalRefl( texEnvRfl, oReflect );',
 
-	'vec3 envTex = vec3(0.5,0.5,0.5 );',
+	'vec3 ev = texture2D( env, vN ).xyz;',
+	'ev += envTex;',
+	'envTex = mix( envTex, ev, reflection );',
+
+
+	//'vec3 envTex = vec3(0.5,0.5,0.5 );',
 	
     //'ev *= base;',
     //'gl_FragColor.xyz = mix( base.xyz, ev.xyz, reflection );',
@@ -344,12 +332,19 @@ fs: [
 			'float hemiDiffuseWeight = 0.5 * dot( fNormalDiff, hemiLgtVector ) + 0.5;',
 			'vec3  hemiCol = mix( vec3( 0.08, 0.03, 0.002 ), vec3( 0.15, 0.2, 0.25 ), hemiDiffuseWeight);',
 			
-			'composites = mix( eyeTex * (diffuse + hemiCol), envTex, fresnel )   + specular;',
+			'composites = mix( eyeTex * (diffuse + hemiCol), envTex, fresnel ) + specular;',
 	'}else{',
 			'fNormalDiff = normalMapComp( texEyeNrm, eyeUVs, -vPosition, normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * iris_normal ),  bump_texture * mix( 0.5, 1.0, cornea_mask) );',
 			//'vec3 sphericalDiff = sphericalRefl( texEnvDif,  fNormalDiff  );',
-			'vec3 sphericalDiff = vec3(1.,1.,1. );',
-			'vec3 sphericalDiffCatarax = pow( sphericalRefl( texEnvDif,  oNormal  ), vec3(2.0)) * vec3( 0.8, 0.79, 0.77);',
+			//'vec3 sphericalDiff = sphericalRefl( texEnvRfl,  fNormalDiff  );',
+			//'vec3 sphericalDiff = vec3(1.,1.,1. );',
+			//'vec3 sphericalDiff = ev+eyeTex;',
+			'vec3 col = vec3(.9,.9,.9 );',
+			'vec3 sphericalDiff = mix( col, ev+(eyeTex*0.7), reflection );',
+			//'vec3 sphericalDiffCatarax = pow( sphericalRefl( texEnvDif,  oNormal  ), vec3(2.0)) * vec3( 0.8, 0.79, 0.77);',
+			//'vec3 sphericalDiffCatarax = pow( sphericalRefl( texEnvRfl,  oNormal  ), vec3(2.0)) * vec3( 0.8, 0.79, 0.77);',
+			//'vec3 sphericalDiffCatarax =  mix( eyeTex, ev+eyeTex, 1.0 );',
+			'vec3 sphericalDiffCatarax =  mix( eyeTex, ev, 1.0 );',
 			'sphericalDiff = pow( sphericalDiff, vec3(2.0)) * 1.5;', // really arbitrary color correct
 
 			'composites = mix( eyeTex * sphericalDiff, sphericalDiffCatarax, cornea_fade * 10.0 * cornea_mask);',
@@ -358,12 +353,13 @@ fs: [
 
 	// linear to sRGB
 	'composites =  pow( composites, vec3(1.0 / 2.2));',
-	'vec3 ev = texture2D( env, vN ).xyz;',
+	/*'vec3 ev = texture2D( env, vN ).xyz;',
 	'ev *= composites;',
 
 	'vec3 result = mix( composites.xyz, ev.xyz, reflection );',
+	'result = result * ( 1.0 - fresnel ) + ( envTex * fresnel );',*/
 
-	'gl_FragColor = vec4( result, 1.0);',
+	'gl_FragColor = vec4( composites, 1.0);',
 '}'
 
 ].join('\n'),
@@ -388,7 +384,7 @@ vs: [
 'uniform float cornea_bump_amount;',
 'uniform float cornea_bump_radius_mult;',
 
-'mat4 InverseMatrix( mat4 A ) {',
+'mat4 InverseMatrix( mat4 A ){',
 
 	'float s0 = A[0][0] * A[1][1] - A[1][0] * A[0][1];',
 	'float s1 = A[0][0] * A[1][2] - A[1][0] * A[0][2];',
@@ -431,16 +427,14 @@ vs: [
 	'return B;',
 '}',
 
-'mat3 makeRotationDir( vec3 direction, vec3 up )',
-'{',
+'mat3 makeRotationDir( vec3 direction, vec3 up ){',
 	'vec3 xaxis = normalize( cross( up, direction));',
 	'vec3 yaxis = normalize( cross( direction, xaxis));',
 
 	'return mat3( xaxis.x, xaxis.y, xaxis.z, yaxis.x,  yaxis.y, yaxis.z, direction.x, direction.y, direction.z);',
 '}',
 
-'mat3 rotationMatrix(vec3 axis, float angle)',
-'{',
+'mat3 rotationMatrix(vec3 axis, float angle){',
 	'axis = normalize(axis);',
 	'float s = sin(angle);',
 	'float c = cos(angle);',
@@ -451,16 +445,7 @@ vs: [
 				'oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c);',
 '}',
 
-'vec3 corneaVertexDisp',
-'(',
-	'vec3		eyeP,',
-	'vec3		eyeN,',
-	'float		iris_size,',
-	'float		cornea_bump_amount,',
-	'float		cornea_bump_radius_mult,',
-	'out vec3	outN',
-')',
-'{',
+'vec3 corneaVertexDisp(vec3 eyeP, vec3	eyeN, float	iris_size, float cornea_bump_amount, float cornea_bump_radius_mult, out vec3 outN){',
 	'vec3 _norm_P = normalize( eyeP );',
 	'float iris_depth = 1.0 - pow(  iris_size, 3.0 );',
 	'float _measured_eye_radius = length( eyeP );',
@@ -480,7 +465,7 @@ vs: [
 	'return _bump_factor * eyeN;',
 '}',
 
-'void main() {',
+'void main(){',
 
 	'vec3 displacedN;',
 	'vec3 displacedP = position.xyz + corneaVertexDisp( position.xyz, normal, iris_size, cornea_bump_amount, cornea_bump_radius_mult, displacedN );',		
@@ -524,7 +509,7 @@ vs: [
 	// spherical
     //'vec3 vPos = normalize( vec3( modelViewMatrix * vec4(position,1.0) ) );',
     //'vNormal = normalize( normalMatrix * normal );',
-	'vec3 r = reflect( vPosition, vNormal );',
+	'vec3 r = reflect(  normalize( vPosition ), vNormal );',
 	'float m = 2. * sqrt( pow( r.x, 2. ) + pow( r.y, 2. ) + pow( r.z + 1., 2. ) );',
 	'vN = r.xy / m + .5;',
 	'vU = uv;',

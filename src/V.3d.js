@@ -424,8 +424,8 @@ V.Nav = function(parent, h, v, d){
 	this.raycaster = new THREE.Raycaster();
 	this.target = new THREE.Vector3();
     this.position = new THREE.Vector3();
-	this.cam = { horizontal:h||0, vertical:v||90, distance:d||20, automove:false };
-    this.mouse = { x:0, y:0, ox:0, oy:0, h:0, v:0, mx:0, my:0, down:false, move:true, button:0 };
+	this.cam = { horizontal:h||0, vertical:v||90, distance:d||20, automove:false, theta:0 };
+    this.mouse = { x:0, y:0, ox:0, oy:0, h:0, v:0, mx:0, my:0, px:0, py:0, pz:0, r:0, down:false, move:true, button:0 };
     this.key = { up:0, down:0, left:0, right:0, ctrl:0, action:0, space:0, shift:0 };
 
     this.moveCamera();
@@ -463,6 +463,7 @@ V.Nav.prototype = {
         var d = this.cam.distance;
         var phi = this.cam.vertical*V.ToRad;
         var theta = this.cam.horizontal*V.ToRad;
+        this.cam.theta = theta;
         phi = Math.max( this.EPS, Math.min( Math.PI - this.EPS, phi ) );
         p.x = d * Math.sin(phi) * Math.cos(theta);
         p.y = d * Math.cos(phi);
@@ -494,12 +495,17 @@ V.Nav.prototype = {
     onMouseDown:function(e){
         this.mouse.down = true;
         this.mouse.button = e.which;
+        //console.log(e.which)
         this.mouse.ox = e.clientX;
         this.mouse.oy = e.clientY;
         this.mouse.h = this.cam.horizontal;
         this.mouse.v = this.cam.vertical;
         this.mouse.x = e.clientX;
         this.mouse.y = e.clientY;
+        this.mouse.px = this.target.x;
+        this.mouse.pz = this.target.z;
+        this.mouse.py = this.target.y;
+        
 	    this.rayTest();
         if (typeof mainDown == 'function') { mainDown(); }
         e.preventDefault();
@@ -516,11 +522,24 @@ V.Nav.prototype = {
     },
     onMouseMove:function(e){
         if (this.mouse.down && this.mouse.move && !this.lockView) {
-    		this.cursor.change('move');
-            if(this.isRevers) this.cam.horizontal = -((e.clientX - this.mouse.ox) * 0.3) + this.mouse.h;
-            else this.cam.horizontal = ((e.clientX - this.mouse.ox) * 0.3) + this.mouse.h;
-            this.cam.vertical = (-(e.clientY - this.mouse.oy) * 0.3) + this.mouse.v;
-            if (this.cam.vertical < 0){ this.cam.vertical = 0; }
+            if(this.mouse.button==3){
+                this.cursor.change('drag');
+                var px = -((e.clientX - this.mouse.ox) * 0.3);
+                if(this.isRevers){
+                    this.target.x = -(Math.sin(this.cam.theta) * px) +  this.mouse.px;
+                    this.target.z = (Math.cos(this.cam.theta) * px) +  this.mouse.pz;
+                }else{
+                    this.target.x = (Math.sin(this.cam.theta) * px) +  this.mouse.px;
+                    this.target.z = -(Math.cos(this.cam.theta) * px) +  this.mouse.pz;
+                }
+                this.target.y = ((e.clientY - this.mouse.oy) * 0.3) + this.mouse.py;
+            }else{
+                this.cursor.change('move');
+                if(this.isRevers) this.cam.horizontal = -((e.clientX - this.mouse.ox) * 0.3) + this.mouse.h;
+                else this.cam.horizontal = ((e.clientX - this.mouse.ox) * 0.3) + this.mouse.h;
+                this.cam.vertical = (-(e.clientY - this.mouse.oy) * 0.3) + this.mouse.v;
+                if (this.cam.vertical < 0){ this.cam.vertical = 0; }
+            }
             this.moveCamera();
         }
         this.mouse.x = e.clientX;

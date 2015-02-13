@@ -108,6 +108,9 @@ V.View.prototype = {
             if(this.w.isReady){ this.wFun(); this.isW=true; }
         }
 
+        // three animation update
+        THREE.AnimationHandler.update( this.clock.getDelta() );
+
         // serious update
         if(this.isWithSerious) this.renderer.resetGLState();
         // tween update
@@ -119,9 +122,6 @@ V.View.prototype = {
         }else{
             this.renderer.render( this.scene, this.nav.camera );
         }
-
-        // three animation update
-        THREE.AnimationHandler.update( this.clock.getDelta() );
 
         var f = this.f;
         f[0] = Date.now();

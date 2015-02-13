@@ -30,8 +30,8 @@ function onload(){
     //head.skeleton = body.skeleton;
 
 	head.setWeight("neck", 1);
-    head.setWeight("earOut", 0.6);
-    head.setWeight("surprise", 1);
+    //head.setWeight("earOut", 0.6);
+    //head.setWeight("surprise", 1);
 
 	head.scale.set(size,size,size);
     body.scale.set(size,size,size);
@@ -122,12 +122,12 @@ function onload(){
 
     matEye = new V.Shader('Eye', {texEyeCol:ex0, texEyeNrm:ex1, env:envbase, texEnvRfl:ex2});
     env.add(matEye);
-    var ball = new THREE.Mesh( new THREE.SphereGeometry( 0.55, 32,16 ), matEye );
-    var ball2 = new THREE.Mesh( new THREE.SphereGeometry( 0.55, 32,16 ), matEye );
+    var ball = new THREE.Mesh( new THREE.SphereGeometry( 0.53, 32,16 ), matEye );
+    var ball2 = new THREE.Mesh( new THREE.SphereGeometry( 0.53, 32,16 ), matEye );
     ball.rotation.x = V.PI;
     ball2.rotation.x = V.PI;
-    ball.position.set(3.8,1.22,3);
-    ball2.position.set(3.8,-1.22,3);
+    ball.position.set(3.87,1.25,3);
+    ball2.position.set(3.87,-1.25,3);
     ball.scale.set(1,1,-1);
     ball2.scale.set(1,1,-1);
     headBones.Bone007.add(ball);

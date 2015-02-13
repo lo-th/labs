@@ -534,7 +534,7 @@ V.Nav.prototype = {
                 }
                 this.target.y = ((e.clientY - this.mouse.oy) * 0.3) + this.mouse.py;
             }else{
-                this.cursor.change('move');
+                this.cursor.change('rotate');
                 if(this.isRevers) this.cam.horizontal = -((e.clientX - this.mouse.ox) * 0.3) + this.mouse.h;
                 else this.cam.horizontal = ((e.clientX - this.mouse.ox) * 0.3) + this.mouse.h;
                 this.cam.vertical = (-(e.clientY - this.mouse.oy) * 0.3) + this.mouse.v;
@@ -635,6 +635,7 @@ V.Cursor = function(){
 		drag : 'url(images/cursor/hand.png) 16 16,auto',
 		draw : 'url(images/cursor/draw.png) 16 16,auto',
 		cut  : 'url(images/cursor/cut.png) 0 30,auto',
+        rotate  : 'url(images/cursor/rotate.png) 16 16,auto',
 		move : 'move',
 		auto : 'auto'
 	}

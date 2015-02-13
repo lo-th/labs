@@ -1,7 +1,7 @@
 var v = new V.View(180, 45, 130);
 v.tell('human');
 v.pool.load('dianna', onload, true);
-var head, body, suit, mathead, matbody, matSuit, matCils, matEyeL_lo, matTeethLower, matTeethUpper, matSock, matTongue, matEye;
+var head, body, suit;
 var bodyBones = {};
 var headBones = {};
 
@@ -49,29 +49,32 @@ function onload(){
         textures[i].flipY = false;
     }
 
-    matHead = new V.Shader('Spherical', {map:textures[1], normalMap:textures[10], skinning:true, morphTargets:true, env:envbase, useMap:1, useNormal:1, reflection:0.2});
-    matBody = new V.Shader('Spherical', {map:textures[0], normalMap:textures[11], skinning:true, morphTargets:false, env:envbase, useMap:1, useNormal:1, reflection:0.2});
-    matSuit = new V.Shader('Spherical', {map:textures[0], normalMap:textures[11], skinning:true, morphTargets:false, env:envbase, useMap:1, useNormal:1, reflection:0.8});
-    matCils = new V.Shader('Spherical', {map:textures[2], morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true, side:THREE.DoubleSide});
-    matEyeL_lo = new V.Shader('Spherical', {map:textures[3], morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true});
-    matTeethLower = new V.Shader('Spherical', {map:textures[4], normalMap:textures[8], morphTargets:true, env:envbase, useMap:1, useNormal:1, reflection:0.5, transparent:true});
-    matTeethUpper = new V.Shader('Spherical', {map:textures[5], normalMap:textures[9], env:envbase, useMap:1, useNormal:1, reflection:0.5, transparent:true});
-    matSock = new V.Shader('Spherical', {map:textures[6], morphTargets:true, env:envbase, useMap:1, reflection:0.5});
-    matTongue = new V.Shader('Spherical', {map:textures[7], morphTargets:true, env:envbase, useMap:1, reflection:0.5});
+    var materials = [];
 
-    env.add(matHead);
-    env.add(matBody);
-    env.add(matSuit);
+    materials[0] = new V.Shader('Spherical', {map:textures[1], normalMap:textures[10], skinning:true, morphTargets:true, env:envbase, useMap:1, useNormal:1, reflection:0.2});
+    materials[1] = new V.Shader('Spherical', {map:textures[0], normalMap:textures[11], skinning:true, morphTargets:false, env:envbase, useMap:1, useNormal:1, reflection:0.2});
+    materials[2] = new V.Shader('Spherical', {map:textures[0], normalMap:textures[11], skinning:true, morphTargets:false, env:envbase, useMap:1, useNormal:1, reflection:0.8});
+    materials[3] = new V.Shader('Spherical', {map:textures[2], morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true, side:THREE.DoubleSide});
+    materials[4] = new V.Shader('Spherical', {map:textures[3], morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true});
+    materials[5] = new V.Shader('Spherical', {map:textures[4], normalMap:textures[8], morphTargets:true, env:envbase, useMap:1, useNormal:1, reflection:0.5, transparent:true});
+    materials[6] = new V.Shader('Spherical', {map:textures[5], normalMap:textures[9], env:envbase, useMap:1, useNormal:1, reflection:0.5, transparent:true});
+    materials[7] = new V.Shader('Spherical', {map:textures[6], morphTargets:true, env:envbase, useMap:1, reflection:0.5});
+    materials[8] = new V.Shader('Spherical', {map:textures[7], morphTargets:true, env:envbase, useMap:1, reflection:0.5});
+    materials[9] = new V.Shader('Spherical', {env:envbase, reflection:1});
 
-    body.material = matBody;
-    suit.material = matSuit;
-    head.material = matHead;
-    v.pool.meshes.dianna.cils.material = matCils;
-    v.pool.meshes.dianna.eyeL_lo.material = matEyeL_lo;
-    v.pool.meshes.dianna.teethLower.material = matTeethLower;
-    v.pool.meshes.dianna.teethUpper.material = matTeethUpper;
-    v.pool.meshes.dianna.sock.material = matSock;
-    v.pool.meshes.dianna.tongue.material = matTongue;
+    i = materials.length;
+    while(i--) env.add(materials[i]);
+
+    body.material = materials[1];
+    suit.material = materials[2];
+    head.material = materials[0];
+    v.pool.meshes.dianna.cils.material = materials[3];
+    v.pool.meshes.dianna.eyeL_lo.material = materials[4];
+    v.pool.meshes.dianna.teethLower.material = materials[5];
+    v.pool.meshes.dianna.teethUpper.material = materials[6];
+    v.pool.meshes.dianna.sock.material = materials[7];
+    v.pool.meshes.dianna.tongue.material = materials[8];
+    v.pool.meshes.dianna.necklace.material = materials[9];
 
     for(var j=0; j<head.skeleton.bones.length; j++){
         var bone = head.skeleton.bones[j]
@@ -80,11 +83,9 @@ function onload(){
         console.log(name)
     }
 
-    var texEyes = [
-        'eye.jpg','eye_n.png','refl.jpg'
-    ];
+    var texEyes = [ 'eye.jpg','eye_n.png','refl.jpg' ];
     var texturesEyes = [];
-    var i = texEyes.length;
+    i = texEyes.length;
     while(i--){
         texturesEyes[i] = THREE.ImageUtils.loadTexture( 'images/dianna/'+texEyes[i]);
         texturesEyes[i].format = THREE.RGBFormat;

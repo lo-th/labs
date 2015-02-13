@@ -112,14 +112,16 @@ V.View.prototype = {
         if(this.isWithSerious) this.renderer.resetGLState();
         // tween update
 		if(TWEEN)TWEEN.update();
-        // three animation update
-    	THREE.AnimationHandler.update( this.clock.getDelta() );
+        
         // render
         if(this.postEffect!==null && this.postEffect.isActive){
             this.postEffect.render();
         }else{
             this.renderer.render( this.scene, this.nav.camera );
         }
+
+        // three animation update
+        THREE.AnimationHandler.update( this.clock.getDelta() );
 
         var f = this.f;
         f[0] = Date.now();

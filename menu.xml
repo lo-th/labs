@@ -14,32 +14,31 @@
 	<demo n='adv_liquid_2' lib=''></demo>
 </rubrique>
 <rubrique n='games'>
-	<demo n='city' lib='sea3d|gui'></demo>
-	<demo n='dungeon' lib='sea3d|gui|rot|tween'></demo>
-	<demo n='third_person' lib='sea3dn|tween'></demo>
-	<demo n='third_person2' lib='sea3d|tween'></demo>
+	<demo n='city' lib=''></demo>
+	<demo n='dungeon' lib='rot'></demo>
+	<demo n='third_person' lib=''></demo>
+	<demo n='third_person2' lib=''></demo>
 </rubrique>	
 <rubrique n='shaders'>
-	<demo n='basic' lib='sea3d|gui'></demo>
-	<demo n='xray' lib='sea3d|gui'></demo>
-	<demo n='fansy' lib='sea3d|gui'></demo>
-	<demo n='parallax' lib='sea3d|gui'></demo>
-	<demo n='spherical' lib='sea3d|gui'></demo>
-	<demo n='shadowmap' lib='sea3d|gui'></demo>
+	<demo n='basic' lib=''></demo>
+	<demo n='xray' lib=''></demo>
+	<demo n='fansy' lib=''></demo>
+	<demo n='parallax' lib=''></demo>
+	<demo n='spherical' lib=''></demo>
+	<demo n='shadowmap' lib=''></demo>
 </rubrique>	
 <rubrique n='experiments'>
-	<demo n='terrain' lib='terrain|gui'></demo>
-	<demo n='seriously' lib='sea3dn|serious'></demo>
-	<demo n='crowd_test' lib='sea3dn'></demo>
-	<demo n='human' lib='sea3dn|gui|tween'></demo>
+	<demo n='terrain' lib='terrain'></demo>
+	<demo n='seriously' lib='serious'></demo>
+	<demo n='crowd_test' lib=''></demo>
+	<demo n='human' lib=''></demo>
 </rubrique>
 <rubrique n='others'>
-	<demo n='liquid' lib='gui'></demo>
-	
+	<demo n='liquid' lib=''></demo>
 	<demo n='metaball' lib=''></demo>
-	<demo n='superdroid' lib='sea3dn'></demo>
-	<demo n='dante' lib='sea3dn'></demo>
-	<demo n='sam' lib='sea3dn'></demo>
+	<demo n='superdroid' lib=''></demo>
+	<demo n='dante' lib=''></demo>
+	<demo n='sam' lib=''></demo>
 	<demo n='eye' lib=''></demo>
 </rubrique>
 </menu>

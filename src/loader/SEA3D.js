@@ -5,7 +5,7 @@
  * 	http://sea3d.poonya.com/
  */
 
-var SEA3D = { VERSION : 16500, REVISION : 2 }
+var SEA3D = { VERSION : 16590, REVISION : 1 }
 
 //
 //	Timer
@@ -1135,7 +1135,7 @@ SEA3D.Geometry = function(name, data, sea) {
 					j = 0;					
 					while (j < colorCount)
 					{
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
 						vColor[j++] = 0;
 						vColor[j++] = 0;
 						vColor[j++] = 1;
@@ -1146,8 +1146,8 @@ SEA3D.Geometry = function(name, data, sea) {
 					j = 0;					
 					while (j < colorCount)
 					{
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
 						vColor[j++] = 0;
 						vColor[j++] = 1;
 					}
@@ -1157,9 +1157,9 @@ SEA3D.Geometry = function(name, data, sea) {
 					j = 0;					
 					while (j < colorCount)
 					{
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
 						vColor[j++] = 1;
 					}
 					break;
@@ -1168,10 +1168,10 @@ SEA3D.Geometry = function(name, data, sea) {
 					j = 0;					
 					while (j < colorCount)
 					{
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
 					}
 					break;
 			}										
@@ -1309,7 +1309,7 @@ SEA3D.GeometryDelta = function(name, data, sea) {
 					j = 0;					
 					while (j < colorCount)
 					{
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
 						vColor[j++] = 0;
 						vColor[j++] = 0;
 						vColor[j++] = 1;
@@ -1320,8 +1320,8 @@ SEA3D.GeometryDelta = function(name, data, sea) {
 					j = 0;					
 					while (j < colorCount)
 					{
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
 						vColor[j++] = 0;
 						vColor[j++] = 1;
 					}
@@ -1331,9 +1331,9 @@ SEA3D.GeometryDelta = function(name, data, sea) {
 					j = 0;					
 					while (j < colorCount)
 					{
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
 						vColor[j++] = 1;
 					}
 					break;
@@ -1342,10 +1342,10 @@ SEA3D.GeometryDelta = function(name, data, sea) {
 					j = 0;					
 					while (j < colorCount)
 					{
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
-						vColor[j++] = data.readUnsignedByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
+						vColor[j++] = data.readUByte() / 0xFF;
 					}
 					break;
 			}										
@@ -1972,8 +1972,7 @@ SEA3D.SkeletonLocal.prototype.type = "sklq";
 SEA3D.AnimationBase = 
 {
 	read : function(scope) {
-		var data = scope.data,		
-			flag = data.readUByte();			
+		var data = scope.data, flag = data.readUByte();			
 		
 		scope.sequence = [];
 		
@@ -2151,14 +2150,16 @@ SEA3D.Morph = function(name, data, sea) {
 	var nodeCount = data.readUShort();
 	
 	this.node = [];
+
+	var i, j;
 			
-	for(var i = 0; i < nodeCount; i++) {
+	for(i = 0; i < nodeCount; i++) {
 		var nodeName = data.readUTF8();
 		
 		if (useVertex) {				
 			var verts = [];
 			
-			var j = 0;
+			j = 0;
 			while(j < len)
 				verts[j++] = data.readFloat();
 		}
@@ -2237,6 +2238,9 @@ SEA3D.Light = {
 		
 		var data = scope.data;
 		
+		scope.attenStart = Number.MAX_VALUE;
+		scope.attenEnd = Number.MAX_VALUE;
+		
 		if (scope.attrib & 64) {
 			var shadowHeader = data.readUByte();
 			
@@ -2245,7 +2249,12 @@ SEA3D.Light = {
 			scope.shadow.opacity = shadowHeader & 1 ? data.readFloat() : 1;
 			scope.shadow.color = shadowHeader & 2 ? data.readUInt24() : 0x000000;
 		}
-				
+		
+		if (scope.attrib & 512) {
+			scope.attenStart = data.readFloat();
+			scope.attenEnd = data.readFloat();
+		}
+					
 		scope.color = data.readUInt24();
 		scope.multiplier = data.readFloat();		
 	}
@@ -2739,15 +2748,6 @@ SEA3D.File.setDecompressionEngine = function(id, name, method) {
 	SEA3D.File.DecompressionMethod[id] = method;
 }
 
-SEA3D.File.readStage = function(scope) {
-	var t;
-	while (scope.stage && scope.stage()) t=0;
-	if (scope.stage) {
-		window.setTimeout(SEA3D.File.readStage, 16, scope);
-		scope.dispatchProgress();
-	}
-}
-
 SEA3D.File.prototype.addClass = function(clazz) {
 	this.typeClass[clazz.prototype.type] = clazz;
 }
@@ -2874,11 +2874,20 @@ SEA3D.File.prototype.readComplete = function() {
 	this.dispatchComplete();
 }
 
+SEA3D.File.prototype.readStage = function(scope) {
+	var t;
+	while (scope.stage && scope.stage()) t=0;
+	if (scope.stage) {
+		window.setInterval(scope.readStage, 10, scope);
+		scope.dispatchProgress();
+	}
+}
+
 SEA3D.File.prototype.read = function() {	
 	this.timer = new SEA3D.Timer();
 	this.stage = this.readHead;
 	
-	SEA3D.File.readStage(this);
+	this.readStage(this);
 }
 
 SEA3D.File.prototype.dispatchCompleteObject = function(obj) {

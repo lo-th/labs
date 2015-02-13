@@ -242,11 +242,12 @@ LTH.Main.prototype = {
 				"<link rel='stylesheet' href='css/consolas.css'>",
 				"<link rel='stylesheet' href='css/basic.css'>",
 				"<script src='js/libs/three.min.js'></script>",
-				//"<script src='js/libs/three.js'></script>";
 				"<script src='js/libs/three.post.js'></script>",
+				"<script src='js/libs/sea3d.min.js'></script>",
+				"<script src='js/libs/tween.min.js'></script>",
+				"<script src='js/libs/gui.min.js'></script>",
 				options,
 				"<script src='build/v3d.min.js'></script>",
-				"<script id='shader'></script>",
 				"</head><body class='"+this.mainClass+"'>",
 				"<script>",
 				"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
@@ -272,7 +273,6 @@ LTH.Main.prototype = {
 		    //this.previewMain.onload = function(){ this.previewTheme(); }.bind(this);
 			if(this.isFirst) this.isFirst=false;
 			else this.menu.modified();
-		
 		}
 	},
 	checkCurrent:function(){

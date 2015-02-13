@@ -1,13 +1,18 @@
-var v = new V.View(180, 45, 130);
+var v = new V.View(-110, 68, 30);
 v.tell('human');
-v.pool.load('dianna', onload, true);
-var head, body, suit, eyel, eyer;
-var bodyBones = {};
-var headBones = {};
-
+var m = {};
+var gui = new V.Gui(false);
+var morphsTables = [];
+var morphConfig = {
+    sad: 0, anger: 0, smileOpen: 0, fear: 0, disgust: 0, surprise: 0, smileClose: 0, blinkRight:0, blinkLeft:0,
+    aah: 0, bigaah: 0, ch_j_sh: 0, f_v: 0, i: 0, k: 0, ee: 0,
+    b_m_p: 0, n: 0, oh: 0, r: 0, d_s_t: 0, th: 0, w: 0, eh: 0, ooh_q:0
+};
+var eyeTime = 0;
 var env = new V.Environment();
 var envbase = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
-
+var isModelLoaded = false;
+v.pool.load('dianna', onload, true);
 v.nav.target.y = 60;
 v.nav.revers();
 v.nav.moveCamera();
@@ -16,26 +21,24 @@ loop();
 
 function loop(){
     requestAnimationFrame( loop );
+    if(isModelLoaded) eyeUpdate();
     v.render();
 }
 
 function onload(){
 	var size = 1;
 
-	head = v.pool.meshes.dianna.head;
-	body = v.pool.meshes.dianna.body;
-    suit = v.pool.meshes.dianna.suit;
+    for(var key in v.pool.meshes.dianna) m[key] = v.pool.meshes.dianna[key];
 
-    suit.skeleton = body.skeleton;
-    head.skeleton = body.skeleton;
+    m.suit.skeleton = m.body.skeleton;
+    m.head.skeleton = m.body.skeleton;
 
-	head.setWeight("neck", 1);
+	m.head.setWeight("neck", 1);
     //head.setWeight("earOut", 0.6);
-    //head.setWeight("surprise", 1);
 
-	head.scale.set(size,size,size);
-    body.scale.set(size,size,size);
-    suit.scale.set(size,size,size);
+	m.head.scale.set(size,size,size);
+    m.body.scale.set(size,size,size);
+    m.suit.scale.set(size,size,size);
 
     // body textures
     var texNames = [
@@ -78,17 +81,17 @@ function onload(){
     i = materials.length;
     while(i--) env.add(materials[i]);
 
-    body.material = materials[1];
-    suit.material = materials[2];
-    head.material = materials[0];
-    v.pool.meshes.dianna.cils.material = materials[3];
-    v.pool.meshes.dianna.eyeL_lo.material = materials[4];
-    v.pool.meshes.dianna.teethLower.material = materials[5];
-    v.pool.meshes.dianna.teethUpper.material = materials[6];
-    v.pool.meshes.dianna.sock.material = materials[7];
-    v.pool.meshes.dianna.tongue.material = materials[8];
-    v.pool.meshes.dianna.necklace.material = materials[9];
-    v.pool.meshes.dianna.necklace.visible = false;
+    m.body.material = materials[1];
+    m.suit.material = materials[2];
+    m.head.material = materials[0];
+    m.cils.material = materials[3];
+    m.eyeL_lo.material = materials[4];
+    m.teethLower.material = materials[5];
+    m.teethUpper.material = materials[6];
+    m.sock.material = materials[7];
+    m.tongue.material = materials[8];
+    m.necklace.material = materials[9];
+    m.necklace.visible = false;
 
     // create eyes
     eyel = new THREE.Mesh( new THREE.SphereGeometry( 0.53, 32,16 ), materials[10] );
@@ -99,15 +102,72 @@ function onload(){
     eyer.position.set(3.87,-1.25,3);
     eyel.scale.set(1,1,-1);
     eyer.scale.set(1,1,-1);
-    var headBone = body.skeleton.bones[20];
+    var headBone = m.body.skeleton.bones[20];
     headBone.add(eyel);
     headBone.add(eyer);
 
-    body.animations[0].stop(0);
-    body.animations[1].play(0);
-    body.animations[2].stop(0);
+    m.body.animations[0].stop(0);
+    m.body.animations[1].play(0);
+    m.body.animations[2].stop(0);
 
-    v.scene.add(body);
-    v.scene.add(suit);
-	v.scene.add(head);
+    v.scene.add(m.body);
+    v.scene.add(m.suit);
+	v.scene.add(m.head);
+
+    initMorph();
+
+    isModelLoaded = true;
+}
+
+function initMorph(){
+    var mName;
+    for (var j=0; j < m.head.geometry.morphTargets.length; j++){
+        mName = m.head.geometry.morphTargets[j].name;
+        morphsTables[mName] = { 
+            cils:testMorph(m.cils, mName),
+            tdown:testMorph(m.teethLower, mName), 
+            eye:testMorph(m.eyeL_lo, mName), 
+            tongue:testMorph(m.tongue, mName), 
+            sock:testMorph(m.sock, mName)
+        }
+    }
+
+    gui.gui.add( morphConfig, 'sad', 0, 100 ).onChange( function() { applyMorph("sad"); });
+    gui.gui.add( morphConfig, 'anger', 0, 100 ).onChange( function() { applyMorph("anger"); });
+    gui.gui.add( morphConfig, 'smileOpen', 0, 100 ).onChange( function() { applyMorph("smileOpen"); });
+    gui.gui.add( morphConfig, 'fear', 0, 100 ).onChange( function() { applyMorph("fear"); });
+    gui.gui.add( morphConfig, 'disgust', 0, 100 ).onChange( function() { applyMorph("disgust"); });
+    gui.gui.add( morphConfig, 'surprise', 0, 100 ).onChange( function() { applyMorph("surprise"); });
+    gui.gui.add( morphConfig, 'smileClose', 0, 100 ).onChange( function() { applyMorph("smileClose"); });
+}
+
+function applyMorph( name ) {
+    var value = morphConfig[name]/100;
+    m.head.setWeight(name, value);
+    if( morphsTables[name].cils ) m.cils.setWeight(name, value);
+    if( morphsTables[name].tdown ) m.teethLower.setWeight(name, value);
+    if( morphsTables[name].eye ) m.eyeL_lo.setWeight(name, value);
+    if( morphsTables[name].tongue ) m.tongue.setWeight(name, value);
+    if( morphsTables[name].sock ) m.sock.setWeight(name, value);
+}
+
+function testMorph(m, name){
+    var result = false;
+    for (var j=0; j < m.geometry.morphTargets.length; j++){
+        if(m.geometry.morphTargets[j].name == name) result = true;
+    }
+    return result;
+}
+
+function eyeUpdate(){
+    eyeTime++;
+    if(eyeTime>=500 && eyeTime<=525){
+        morphConfig.blinkRight +=4; morphConfig.blinkLeft +=4; 
+        applyMorph( "blinkRight");
+        applyMorph( "blinkLeft");
+    }else if(eyeTime>=525 && eyeTime<=550){
+        morphConfig.blinkRight -=4; morphConfig.blinkLeft -=4; 
+        applyMorph( "blinkRight");
+        applyMorph( "blinkLeft");
+    }else if(eyeTime>=550) eyeTime = 0;   
 }

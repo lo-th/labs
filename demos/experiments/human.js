@@ -43,8 +43,8 @@ function onload(){
     // body textures
     var texNames = [
         'full.jpg','head.jpg','hair.png','eye_cont.png',
-        'teethLow.png','teethUp.png','sock.jpg','tongue.jpg',
-        'teethLow_n.jpg','teethUp_n.jpg','head_n.jpg','body_n.jpg', 'hair_n.jpg'
+        'teeth.png','mouth.jpg',
+        'teeth_n.jpg','hair_n.jpg','head_n.jpg','body_n.jpg'
     ];
     var textures = [];
     var i = texNames.length;
@@ -66,18 +66,19 @@ function onload(){
 
     var materials = [];
 
-    materials[0] = new V.Shader('Spherical', {map:textures[1], morphTargets:true, skinning:true, normalMap:textures[10], env:envbase, useMap:1, useNormal:1, reflection:0.2});
-    materials[1] = new V.Shader('Spherical', {map:textures[0], morphTargets:false, skinning:true, normalMap:textures[11], env:envbase, useMap:1, useNormal:1, reflection:0.2});
-    materials[2] = new V.Shader('Spherical', {map:textures[0], morphTargets:false, skinning:true, normalMap:textures[11], env:envbase, useMap:1, useNormal:1, reflection:0.8});
+    materials[0] = new V.Shader('Spherical', {map:textures[1], morphTargets:true, skinning:true, normalMap:textures[8], env:envbase, useMap:1, useNormal:1, reflection:0.2});
+    materials[1] = new V.Shader('Spherical', {map:textures[0], morphTargets:false, skinning:true, normalMap:textures[9], env:envbase, useMap:1, useNormal:1, reflection:0.2});
+    materials[2] = new V.Shader('Spherical', {map:textures[0], morphTargets:false, skinning:true, normalMap:textures[9], env:envbase, useMap:1, useNormal:1, reflection:0.8});
     materials[3] = new V.Shader('Spherical', {map:textures[2], morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true, side:THREE.DoubleSide});
     materials[4] = new V.Shader('Spherical', {map:textures[3], morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true});
-    materials[5] = new V.Shader('Spherical', {map:textures[4], morphTargets:true, normalMap:textures[8], env:envbase, useMap:1, useNormal:1, reflection:0.5, transparent:true});
-    materials[6] = new V.Shader('Spherical', {map:textures[5], normalMap:textures[9], env:envbase, useMap:1, useNormal:1, reflection:0.5, transparent:true});
-    materials[7] = new V.Shader('Spherical', {map:textures[6], morphTargets:true, env:envbase, useMap:1, reflection:0.5});
-    materials[8] = new V.Shader('Spherical', {map:textures[7], morphTargets:true, env:envbase, useMap:1, reflection:0.5});
-    materials[9] = new V.Shader('Spherical', {env:envbase, reflection:1});
+    materials[5] = new V.Shader('Spherical', {map:textures[4], morphTargets:true, normalMap:textures[6], env:envbase, useMap:1, useNormal:1, reflection:0.1, transparent:true, side:THREE.DoubleSide});
+    materials[6] = new V.Shader('Spherical', {map:textures[4], normalMap:textures[6], env:envbase, useMap:1, useNormal:1, reflection:0.1, transparent:true, side:THREE.DoubleSide});
+    materials[7] = new V.Shader('Spherical', {map:textures[5], morphTargets:true, env:envbase, useMap:1, reflection:0.2, side:THREE.DoubleSide});
+    //materials[8] = new V.Shader('Spherical', {map:textures[7], morphTargets:true, env:envbase, useMap:1, reflection:0.2});
+    materials[8] = new V.Shader('Spherical', {env:envbase, reflection:1});
+    
+    materials[9] = new V.Shader('Spherical', {map:textures[2], normalMap:textures[7], env:envbase, useMap:1, useNormal:1, reflection:0.5, transparent:true});
     materials[10] = new V.Shader('Eye', {texEyeCol:texturesEyes[0], texEyeNrm:texturesEyes[1], env:envbase, texEnvRfl:texturesEyes[2]});
-    materials[11] = new V.Shader('Spherical', {map:textures[2], normalMap:textures[12], env:envbase, useMap:1, useNormal:1, reflection:0.5, transparent:true});
 
     i = materials.length;
     while(i--) env.add(materials[i]);
@@ -90,10 +91,10 @@ function onload(){
     m.teethLower.material = materials[5];
     m.teethUpper.material = materials[6];
     m.sock.material = materials[7];
-    m.tongue.material = materials[8];
-    m.necklace.material = materials[9];
+    m.tongue.material = materials[7];
+    m.necklace.material = materials[8];
     m.necklace.visible = false;
-    m.hairn.material = materials[11];
+    m.hairn.material = materials[9];
 
     // create eyes
     eyel = new THREE.Mesh( new THREE.SphereGeometry( 0.53, 32,16 ), materials[10] );

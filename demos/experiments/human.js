@@ -77,6 +77,7 @@ function onload(){
     materials[8] = new V.Shader('Spherical', {map:textures[7], morphTargets:true, env:envbase, useMap:1, reflection:0.5});
     materials[9] = new V.Shader('Spherical', {env:envbase, reflection:1});
     materials[10] = new V.Shader('Eye', {texEyeCol:texturesEyes[0], texEyeNrm:texturesEyes[1], env:envbase, texEnvRfl:texturesEyes[2]});
+    materials[11] = new V.Shader('Spherical', {map:textures[2], env:envbase, useMap:1, reflection:0.5, transparent:true});
 
     i = materials.length;
     while(i--) env.add(materials[i]);
@@ -92,6 +93,7 @@ function onload(){
     m.tongue.material = materials[8];
     m.necklace.material = materials[9];
     m.necklace.visible = false;
+    m.hairn.material = materials[11];
 
     // create eyes
     eyel = new THREE.Mesh( new THREE.SphereGeometry( 0.53, 32,16 ), materials[10] );
@@ -167,7 +169,11 @@ function eyeUpdate(){
         applyMorph( "blinkLeft");
     }else if(eyeTime>=525 && eyeTime<=550){
         morphConfig.blinkRight -=4; morphConfig.blinkLeft -=4; 
-        applyMorph( "blinkRight");
-        applyMorph( "blinkLeft");
-    }else if(eyeTime>=550) eyeTime = 0;   
+        applyMorph("blinkRight");
+        applyMorph("blinkLeft");
+    }else if(eyeTime>=550){
+        eyeTime = 0;
+        morphConfig.blinkRight = 0;
+        morphConfig.blinkLeft = 0;
+    }   
 }

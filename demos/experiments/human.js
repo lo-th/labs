@@ -44,7 +44,7 @@ function onload(){
     var texNames = [
         'full.jpg','head.jpg','hair.png','eye_cont.png',
         'teethLow.png','teethUp.png','sock.jpg','tongue.jpg',
-        'teethLow_n.jpg','teethUp_n.jpg','head_n.jpg','body_n.jpg'
+        'teethLow_n.jpg','teethUp_n.jpg','head_n.jpg','body_n.jpg', 'hair_n.jpg'
     ];
     var textures = [];
     var i = texNames.length;
@@ -77,7 +77,7 @@ function onload(){
     materials[8] = new V.Shader('Spherical', {map:textures[7], morphTargets:true, env:envbase, useMap:1, reflection:0.5});
     materials[9] = new V.Shader('Spherical', {env:envbase, reflection:1});
     materials[10] = new V.Shader('Eye', {texEyeCol:texturesEyes[0], texEyeNrm:texturesEyes[1], env:envbase, texEnvRfl:texturesEyes[2]});
-    materials[11] = new V.Shader('Spherical', {map:textures[2], env:envbase, useMap:1, reflection:0.5, transparent:true});
+    materials[11] = new V.Shader('Spherical', {map:textures[2], normalMap:textures[12], env:envbase, useMap:1, useNormal:1, reflection:0.5, transparent:true});
 
     i = materials.length;
     while(i--) env.add(materials[i]);

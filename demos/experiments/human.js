@@ -44,7 +44,7 @@ function onload(){
     var texNames = [
         'full.jpg','head.jpg','hair.png','eye_cont.png',
         'teeth.png','mouth.jpg',
-        'teeth_n.jpg','hair_n.jpg','head_n.jpg','body_n.jpg'
+        'teeth_n.jpg','hair_n.jpg','head_n.jpg','body_n.jpg', 'mouth_n.jpg'
     ];
     var textures = [];
     var i = texNames.length;
@@ -73,10 +73,8 @@ function onload(){
     materials[4] = new V.Shader('Spherical', {map:textures[3], morphTargets:true, env:envbase, useMap:1, reflection:0.5, transparent:true});
     materials[5] = new V.Shader('Spherical', {map:textures[4], morphTargets:true, normalMap:textures[6], env:envbase, useMap:1, useNormal:1, reflection:0.1, transparent:true, side:THREE.DoubleSide});
     materials[6] = new V.Shader('Spherical', {map:textures[4], normalMap:textures[6], env:envbase, useMap:1, useNormal:1, reflection:0.1, transparent:true, side:THREE.DoubleSide});
-    materials[7] = new V.Shader('Spherical', {map:textures[5], morphTargets:true, env:envbase, useMap:1, reflection:0.2, side:THREE.DoubleSide});
-    //materials[8] = new V.Shader('Spherical', {map:textures[7], morphTargets:true, env:envbase, useMap:1, reflection:0.2});
+    materials[7] = new V.Shader('Spherical', {map:textures[5], normalMap:textures[10], morphTargets:true, env:envbase, useMap:1, useNormal:1, reflection:0.2, side:THREE.DoubleSide});
     materials[8] = new V.Shader('Spherical', {env:envbase, reflection:1});
-    
     materials[9] = new V.Shader('Spherical', {map:textures[2], normalMap:textures[7], env:envbase, useMap:1, useNormal:1, reflection:0.5, transparent:true});
     materials[10] = new V.Shader('Eye', {texEyeCol:texturesEyes[0], texEyeNrm:texturesEyes[1], env:envbase, texEnvRfl:texturesEyes[2]});
 

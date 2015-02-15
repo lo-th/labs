@@ -1,8 +1,12 @@
-/**
- * @author loth / http://lo-th.github.io/labs/
- */
+/**   _     _   _     
+*    | |___| |_| |__
+*    | / _ \  _|    |
+*    |_\___/\__|_||_|
+*    @author LoTh / http://lo-th.github.io/labs/
+*/
 
-V.SeaPool = function(){
+V.SeaPool = function(parent){
+    this.root = parent;
     this.meshes = {};
 }
 V.SeaPool.prototype = {
@@ -11,7 +15,14 @@ V.SeaPool.prototype = {
         this.callback = callback || function(){};
         var list = "";
         var loader = new THREE.SEA3D( true );
+        loader.onProgress = function( e ) {
+            this.root.loader.innerHTML = 'Loading '+ name +': '+(e.progress*100).toFixed(0)+'%';
+        }.bind(this);
+        loader.onDownloadProgress = function( e ) {
+            this.root.loader.style.display = 'block';
+        }.bind(this);
         loader.onComplete = function( e ) {
+            this.root.loader.style.display = 'none';
             this.meshes[name] = {};
             var i = loader.meshes.length, m;
             while(i--){
@@ -22,6 +33,7 @@ V.SeaPool.prototype = {
             if(displayList) console.log(list);
             this.callback();
         }.bind(this);
+
         loader.parser = THREE.SEA3D.DEFAULT;
         loader.load( 'models/'+name+'.sea' );
         //loader.invertZ = true;
@@ -63,5 +75,52 @@ V.TransGeo = function(g, noBuffer){
         return bg;
     } else{
         return g;
+    }
+}
+
+// TEXTURES
+
+V.ImgPool = function(parent){
+    this.root = parent;
+    this.imgs = {};
+}
+V.ImgPool.prototype = {
+    constructor: V.ImgPool,
+    load:function(folder, url, callback){
+        this.callback = callback || function(){};
+        this.folder = folder || 'images/';
+        if(typeof url == 'string' || url instanceof String){
+            var singleurl = url;
+            url = [singleurl];
+        }
+        this.total = url.length;
+        this.root.loader.style.display = 'block';
+        this.loadnext(url);
+    },
+    loadnext:function(url){
+        var img = new Image();
+        img.onload = function(){
+            var name = url[0].substring(url[0].lastIndexOf("/")+1, url[0].lastIndexOf("."));
+            this.imgs[name] = img;
+            url.shift();
+            if(url.length){
+                this.root.loader.innerHTML = 'Loading images: '+ url.length;
+                this.loadnext(url);
+            }else{ 
+                this.root.loader.style.display = 'none';
+                this.callback();
+            }
+        }.bind(this);
+        img.src = this.folder+url[0];
+    },
+    texture:function( name, flip, repeat, linear, format ){
+        var tx = new THREE.Texture(this.imgs[name]);
+        tx.flipY = flip || false;
+        if(repeat)tx.wrapS = tx.wrapT = THREE.RepeatWrapping;
+        if(linear)tx.minFilter = tx.magFilter = THREE.LinearFilter;
+        if(format)tx.format = THREE.RGBFormat;
+
+        tx.needsUpdate = true;
+        return tx;
     }
 }

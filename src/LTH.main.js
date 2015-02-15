@@ -253,6 +253,7 @@ LTH.Main.prototype = {
 				"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
 				"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
 				"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
+				"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
 				value,
 				"</script>",
 				"</body></html>"

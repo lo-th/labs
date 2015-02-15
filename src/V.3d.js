@@ -6,7 +6,7 @@
 */
 
 var canvas, info, debug;
-var THREE, mainClick, mainDown, mainUp, mainMove, mainRay, v, shader;
+var THREE, mainClick, mainDown, mainUp, mainMove, mainRay, v, shader, loader;
 
 var V = {};
 var TWEEN = TWEEN || null;
@@ -49,6 +49,7 @@ V.View = function(h,v,d){
 	this.canvas = canvas;
     this.debug = debug;
     this.info = info;
+    this.loader = loader;
 
     this.renderer = new THREE.WebGLRenderer({canvas:canvas, precision: "mediump", antialias:true, alpha: true, stencil:false });
     //this.renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha: true });
@@ -73,7 +74,9 @@ V.View = function(h,v,d){
     this.scene.add(this.skinned);
     this.initGeo();
     this.initMat();
-    this.pool = new V.SeaPool();
+
+    this.pool = new V.SeaPool(this);
+    this.impool = new V.ImgPool(this);
 
     this.postEffect = null;
 

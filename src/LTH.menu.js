@@ -1,6 +1,10 @@
-/**
- * @author loth / http://lo-th.github.io/labs/
- */
+/**   _     _   _     
+*    | |___| |_| |__
+*    | / _ \  _|    |
+*    |_\___/\__|_||_|
+*    @author LoTh / http://lo-th.github.io/labs/
+*/
+
 LTH.logoTimer = null;
 
 LTH.Menu = function(main){

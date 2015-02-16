@@ -1,5 +1,5 @@
 'use strict';
-importScripts('../../js/libs/oimo.min.js');
+//importScripts('../../js/libs/oimo.min.js');
 
 var f = [0,0,0,0];
 var ar;
@@ -10,6 +10,10 @@ var world = null;
 
 self.onmessage = function(e) {
 	var m = e.data.m;
+	if(m==='init'){
+		importScripts(e.data.url);
+		self.postMessage({init:true});
+	}
 	if(m==='room') sim.room(e.data.obj);
 	if(m==='add')  sim.add(e.data.obj);
 	if(m==='run'){

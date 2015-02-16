@@ -1,5 +1,5 @@
 'use strict';
-importScripts('../../js/libs/liquidfun.js');
+//importScripts('../../js/libs/liquidfun.js');
 
 var f = [0,0,0,0];
 var ar;// body position
@@ -17,7 +17,10 @@ var inv255 = .003921569;
 
 self.onmessage = function(e) {
 	var m = e.data.m;
-
+	if(m==='init'){
+		importScripts(e.data.url);
+		self.postMessage({init:true});
+	}
 	if(m==='addParticle') sim.addParticle(e.data.obj);
 	if(m==='updecal') sim.updateDecal(e.data);
 	if(m==='add')  sim.add(e.data.obj);

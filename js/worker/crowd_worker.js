@@ -1,5 +1,5 @@
 'use strict';
-importScripts('../../js/libs/crowd.js');
+//importScripts('../../js/libs/crowd.js');
 
 var f = [0,0,0,0];
 var sim = null;
@@ -11,8 +11,10 @@ var tmp;
 
 self.onmessage = function(e) {
     var m = e.data.m;
-    
-
+    if(m==='init'){
+        importScripts(e.data.url);
+        self.postMessage({init:true});
+    }
     if(m==='add') sim.addAgent(e.data.obj);
     if(m==='obstacle') sim.addObstacle(e.data.obj);
     if(m==='updecal') sim.updateDecal(e.data);
@@ -21,7 +23,7 @@ self.onmessage = function(e) {
     if(m==='run'){
         ar = e.data.ar;
 
-        if(sim == null) sim = new CROWD.Simulation();
+        if(sim == null) sim = new W.Simulation();
         else sim.isOk = true;
 
         sim.run();
@@ -44,55 +46,9 @@ self.onmessage = function(e) {
     }
 }
 
+var W = {};
 
-var CROWD = {};
-
-CROWD.init = Module.cwrap('init', 'boolean', []);
-CROWD.run = Module.cwrap('run', '', ['number']);
-CROWD.deleteCrowd = Module.cwrap('deleteCrowd', '', []);
-
-CROWD.allocateMem_X_Y_RAD = Module.cwrap('allocateMem', '', ['number', 'number']);
-CROWD.allocateMemResusable = Module.cwrap('allocateMemReusable', '', ['number', 'number']);
-
-CROWD.addObstacle = Module.cwrap('addObstacle', '', ['number', 'number']);
-CROWD.processObstacles = Module.cwrap('processObstacles', 'number', []);
-CROWD.removeObstacles = Module.cwrap('removeObstacles', 'number', []);
-
-CROWD.addAgent = Module.cwrap('addAgent', '', ['number', 'number']);
-CROWD.removeAgent = Module.cwrap('removeAgent', 'number', ['number']);
-
-CROWD.addAgentGoal = Module.cwrap('addAgentGoal', '', ['number', 'number', 'number']);
-CROWD.addAgentsGoal = Module.cwrap('addAgentsGoal', '', ['number', 'number']);
-
-CROWD.addWayPoint = Module.cwrap('addWayPoint', '', ['number', 'number']);
-CROWD.recomputeRoadmap = Module.cwrap('recomputeRoadmap', '', []);
-
-CROWD.setTimeStep = Module.cwrap('setTimeStep', '', ['number']);
-CROWD.setAgentMaxSpeed = Module.cwrap('setAgentMaxSpeed', '', ['number', 'number']);
-CROWD.setAgentRadius = Module.cwrap('setAgentRadius', '', ['number']);
-CROWD.setAgentMaxNeighbors = Module.cwrap('setAgentMaxNeighbors', '', ['number']);
-CROWD.setAgentNeighborDist = Module.cwrap('setAgentNeighborDist', '', ['number']);
-CROWD.setAgentPosition = Module.cwrap('setAgentPosition', '', ['number', 'number']);
-CROWD.setAgentPrefVelocity = Module.cwrap('setAgentPrefVelocity', '', ['number', 'number']);
-CROWD.setAgentTimeHorizon = Module.cwrap('setAgentTimeHorizon', '', ['number']);
-CROWD.setAgentTimeHorizonObst = Module.cwrap('setAgentTimeHorizonObst', '', ['number']);
-CROWD.setAgentVelocity = Module.cwrap('setAgentVelocity', '', ['number', 'number']);
-CROWD.setAgentUseRoadMap = Module.cwrap('setAgentUseRoadMap', '', ['number', 'number']);
-
-CROWD.getTimeStep = Module.cwrap('getTimeStep', 'number', ['number']);
-CROWD.getAgentMaxSpeed = Module.cwrap('getAgentMaxSpeed', 'number', ['number']);
-CROWD.getAgentRadius = Module.cwrap('getAgentRadius', 'number', ['number']);
-CROWD.getAgentMaxNeighbors = Module.cwrap('getAgentMaxNeighbors', 'number', ['number']);
-CROWD.getAgentNeighborDist = Module.cwrap('getAgentNeighborDist', 'number', ['number']);
-CROWD.getAgentTimeHorizon = Module.cwrap('getAgentTimeHorizon', 'number', ['number']);
-CROWD.getAgentTimeHorizonObst = Module.cwrap('getAgentTimeHorizonObst', 'number', ['number']);
-CROWD.getAgentPosition = Module.cwrap('getAgentPosition', 'number', ['number']);
-CROWD.getAgentPrefVelocity = Module.cwrap('getAgentPrefVelocity', 'number', ['number']);
-CROWD.getAgentVelocity = Module.cwrap('getAgentVelocity', 'number', ['number']);
-CROWD.getAgentUseRoadMap = Module.cwrap('getAgentUseRoadMap', 'boolean', ['number']);
-
-
-CROWD.Simulation = function () {
+W.Simulation = function () {
     this.size = 6000;
     this.agents = [];
     this.obstacles = [];
@@ -113,10 +69,10 @@ CROWD.Simulation = function () {
 
     this.isOk = true;
 }
-CROWD.Simulation.prototype = {
-	constructor: CROWD.Simulation,
+W.Simulation.prototype = {
+	constructor: W.Simulation,
 	addAgent : function (obj) {
-        var agent = new CROWD.Agent(this, new CROWD.V2(obj.pos[0] || 0, obj.pos[2] || 0 ) , obj.size[0] || 10, obj.useRoadMap || false );
+        var agent = new W.Agent(this, new W.V2(obj.pos[0] || 0, obj.pos[2] || 0 ) , obj.size[0] || 10, obj.useRoadMap || false );
         //agent.setGoal(0,0);
         //this.agents.push(agent);
         //CROWD.addAgentGoal(agent.id, 0, 0);
@@ -124,7 +80,7 @@ CROWD.Simulation.prototype = {
         //return agent.getAgentNo();
     },
     addObstacle : function(obj){
-        var obstacle = new CROWD.Obstacle( this, obj );
+        var obstacle = new W.Obstacle( this, obj );
         this.processObstacles();
 
        
@@ -162,7 +118,7 @@ CROWD.Simulation.prototype = {
         var h, j = 0
         for(var i=start; i<end; i++ ){
             h = i*2;
-            vertices[j] = new CROWD.V2( dr[h], dr[h+1] );
+            vertices[j] = new W.V2( dr[h], dr[h+1] );
             j++;
         }
         // close shape 
@@ -171,7 +127,7 @@ CROWD.Simulation.prototype = {
         //fixtureDef.shape = shape;
 
         if(this.obstacles[n] == null ){
-            this.obstacles[n] = new CROWD.Obstacle(null, { type:'poly', id:n, arr:vertices });
+            this.obstacles[n] = new W.Obstacle(null, { type:'poly', id:n, arr:vertices });
         }else{
             this.obstacles[n].addByClosedPolygon({ arr:vertices })
             //this.obstacles[n].DestroyFixture(this.obstacles[n].fixtures[0]);
@@ -203,7 +159,7 @@ CROWD.Simulation.prototype = {
         CROWD.recomputeRoadmap();
     },
     addWayPoint : function (v, debug) {
-        var wp = new CROWD.WayPoint(v.x, v.y);
+        var wp = new W.WayPoint(v.x, v.y);
     },
     /*addObstacleByBoundingBox : function (mesh, position, isVisible) {
         var obstacle = new BABYLON.Obstacle();
@@ -358,20 +314,20 @@ CROWD.Simulation.prototype = {
         CROWD.getAgentVelocity(agentId);
 
         var arr = new Float32Array(this.dataHeap_reusable.buffer, this.dataHeap_reusable.byteOffset, this.data_reusable.length);
-        var v = new CROWD.V2(arr[0], arr[1]);
+        var v = new W.V2(arr[0], arr[1]);
         return v;
     },
     getAgentPosition : function (agentId) {
         CROWD.getAgentPosition(agentId);
         var arr = new Float32Array(this.dataHeap_reusable.buffer, this.dataHeap_reusable.byteOffset, this.data_reusable.length);
 
-        var v = new CROWD.V2(arr[0], arr[1]);
+        var v = new W.V2(arr[0], arr[1]);
         return v;
     },
     getAgentPrefVelocity : function (agentId) {
         CROWD.getAgentPrefVelocity(agentId);
         var arr = new Float32Array(this.dataHeap_reusable.buffer, this.dataHeap_reusable.byteOffset, this.data_reusable.length);
-        var v = new CROWD.V2(arr[0], arr[1]);
+        var v = new W.V2(arr[0], arr[1]);
         return v;
     },
     allocateMem_X_Y_RAD : function () {
@@ -409,17 +365,17 @@ CROWD.Simulation.prototype = {
     }
 }
 
-CROWD.PI = Math.PI;
-CROWD.TwoPI = 2.0 * Math.PI;
+W.PI = Math.PI;
+W.TwoPI = 2.0 * Math.PI;
 
 
-CROWD.V2 = function(x,y){
+W.V2 = function(x,y){
     this.x = x || 0;
     this.y = y || 0;
 }
 
-CROWD.V2.prototype = {
-    constructor: CROWD.V2,
+W.V2.prototype = {
+    constructor: W.V2,
     length: function () {
         return Math.sqrt( this.x * this.x + this.y * this.y );
     },
@@ -440,13 +396,13 @@ CROWD.V2.prototype = {
 }
 
 
-CROWD.Agent = function(sim, position, radius, useRoadMap){
+W.Agent = function(sim, position, radius, useRoadMap){
     this.sim = sim;
 
-    this.position = position || new CROWD.V2();
-    this.oldPosition = position || new CROWD.V2();
+    this.position = position || new W.V2();
+    this.oldPosition = position || new W.V2();
     this.orientation = 0;
-    this.goal = new CROWD.V2();
+    this.goal = new W.V2();
     this.useRoadMap = 0;
     //this.isSelected = false;
 
@@ -465,8 +421,8 @@ CROWD.Agent = function(sim, position, radius, useRoadMap){
     this.sim.agents.push(this);
 }
 
-CROWD.Agent.prototype = {
-    constructor: CROWD.Agent,
+W.Agent.prototype = {
+    constructor: W.Agent,
     remove : function (index) {
         //this.mesh.dispose();
         CROWD.removeAgent(index);
@@ -479,7 +435,6 @@ CROWD.Agent.prototype = {
         CROWD.addAgentGoal(this.id, this.goal.x, this.goal.y);
     },
     addGoal : function (goal) {
-        
         CROWD.addAgentGoal(this.id, goal.x, goal.y);
     },
     setUseRoadMap : function (useRoadmap) {
@@ -513,9 +468,9 @@ CROWD.Agent.prototype = {
         return this.orientation;
     },
     unwrapRadian : function(r){
-        r = r % CROWD.TwoPI;
-        if (r > CROWD.PI) r -= CROWD.TwoPI;
-        if (r < -CROWD.PI) r += CROWD.TwoPI;
+        r = r % W.TwoPI;
+        if (r > W.PI) r -= W.TwoPI;
+        if (r < -W.PI) r += W.TwoPI;
         return r;
     },
     lerp : function (a, b, percent) { 
@@ -528,7 +483,7 @@ CROWD.Agent.prototype = {
         CROWD.getAgentVelocity(this.id);
 
         var arr = new Float32Array(this.sim.dataHeap_reusable.buffer, this.sim.dataHeap_reusable.byteOffset, this.sim.data_reusable.length);
-        var v = new CROWD.V2(arr[0], arr[1]);
+        var v = new W.V2(arr[0], arr[1]);
         return v;
     },
     //setIsSelected : function (isSelected) {
@@ -565,7 +520,7 @@ CROWD.Agent.prototype = {
 
 
 
-CROWD.Obstacle = function (sim, obj) {
+W.Obstacle = function (sim, obj) {
     obj = obj || {};
     this.sim = sim;
     //Obstacle.ObstacleNo;
@@ -589,8 +544,8 @@ CROWD.Obstacle = function (sim, obj) {
     }
 }
 
-CROWD.Obstacle.prototype = {
-    constructor: CROWD.Obstacle,
+W.Obstacle.prototype = {
+    constructor: W.Obstacle,
     addByBoundingBox : function (obj) {
         var pos = obj.pos || [1,0,1];
         var size = obj.size || [20,20,20];
@@ -653,6 +608,6 @@ CROWD.Obstacle.prototype = {
 
 
 
-CROWD.WayPoint = function (x, y) {
+W.WayPoint = function (x, y) {
     CROWD.addWayPoint(x, y);
 }

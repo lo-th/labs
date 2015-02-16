@@ -7,7 +7,7 @@
 
 var LTH = {};
 
-LTH.CODES = ['full','serious','rot','liquidfun','ammo','oimo','crowd' ]
+LTH.CODES = ['full','serious','rot','liquid','ammo','oimo','crowd' ]
 
 LTH.rubriques = [];
 LTH.demoNames = [];
@@ -119,7 +119,7 @@ LTH.Main.prototype = {
 	resize:function(){
 		var w = window.innerWidth;
 		var h = window.innerHeight;
-		var v0 = this.menuSize;//220;
+		var v0 = this.menuSize;
 		var topy = 0;
 		var v1 = Math.floor((w-v0)*0.5);
 		var v2 = Math.floor((h-topy)*0.5);

@@ -6,17 +6,18 @@
 */
 
 V.Worker = function(parent, name){
-    this.name = name;
     this.root = parent;
+    this.name = name;
     this.msg = '';
 
     this.update = null;
     this.postMess = null;
 
-    var url, max, max2, max3, max4, nValue, nValue2;
+    var url, max, max2, max3, max4, nValue, nValue2, sourceURL;
     switch(this.name){
         case 'crowd':
             url = 'js/worker/crowd_worker.js';
+            sourceURL = '../../js/libs/crowd.js';
             max = 1000;
             max2 = 100;
             max3 = 10;
@@ -28,6 +29,7 @@ V.Worker = function(parent, name){
         break;
         case 'liquid':
             url = 'js/worker/liquid_worker.js';
+            sourceURL = '../../js/libs/liquidfun.js';
             max = 1000;
             max2 = 100;
             max3 = 10;
@@ -39,6 +41,7 @@ V.Worker = function(parent, name){
         break;
         case 'oimo':
             url = 'js/worker/oimo_worker.js';
+            sourceURL = '../../js/libs/oimo.min.js';
             max = 1000;
             max2 = 10;
             max3 = 10;
@@ -48,6 +51,11 @@ V.Worker = function(parent, name){
             this.update = this.upOimo;
             this.postMess = this.postOimo;
         break;
+    }
+
+    if(window.top.main.transcode.useTrans){
+        sourceURL = window.top.main.transcode.codes[this.name];
+       // console.log('with transcode', sourceURL);
     }
 
     this.w = new Worker(url);
@@ -65,7 +73,8 @@ V.Worker = function(parent, name){
     this.isReady = false;
     this.fps = 0;
 
-    this.loop();
+    //this.loop();
+    this.w.postMessage({ m:'init', url:sourceURL });
     //this.w.onmessage = function(e){this.onMessage(e)}.bind( this );
 }
 V.Worker.prototype = {
@@ -97,6 +106,10 @@ V.Worker.prototype = {
     // CROWD ---------------------------------------------
 
     upCrowd:function(e){
+        if(e.data.init){
+            this.postMess();
+            return;
+        }
         if(e.data.w && !this.isReady) this.isReady = true;
         this.fps = e.data.fps;
         this.ar = e.data.ar;
@@ -120,6 +133,10 @@ V.Worker.prototype = {
     // LIQUID ---------------------------------------------
 
     upLiquid:function(e){
+        if(e.data.init){
+            this.postMess();
+            return;
+        }
         if(e.data.w && !this.isReady) this.isReady = true;
         this.fps = e.data.fps;
         this.ar = e.data.ar;
@@ -147,9 +164,7 @@ V.Worker.prototype = {
             }
             p.update();
         }
-
         this.computeTime();
-
     },
     postLiquid:function(){
         //this.w.postMessage({m:'run', m2:this.msg, drn:this.drn, drc:this.drc, dr:this.dr, ar:this.ar, pr:this.pr, prn:this.prn},[this.ar.buffer, this.pr.buffer]);
@@ -160,6 +175,10 @@ V.Worker.prototype = {
     // OIMO ---------------------------------------------
 
     upOimo:function(e){
+        if(e.data.init){
+            this.postMess();
+            return;
+        }
         if(e.data.w && !this.isReady) this.isReady = true;
         this.fps = e.data.fps;
         this.ar = e.data.ar;

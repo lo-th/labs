@@ -7,7 +7,7 @@
 
 var LTH = {};
 
-LTH.CODES = ['full','serious','rot','liquid','ammo','oimo','crowd' ]
+LTH.CODES = ['full','serious','rot','terrain','liquid','ammo','oimo','crowd'];
 
 LTH.rubriques = [];
 LTH.demoNames = [];
@@ -246,7 +246,7 @@ LTH.Main.prototype = {
 				options = '';
 				ops = LTH.libsNames[LTH.cRubr][LTH.cFile];
 				i = ops.length;
-				while(i--) {if(ops[i]!=='')options+="<script src='js/libs/"+ops[i]+".min.js'></script>";}
+				while(i--) {if(ops[i]!=='')options+="<script src='" + this.transcode.codes[ops[i]] + "'></script>";}
 
 		        myContent = [
 				    "<!DOCTYPE html>",

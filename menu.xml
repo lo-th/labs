@@ -26,6 +26,7 @@
 	<demo n='parallax' lib=''></demo>
 	<demo n='spherical' lib=''></demo>
 	<demo n='shadowmap' lib=''></demo>
+	<demo n='metaball' lib=''></demo>
 </rubrique>	
 <rubrique n='experiments'>
 	<demo n='terrain' lib='terrain'></demo>
@@ -33,9 +34,8 @@
 	<demo n='crowd_test' lib=''></demo>
 	<demo n='human' lib=''></demo>
 </rubrique>
-<rubrique n='others'>
+<rubrique n='tests'>
 	<demo n='liquid' lib=''></demo>
-	<demo n='metaball' lib=''></demo>
 	<demo n='superdroid' lib=''></demo>
 	<demo n='dante' lib=''></demo>
 	<demo n='sam' lib=''></demo>

@@ -7,7 +7,8 @@
 
 var URL = window.URL || window.webkitURL;
 
-LTH.Transcode = function( list, callback, debug){
+LTH.Transcode = function(main, list, callback, debug){
+	this.main = main;
 	this.list = list;
 	this.callback = callback || function(){};
 	this.isDebug = debug || false;
@@ -123,7 +124,10 @@ LTH.Transcode.prototype = {
 			pix = pix == 127 ? 10 : pix;
 			string += String.fromCharCode(pix);
 		}
-		if(this.isDebug) console.log(this.name, Date.now()-this.time+'ms');
+		if(this.isDebug){
+			this.main.menu.title.innerHTML = 'WELCOME<br>LOADING CODES<br>'+this.name.toUpperCase() + ' ' + (Date.now()-this.time)+' MS';
+		    //console.log(this.name, Date.now()-this.time+'ms');
+		}
 
 		if(this.name=='full'){
 			if(string.substring(3, 8)=='three') this.useTrans = false;//console.log(string.substring(3, 8));

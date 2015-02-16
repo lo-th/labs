@@ -55,7 +55,7 @@ html, body {
 
 /* TITLE */
 
-.title {position:absolute; left:50%; top:140px;  margin-left:-64px; width:120px; height:40px; text-align:center; font-weight: bold; }
+.title {position:absolute; left:50%; top:140px;  margin-left:-100px; width:200px; height:40px; text-align:center; font-weight: bold; pointer-events:none;}
 
 /* MENU */
 

@@ -7,6 +7,8 @@
 
 var LTH = {};
 
+LTH.CODES = ['full','serious','rot','liquidfun','ammo','oimo','crowd' ]
+
 LTH.rubriques = [];
 LTH.demoNames = [];
 LTH.libsNames = [];
@@ -19,17 +21,15 @@ var CodeMirror = CodeMirror || {};
 var GRAD = GRAD || {};
 var history;
 var main;
-var transcode;
 
 window.onload = init;
 
 function init(){
-	transcode = new LTH.Transcode(['full','serious','rot','liquidfun','ammo','oimo','crowd' ], endTranscode, true);
+	main = new LTH.Main();
 }
 
 function endTranscode(){
-
-	main = new LTH.Main();
+    main.menu.initHomeland(main.transcode.isWebGl);
 }
 
 //----------------------------------------
@@ -63,6 +63,7 @@ LTH.Main = function(){
 	//this.codeLoaded = false;
 	this.isFirst = false;
 
+	this.transcode =null;
 	this.menu = null;
 	this.editor = null;
 	this.editorVertex = null;
@@ -84,8 +85,13 @@ LTH.Main.prototype = {
 		this.editor = new LTH.CodeEditor(this);
 		this.menu = new LTH.Menu(this);
 
-		//var _this = this;
+		this.transcode = new LTH.Transcode(this, LTH.CODES, endTranscode, true);
+
 	    window.onresize = function(e) {this.resize(e)}.bind(this);
+	},
+	initHome:function(){
+		console.log('end');
+		this.menu.initHomeland(this.transcode.isWebGl);
 	},
 	switchMode:function(mode){
 		if(mode!==this.mode){
@@ -235,7 +241,7 @@ LTH.Main.prototype = {
 
 			var options, ops, i, myContent;
 
-			if(transcode.useTrans){
+			if(this.transcode.useTrans){
 				// extra libs
 				options = '';
 				ops = LTH.libsNames[LTH.cRubr][LTH.cFile];
@@ -249,7 +255,7 @@ LTH.Main.prototype = {
 					"<meta charset='utf-8'>",
 					"<link rel='stylesheet' href='css/consolas.css'>",
 					"<link rel='stylesheet' href='css/basic.css'>",
-					"<script src='" + transcode.codes.full + "'></script>",
+					"<script src='" + this.transcode.codes.full + "'></script>",
 					options,
 					"<script src='build/v3d.min.js'></script>",
 					"</head><body class='"+this.mainClass+"'>",

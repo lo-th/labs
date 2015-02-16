@@ -1,0 +1,1 @@
+python build.py --include post --minify --output ../js/libs/three.post.min.js

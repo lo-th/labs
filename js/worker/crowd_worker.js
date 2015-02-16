@@ -4,6 +4,9 @@ importScripts('../../js/libs/crowd.js');
 var f = [0,0,0,0];
 var sim = null;
 var ar;
+var dr = [];
+var drn = [];
+var drc = [];// close or not
 var tmp;
 
 self.onmessage = function(e) {
@@ -12,6 +15,7 @@ self.onmessage = function(e) {
 
     if(m==='add') sim.addAgent(e.data.obj);
     if(m==='obstacle') sim.addObstacle(e.data.obj);
+    if(m==='updecal') sim.updateDecal(e.data);
     if(m==='goal') sim.setGoal(e.data.obj);
 
     if(m==='run'){
@@ -130,6 +134,51 @@ CROWD.Simulation.prototype = {
         CROWD.recomputeRoadmap();
     },
 
+    updateDecal:function(obj){
+        dr=obj.dr; 
+        drn=obj.drn; 
+        drc=obj.drc;
+        var max = drn.length;
+        var n, oldNum = 0;
+        for(var i=0; i<max; i++){
+            n = drn[i];
+            if(n===0){ if(this.obstacles[i])this.removeDecal(i);} // remove Chain
+            else this.actualizDecale(i, oldNum, oldNum+n); // update Chain
+            oldNum += n;
+        }
+
+        this.processObstacles();
+        //this.computeRoadMap();
+
+    },
+    removeDecal:function(n){
+        //this.decals[n].DestroyFixture(this.decals[n].fixtures[0]);
+        //world.DestroyBody(this.decals[n]);
+        this.removeObstacle(n);
+        this.obstacles[n] = null;
+    },
+    actualizDecale:function(n, start, end){
+        var vertices = [];
+        var h, j = 0
+        for(var i=start; i<end; i++ ){
+            h = i*2;
+            vertices[j] = new CROWD.V2( dr[h], dr[h+1] );
+            j++;
+        }
+        // close shape 
+        //if(drc[n]===1) shape.CreateLoop();
+        // add shape to fixture
+        //fixtureDef.shape = shape;
+
+        if(this.obstacles[n] == null ){
+            this.obstacles[n] = new CROWD.Obstacle(null, { type:'poly', id:n, arr:vertices });
+        }else{
+            this.obstacles[n].addByClosedPolygon({ arr:vertices })
+            //this.obstacles[n].DestroyFixture(this.obstacles[n].fixtures[0]);
+            //this.obstacles[n].CreateFixtureFromDef(fixtureDef);
+        }
+    },
+
 
 
 
@@ -171,16 +220,13 @@ CROWD.Simulation.prototype = {
     },
     removeObstacle : function (obstacleId) {
         var i = this.getIndexFromId(obstacleId, BABYLON.Obstacle.ObstaclesOrder);
-        if (i == -1)
-            return;
-
+        if (i == -1) return;
         this.obstacles[i].remove(i);
         this.obstacles.splice(i, 1);
 
         CROWD.removeObstacles();
 
-        if (this.obstacles.length == 0)
-            return;
+        if (this.obstacles.length == 0) return;
 
         for (var i = 0; i < this.obstacles.length; i++) {
             this.obstacles[i].rebuild();
@@ -520,15 +566,15 @@ CROWD.Agent.prototype = {
 
 
 CROWD.Obstacle = function (sim, obj) {
-    this.sim = sim;
-    this.id = this.sim.obstacles.length;//Obstacle.ObstacleNo;
-
-     this.dataHeap = null;
-     this.data = null;
-
     obj = obj || {};
-    obj.type = obj.type || 'box';
+    this.sim = sim;
+    //Obstacle.ObstacleNo;
 
+    this.dataHeap = null;
+    this.data = null;
+
+    
+    obj.type = obj.type || 'box';
     if(obj.type == 'box'){
         this.addByBoundingBox(obj);
     }else{
@@ -537,7 +583,10 @@ CROWD.Obstacle = function (sim, obj) {
     //Obstacle.ObstaclesOrder.push(this.id);
     //Obstacle.NumObstacles++;
     //Obstacle.ObstacleNo++;
-    this.sim.obstacles.push(this);
+    if(this.sim!==null){
+        this.id = obj.id || this.sim.obstacles.length;
+        this.sim.obstacles.push(this);
+    }
 }
 
 CROWD.Obstacle.prototype = {
@@ -568,29 +617,15 @@ CROWD.Obstacle.prototype = {
     },
     addByClosedPolygon : function (obj) {
         var index = 0;
-       //  this.data = new Float32Array([x-mw, y+mh, x+mw, y+mh, x+mw, y-mh, x-mw, y-mh]);
-        this.data = new Float32Array(arr.length * 2);
+        this.data = new Float32Array(obj.arr.length * 2);
         for (var i = 0; i < obj.arr.length; i++) {
             this.data[index++] = obj.arr[i].x;
             this.data[index++] = obj.arr[i].y;
         }
 
         this.allocateMem();
-
         this.addToSimulation();
-
         _free(this.dataHeap.byteOffset);
-
-       // var lines = [];
-
-/*        if (debug) {
-            for (var i = 0; i < arr.length; i++) {
-                lines[i] = new BABYLON.Vector3(arr[i].x, 0, arr[i].y);
-            }
-
-            lines.push(new BABYLON.Vector3(arr[0].x, 0, arr[0].y));
-            this.mesh = BABYLON.Mesh.CreateLines("lines", lines, scene);
-        }*/
     },
     rebuild : function () {
         this.allocateMem();

@@ -35,8 +35,12 @@ LTH.Menu = function(main){
 	this.home = null;
 	this.leftMenu = null;
 
-	this.initLogo();
-	this.initHome();
+	if(transcode.isWebGl){
+		this.initLogo(true);
+		this.initHome();
+	}else{
+		this.initLogo(false);
+	}
 
 
 	var _this = this;
@@ -51,19 +55,24 @@ LTH.Menu = function(main){
 
 LTH.Menu.prototype = {
 	constructor: LTH.Menu,
-	initLogo:function(){
+	initLogo:function(isOK){
 		this.logo = this.doc.createElement('div');
 		this.logo.className = 'logo';
 		this.content.appendChild( this.logo );
 		this.logo.innerHTML = LTH.Logos(this.baseColor);
 		this.title = this.doc.createElement('div');
-		this.title.innerHTML = 'LOTH LABS';
+		
 		this.title.className = 'title';
 		this.content.appendChild( this.title );
 
-		this.logo.onmousedown = function(e){ this.initHome(e); }.bind(this);
-		this.logo.onmouseover = function(e){ if(!this.isHome) this.title.innerHTML = 'BACK HOME'; }.bind(this);
-		this.logo.onmouseout = function(e){ if(!this.isHome) this.title.innerHTML = LTH.rubriques[LTH.cRubr].toUpperCase(); }.bind(this);
+		if(isOK){
+			this.title.innerHTML = 'LOTH LABS';
+			this.logo.onmousedown = function(e){ this.initHome(e); }.bind(this);
+			this.logo.onmouseover = function(e){ if(!this.isHome) this.title.innerHTML = 'BACK HOME'; }.bind(this);
+			this.logo.onmouseout = function(e){ if(!this.isHome) this.title.innerHTML = LTH.rubriques[LTH.cRubr].toUpperCase(); }.bind(this);
+		} else {
+			this.title.innerHTML = 'SORRY, YOU NEED WEBGL BROWSER';
+		}
 
 		this.miniLogos();
 	},

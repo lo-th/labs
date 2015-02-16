@@ -19,10 +19,18 @@ var CodeMirror = CodeMirror || {};
 var GRAD = GRAD || {};
 var history;
 var main;
+var transcode;
 
 window.onload = init;
 
-function init(){ main = new LTH.Main(); }
+function init(){
+	transcode = new LTH.Transcode(['full','serious','rot','liquidfun','ammo','oimo','crowd' ], endTranscode, true);
+}
+
+function endTranscode(){
+
+	main = new LTH.Main();
+}
 
 //----------------------------------------
 //
@@ -76,15 +84,14 @@ LTH.Main.prototype = {
 		this.editor = new LTH.CodeEditor(this);
 		this.menu = new LTH.Menu(this);
 
-		var _this = this;
-	    window.onresize = function(e) {_this.resize(e)};
+		//var _this = this;
+	    window.onresize = function(e) {this.resize(e)}.bind(this);
 	},
 	switchMode:function(mode){
 		if(mode!==this.mode){
 			if(this.mode==='shader') this.clearShader();
 			if(mode==='shader') this.initShader();
 			this.mode = mode;
-
 		}
 	},
 	clearShader:function(){
@@ -224,13 +231,75 @@ LTH.Main.prototype = {
 		if(value!==''){
 			
 			this.clearPreview();
-			//if(this.preview==null)
 			this.initPreview();
 
+			var options, ops, i, myContent;
+
+			if(transcode.useTrans){
+				// extra libs
+				options = '';
+				ops = LTH.libsNames[LTH.cRubr][LTH.cFile];
+				i = ops.length;
+				while(i--) {if(ops[i]!=='')options+="<script src='js/libs/"+ops[i]+".min.js'></script>";}
+
+		        myContent = [
+				    "<!DOCTYPE html>",
+					"<html lang='en'><head>",
+					"<title>prev</title>",
+					"<meta charset='utf-8'>",
+					"<link rel='stylesheet' href='css/consolas.css'>",
+					"<link rel='stylesheet' href='css/basic.css'>",
+					"<script src='" + transcode.codes.full + "'></script>",
+					options,
+					"<script src='build/v3d.min.js'></script>",
+					"</head><body class='"+this.mainClass+"'>",
+					"<script>",
+					"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
+					"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
+					"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
+					"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
+					value,
+					"</script>",
+					"</body></html>"
+				].join("\n");
+			}else{
+				// extra libs
+				options = '';
+				ops = LTH.libsNames[LTH.cRubr][LTH.cFile];
+				i = ops.length;
+				while(i--) {if(ops[i]!=='')options+="<script src='js/libs/"+ops[i]+".min.js'></script>";}
+
+		        myContent = [
+				    "<!DOCTYPE html>",
+					"<html lang='en'>",
+					"<head>",
+					"<title>prev</title>",
+					"<meta charset='utf-8'>",
+					"<link rel='stylesheet' href='css/consolas.css'>",
+					"<link rel='stylesheet' href='css/basic.css'>",
+					"<script src='js/libs/three.min.js'></script>",
+					"<script src='js/libs/three.post.js'></script>",
+					"<script src='js/libs/sea3d.min.js'></script>",
+					"<script src='js/libs/tween.min.js'></script>",
+					"<script src='js/libs/gui.min.js'></script>",
+					options,
+					"<script src='build/v3d.min.js'></script>",
+					"</head><body class='"+this.mainClass+"'>",
+					"<script>",
+					"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
+					"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
+					"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
+					"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
+					value,
+					"</script>",
+					"</body></html>"
+				].join("\n");
+			}
+
 			// extra libs
-			var options = '';
-			var ops = LTH.libsNames[LTH.cRubr][LTH.cFile];
-			var i = ops.length;
+			/*options = '';
+			ops = LTH.libsNames[LTH.cRubr][LTH.cFile];
+			i = ops.length;
 			while(i--) {if(ops[i]!=='')options+="<script src='js/libs/"+ops[i]+".min.js'></script>";}
 
 	        var myContent = [
@@ -241,11 +310,12 @@ LTH.Main.prototype = {
 				"<meta charset='utf-8'>",
 				"<link rel='stylesheet' href='css/consolas.css'>",
 				"<link rel='stylesheet' href='css/basic.css'>",
-				"<script src='js/libs/three.min.js'></script>",
-				"<script src='js/libs/three.post.js'></script>",
-				"<script src='js/libs/sea3d.min.js'></script>",
-				"<script src='js/libs/tween.min.js'></script>",
-				"<script src='js/libs/gui.min.js'></script>",
+				"<script src='" + transcode.codes.full + "' type='text/javascript' charset='UTF-8'></script>",
+				//"<script src='js/libs/three.min.js'></script>",
+				//"<script src='js/libs/three.post.js'></script>",
+				//"<script src='js/libs/sea3d.min.js'></script>",
+				//"<script src='js/libs/tween.min.js'></script>",
+				//"<script src='js/libs/gui.min.js'></script>",
 				options,
 				"<script src='build/v3d.min.js'></script>",
 				"</head><body class='"+this.mainClass+"'>",
@@ -257,7 +327,9 @@ LTH.Main.prototype = {
 				value,
 				"</script>",
 				"</body></html>"
-			].join("\n");
+			].join("\n");*/
+
+			//console.log(myContent)
 
 			this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
 			this.previewMain = this.preview.contentWindow;
@@ -268,7 +340,7 @@ LTH.Main.prototype = {
             //this.preview.style.display = 'block';
 
             //var myIFrame = document.getElementById('preview');
-            //console.log(myIFrame)
+            
 
 		    this.resize();
 		    //this.previewMain.onload = function(){ this.previewTheme(); }.bind(this);

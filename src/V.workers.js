@@ -13,8 +13,6 @@ V.Worker = function(parent, name){
     this.update = null;
     this.postMess = null;
 
-
-
     var url, max, max2, max3, max4, nValue, nValue2;
     switch(this.name){
         case 'crowd':
@@ -202,6 +200,8 @@ V.Worker.prototype = {
                 
         v.addSolid({ type:'box', size:[o.w-o.m,o.h-o.m,o.d-o.m], pos:[ 0,wpos+o.m*0.5,0] });
         v.addSolid({ type:'box', size:[o.w+o.m,o.h,o.d+o.m], pos:[ 0,wpos,0]});
+
+        //console.log('room')
     },
 
     add:function(obj){
@@ -215,7 +215,6 @@ V.Worker.prototype = {
     },
     chaine:function(obj){
         if(obj.close) this.drc[0] = 1;
-
         var l = obj.points.length * 0.5;
         this.drn[0] = l;
         var n;
@@ -225,7 +224,6 @@ V.Worker.prototype = {
             this.dr[n] = obj.points[n];
             this.dr[n+1] = obj.points[n+1];
         }
-
         this.updateDecal();
     },
     updateDecal:function(){

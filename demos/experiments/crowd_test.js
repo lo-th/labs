@@ -8,8 +8,9 @@ v.scene.add(ball);
 var env = new V.Environment();
 var envbase = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
 v.zone({s:500});
-v.zone({s:20, v:true});
-v.zone({s:20, v:true, pos:[0,0,30]})
+var select = null;
+//v.zone({s:20, v:true});
+//v.zone({s:20, v:true, pos:[0,0,30]})
 //v.pool.load('boblow', onload);
 v.pool.load('heros', onload);
 
@@ -35,8 +36,6 @@ function onload(){
 	model2.material = material;
 	env.add(material);
 
-	
-
 	v.addWorker('crowd', onWorker);
 }
 
@@ -59,8 +58,12 @@ function addClone(x,y,z){
 }
 
 function onWorker(){
-	v.w.post({m:'obstacle', obj:{type:'box', pos:[0,0,0], size:[20,10,20]}})
-	v.w.post({m:'obstacle', obj:{type:'box', pos:[0,0,30], size:[20,10,20]}})
+	var w = 100/2;
+    var h = 50/2;
+
+	v.chaine({ points:[ -w,h,  w,h, w,-h, -w,-h   ], close:true });
+	//v.w.post({m:'obstacle', obj:{type:'box', pos:[0,0,0], size:[20,10,20]}})
+	//v.w.post({m:'obstacle', obj:{type:'box', pos:[0,0,30], size:[20,10,20]}})
 
 	workerOn = true;
 }
@@ -70,9 +73,28 @@ function mainDown(){
 	var z = v.nav.mouse3d.z;
 	//v.add({type:'box', pos:[x, 0, z], size:[2,6,2]});
 	addClone(x, 0, z);
+
+	select = v.anchors[v.nav.selectName];
+	if (select) { 
+		v.nav.mouse.move = false;
+		select.material = v.mat.Sanchor;
+	}
 }
 
 function mainMove(){
 	ball.position.set(v.nav.mouse3d.x, 0, v.nav.mouse3d.z);
 	if(workerOn)v.w.post({m:'goal', obj:{ x:v.nav.mouse3d.x, y:v.nav.mouse3d.z}})
+
+	if (select) {
+		select.position.set(v.nav.mouse3d.x, 0, v.nav.mouse3d.z);
+		v.upAnchor(select);
+	}
+}
+
+function mainUp(){
+	if (select) { 
+		v.nav.mouse.move = true;
+		select.material = v.mat.anchor; 
+		select = null;
+	}
 }

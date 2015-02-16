@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>SCRIPT to PNG</title>
+<link rel="stylesheet" href="css/consolas.css">
+<link href="css/codemirror.css" rel="stylesheet">
+<style>
+body {
+    background-color:#25292e;
+    color:#d2cec8;
+    font-size: 12px;
+    color: #fff;
+    font-family: Consolas, 'ConsolasRegular', 'Courier New', monospace;;
+}
+
+input{ margin:5px; padding:5px; background-color:#25292e; color:#d2cec8; border:none;}
+
+#interface{ position: absolute; left:0; top:0; width:100%; height:260px; }
+#title{ position: absolute; left:10px; top:10px; width:300px; height:30px; font-size: 14px; pointer-events:none;}
+#colorSelect{position:absolute; left:180px; top:10px; text-align: center;}
+#cr{ position: absolute; left:0px; top:0px; width: 30px; padding-top:7px; padding-bottom:7px; cursor:pointer; background: red;}
+#cg{ position: absolute; left:34px; top:0px; width: 30px; padding-top:7px; padding-bottom:7px; cursor:pointer; background: green;}
+#cb{ position: absolute; left:68px; top:0px; width: 30px; padding-top:7px; padding-bottom:7px; cursor:pointer; background: blue;}
+#imageSizeX{ position: absolute; left:300px; top:10px; width: 50px;}
+#imageSizeY{ position: absolute; left:400px; top:10px; width: 50px;}
+#xtxt{ position: absolute; left:300px; top:30px; margin-left:-8px; width: 20px; }
+#ytxt{ position: absolute; left:400px; top:30px; margin-left:-8px; width: 20px; }
+#files{ position: absolute; left:10px; top:40px; cursor:pointer; margin-left:0; padding:0;}
+#files2{ position: absolute; left:310px; top:40px; cursor:pointer; margin-left:0; padding:0;}
+
+#inputtxt{ position: absolute; left:10px; top:60px; width:200px; height:20px; }
+#outputtxt{ position: absolute; right:10px; top:60px; width:200px; height:20px; text-align:right; display:none;}
+#input{ position: absolute; left:10px; top:80px; width:calc(50% - 40px); height:180px; }
+#output{ position: absolute; right:10px; top:80px; width:calc(50% - 40px); height:180px; display:none;}
+#images{ position: absolute; left:10px; top:310px; border:1px solid red;}
+
+#buttonSelect{position: absolute; left:500px; top:7px;}
+.button {
+    cursor:pointer; display:inline-block;
+}
+.editor {
+    position:absolute; background-color:none; pointer-events:auto; display:block; border:1px solid #000000; 
+    box-shadow: -12px -12px 12px -12px rgba(0, 0, 0, 0.3) inset; z-index:1;
+    left:10px; top:80px; width:calc(100% - 40px); height:180px;
+}
+
+#link{ position: absolute; left:880px; top:10px; width:200px;}
+a{color:#ff8800;text-decoration:none;}
+#linktoimg{ position: absolute; left:10px; top:270px; width:300px; padding:6px; border:1px solid red; cursor:pointer; text-align: center; display:none;}
+</style>
+</head>
+
+<body>
+<div id='interface'>
+    <div id="title"> SCRIPT to PNG </div>
+    <div id="xtxt">X</div> <input type="number" name="quantity" min="32" max="2048" value="1024"  id='imageSizeX'>
+    <div id="ytxt">Y</div> <input type="number" name="quantity" min="32" max="2048" value="200"  id='imageSizeY'>
+    <div id="colorSelect">
+       <div id="cr">R</div>
+       <div id="cg">G</div>
+       <div id="cb">B</div>
+    </div>
+    <div id="buttonSelect">
+    <input type="submit" onClick=update(0) value="Fixe" class="button">
+    <input type="submit" onClick=update(1) value="Fixe X" class="button">
+    <input type="submit" onClick=update(2) value="Fixe Y" class="button">
+    <input type="submit" onClick=update(3) value="AutoSize" class="button">
+    </div>
+    <div id="link">You can use this tools<br><a href="http://css-ig.net/scriptpng" target="_blank">PNG compression</a><br>setting [7] High</div>
+    <input type="file" id="files"/>
+</div>
+<img id="images"></img>
+
+<script src="js/libs/codemirror.min.js"></script>
+<a id='linktoimg'></a>
+
+<script type="text/javascript">
+var content = document.createElement('div');
+content.className = 'editor';
+document.body.appendChild( content );
+var current = 1;
+
+
+var editor = CodeMirror(this.content, {
+    lineNumbers: true,
+    matchBrackets: true,
+    indentWithTabs: true,
+    styleActiveLine: true,
+    theme:'monokai',
+    mode:'text/javascript',
+    tabSize: 4,
+    indentUnit: 4,
+    highlightSelectionMatches: {showToken: /\w/}
+});
+var size = [1024, 1024];
+var rgb = [0,1,0];
+var r = document.getElementById('cr');
+var g = document.getElementById('cg');
+var b = document.getElementById('cb');
+
+r.onclick = function(){ if(rgb[0]==1)rgb[0]=0; else rgb[0]=1; testSelectColor(); }
+g.onclick = function(){ if(rgb[1]==1)rgb[1]=0; else rgb[1]=1; testSelectColor(); }
+b.onclick = function(){ if(rgb[2]==1)rgb[2]=0; else rgb[2]=1; testSelectColor(); }
+testSelectColor();
+
+function testSelectColor() {
+    if(rgb[0]==1) r.style.border = '1px solid white'; else r.style.border = '1px solid rgba(0,0,0,0)';
+    if(rgb[1]==1) g.style.border = '1px solid white'; else g.style.border = '1px solid rgba(0,0,0,0)';
+    if(rgb[2]==1) b.style.border = '1px solid white'; else b.style.border = '1px solid rgba(0,0,0,0)';
+}
+
+
+function update(n) {
+	var s=30;
+	current = n;
+    var str = editor.getValue();
+    var sizer = str.length;
+    if(!str.length) return;
+
+    if(n===0){ 
+  	    size = [document.getElementById('imageSizeX').value, document.getElementById('imageSizeY').value];
+  	} else if(n===1){ 
+        s = Math.ceil(sizer/document.getElementById('imageSizeX').value);
+        size = [document.getElementById('imageSizeX').value, s]; 
+    } else if(n===2){
+    	s = Math.ceil(sizer/document.getElementById('imageSizeY').value);
+    	size = [s, document.getElementById('imageSizeY').value];
+    } else {
+        s = Math.ceil(Math.sqrt(sizer));
+        size = [s, s];
+    }
+
+    createPNG(str)
+}
+
+function handleFileSelect(e) {
+    var f = e.target.files[0];
+    var reader = new FileReader();
+    reader.onload = (function(theFile) {
+        return function(e) {
+            var str = editor.getValue() + e.target.result;
+            //editor.setValue(e.target.result);
+            editor.setValue(str);
+            update(current);
+        };
+    })(f);
+    reader.readAsText(f);
+}
+
+var IM = document.getElementById('images');
+var canvas = document.createElement("canvas");
+var ctx = canvas.getContext('2d');
+
+//var input = document.getElementById('input');
+//var output = document.getElementById('output');
+
+document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+function createPNG(str) {
+    canvas.width = size[0];
+    canvas.height = size[1];
+    var image = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    var n = 0;
+    var c;
+    var data = new Uint8Array(size[0]*size[1]*4);
+    for(i = 0, l = data.length; i < l; i+=4) {
+        var pix = (str.charCodeAt(n) || 32);
+        if(pix===10)pix=127;
+        pix-=32;
+        if(rgb[0]==1) data[i+0] = pix; else data[i+0] = 0;
+        if(rgb[1]==1) data[i+1] = pix; else data[i+1] = 0;
+        if(rgb[2]==1) data[i+2] = pix; else data[i+2] = 0;
+        data[i+3] = 255;
+        n++;
+    }
+
+    var strData = "";
+    for (var i=0;i<data.length;i++) {
+        image.data[i] = data[i]
+    }
+
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0,0, canvas.width, canvas.height);
+    ctx.putImageData(image, 0, 0);
+    IM.src = canvas.toDataURL("image/png");
+
+    //IM = Canvas2Image.saveAsPNG(canvas, true);  
+    
+    var link = document.getElementById('linktoimg');
+    link.style.display = 'block';
+    link.innerHTML = 'download image';
+    link.addEventListener('click', function(ev) {
+        link.href = IM.src;
+        link.download = "test.png";
+    }, false);
+}
+
+</script>
+</body></html>

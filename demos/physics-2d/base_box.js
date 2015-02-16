@@ -1,8 +1,8 @@
 var v = new V.View(-90, 45, 130);
 v.tell('The base');
 v.addWorker('liquid', onWorker);
-var select = null;
 v.zone({s:300});
+var select = null;
 
 loop();
 

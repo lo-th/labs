@@ -3,5 +3,6 @@
     "src/LTH.menu.js",
     "src/LTH.files.js",
     "src/LTH.shader.js",
-    "src/LTH.editor.js"
+    "src/LTH.editor.js",
+    "src/LTH.transcode.js"
 ]

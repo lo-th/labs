@@ -11,16 +11,19 @@ V.SeaPool = function(parent){
 }
 V.SeaPool.prototype = {
     constructor: V.SeaPool,
-    load:function(name, callback, displayList){
+    load:function(name, callback, displayList, noLoader){
         this.callback = callback || function(){};
+        this.noLoader = noLoader || false;
         var list = "";
         var loader = new THREE.SEA3D( true );
-        loader.onProgress = function( e ) {
-            this.root.loader.innerHTML = 'Loading '+ name +': '+(e.progress*100).toFixed(0)+'%';
-        }.bind(this);
-        loader.onDownloadProgress = function( e ) {
-            this.root.loader.style.display = 'block';
-        }.bind(this);
+        if(!this.noLoader){
+            loader.onProgress = function( e ) {
+                this.root.loader.innerHTML = 'Loading '+ name +': '+(e.progress*100).toFixed(0)+'%';
+            }.bind(this);
+            loader.onDownloadProgress = function( e ) {
+                this.root.loader.style.display = 'block';
+            }.bind(this);
+        }
         loader.onComplete = function( e ) {
             this.root.loader.style.display = 'none';
             this.meshes[name] = {};
@@ -38,6 +41,12 @@ V.SeaPool.prototype = {
         loader.load( 'models/'+name+'.sea' );
         //loader.invertZ = true;
         //loader.flipZ = true;
+    },
+    getGeometry:function(obj, name){
+        var g = this.meshes[obj][name].geometry;
+        var mtx = new THREE.Matrix4().makeScale(1, 1, -1);
+        g.applyMatrix(mtx);
+        return g;
     }
 }
 

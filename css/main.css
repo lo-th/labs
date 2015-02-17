@@ -72,7 +72,7 @@ html, body {
     -o-transition: 0.2s ease-out;
     transition: 0.2s ease-out;
 }
-.Out {  width:60px;
+.Out { width:60px;
     -webkit-transition: 0.2s ease-out;
     -moz-transition: 0.2s ease-out;
     -o-transition: 0.2s ease-out;
@@ -83,9 +83,7 @@ html, body {
 	position:absolute; bottom:20px; width:100%; height:22px; text-align:center; overflow:hidden;
 }
 
-.ic{
-	display:block; width:158px; height:30px; cursor:pointer; pointer-events:auto;
-}
+.ic{ display:block; width:158px; height:30px; cursor:pointer; pointer-events:auto; }
 
 .night .icover {background:#393f45;}
 .day .icover {background:#c6c0ba;}
@@ -116,7 +114,7 @@ html, body {
 
 .b{
 	width:20px; height:20px; font-size:14px; cursor:pointer; border:1px solid #25292e;
-	text-align:center; pointer-events:auto; display:inline-block; border-radius:20px; margin: 2px;
+	text-align:center; pointer-events:auto; display:inline-block; border-radius:20px; margin:2px;
 }
 
 .day .b   {border:1px solid #25292e;}
@@ -125,9 +123,9 @@ html, body {
 /* Rubtrique */
 
 .rub{
-	width:118px; height:118px; font-size:14px;  font-weight: bold; cursor:pointer;
-	text-align:center; pointer-events:auto; display:inline-block; border-radius:64px; margin: 20px; padding-top:50px;
-	
+	width:118px; height:118px; font-size:14px; font-weight: bold; cursor:pointer;
+	text-align:center; pointer-events:auto; display:inline-block; border-radius:64px; margin: 10px; padding-top:50px;
+	border:1px solid #25292e;
 }
 
 .night .rub   {
@@ -137,6 +135,7 @@ html, body {
     -moz-transition: 0.2s ease-out;
     -o-transition: 0.2s ease-out;
     transition: 0.2s ease-out;
+    border:1px solid rgba(0,0,0,0.3);
 }
 
 .night .rubover {
@@ -147,6 +146,7 @@ html, body {
     -o-transition: 0.2s ease-out;
     transition: 0.2s ease-out;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    border:1px solid #FFFFFF;
 }
 
 .day .rub {

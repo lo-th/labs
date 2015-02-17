@@ -98,6 +98,8 @@ V.View = function(h,v,d){
 
     this.isWithSerious = false;
 
+    this.pool.load('object', this.initObject, false, true);
+
 	window.onresize = function(e) {this.resize(e)}.bind(this);
 }
 
@@ -222,6 +224,11 @@ V.View.prototype = {
         else v.basic.scale.set(1,1,-1);
         v.scene.add(v.basic);
     },
+    initObject:function(){
+        //console.log('loaded')
+        v.geo['box'] = new THREE.BufferGeometry().fromGeometry(v.pool.getGeometry('object', 'box') );
+        v.geo['cylinder'] = new THREE.BufferGeometry().fromGeometry(v.pool.getGeometry('object', 'cylinder') );
+    },
     basic:function(){
         this.basic = new THREE.Mesh( this.geo.ground, this.mat.base );
         this.basic.scale.set(50,50,50);
@@ -262,7 +269,7 @@ V.View.prototype = {
             m = new V.Blob(this, position, obj.size[0]*4);
             this.sceneBlob.add(m);
         }else{
-            m = new THREE.Mesh( this.geo[obj.type||'box'], this.mat[obj.mat||'base2'] );
+            m = new THREE.Mesh( this.geo[obj.type||'box'], this.mat[obj.mat||('shad_'+obj.type)] );
             m.scale.set(obj.size[0],obj.size[1],obj.size[2]);
             m.position.set(obj.pos[0],obj.pos[1],obj.pos[2]);
             m.rotation.set(0,0,0);
@@ -301,6 +308,12 @@ V.View.prototype = {
         mat['Sanchor'] = new THREE.MeshBasicMaterial( { color:0XFFFFFF });
         mat['base2'] = new THREE.MeshBasicMaterial( { color:0X00FF00, map:THREE.ImageUtils.loadTexture( 'images/grid1.jpg' ) });
         mat['solid'] = new THREE.MeshBasicMaterial( { color:0XFF0073, transparent:true, opacity:0.05,  depthWrite:false });
+
+        var tx = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
+        tx.mapping = THREE.SphericalReflectionMapping;
+        mat['shad_box'] = new THREE.MeshBasicMaterial({color:0XE74C3C, envMap:tx, reflectivity:0.4});
+        mat['shad_sphere'] = new THREE.MeshBasicMaterial({color:0X2980B9, envMap:tx, reflectivity:0.4});
+        mat['shad_cylinder'] = new THREE.MeshBasicMaterial({color:0X8E44AD, envMap:tx, reflectivity:0.4});
     	this.mat = mat;
     },
     addWorker:function(name, fun){

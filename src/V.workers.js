@@ -51,6 +51,18 @@ V.Worker = function(parent, name){
             this.update = this.upOimo;
             this.postMess = this.postOimo;
         break;
+        case 'ammo':
+            url = 'js/worker/ammo_worker.js';
+            sourceURL = '../../js/libs/ammo.min.js';
+            max = 1000;
+            max2 = 10;
+            max3 = 10;
+            max4 = 0;
+            nValue = 8;
+            nValue2 = 3;
+            this.update = this.upAmmo;
+            this.postMess = this.postAmmo;
+        break;
     }
 
     if(window.top.main.transcode.useTrans){
@@ -169,6 +181,33 @@ V.Worker.prototype = {
     postLiquid:function(){
         //this.w.postMessage({m:'run', m2:this.msg, drn:this.drn, drc:this.drc, dr:this.dr, ar:this.ar, pr:this.pr, prn:this.prn},[this.ar.buffer, this.pr.buffer]);
         this.w.postMessage({m:'run', prn:this.prn, ar:this.ar, pr:this.pr },[this.ar.buffer, this.pr.buffer]);
+    },
+
+    // AMMO ---------------------------------------------
+
+    upAmmo:function(e){
+        if(e.data.init){
+            this.postMess();
+            return;
+        }
+        if(e.data.w && !this.isReady) this.isReady = true;
+        this.fps = e.data.fps;
+        this.ar = e.data.ar;
+        var m = this.root.meshs;
+        var i = m.length, id;
+        while(i--){
+            id = i*8;
+            if(this.ar[id]){
+                m[i].position.set( this.ar[id+1], this.ar[id+2], this.ar[id+3] );
+                if(m.type!=='BLOB') m[i].quaternion.set( this.ar[id+4], this.ar[id+5], this.ar[id+6], this.ar[id+7] );
+            }
+        }
+
+        this.computeTime();
+
+    },
+    postAmmo:function(){
+        this.w.postMessage({m:'run', m2:this.msg, drn:this.drn, drc:this.drc, ar:this.ar, dr:this.dr},[this.ar.buffer]);
     },
 
 

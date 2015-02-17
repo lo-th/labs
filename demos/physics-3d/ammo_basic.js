@@ -1,6 +1,6 @@
 var v = new V.View(180, 45, 130);
-v.tell('The base');
-v.addWorker('oimo', onWorker);
+v.tell('ammo basic');
+v.addWorker('ammo', onWorker);
 
 loop();
 
@@ -11,7 +11,7 @@ function loop(){
 
 function onWorker(){
     v.w.room({w:50, h:30, d:50, m:3});
-    var x,y;
+    var x,y,z,tt;
     var sx,sy,sz;
     for(var i = 0; i<300; i++){
         sx = V.rand(1, 8);
@@ -20,6 +20,8 @@ function onWorker(){
         x = V.rand(-20, 20);
         y = V.rand(0, 40);
         z = V.rand(-20, 20);
-        v.add({type:'box', mass:1, pos:[x, y*(i*0.1), z], size:[sx,sy,sz]});
+        tt = V.randInt(0, 1);
+        if(tt==0) v.add({type:'box', mass:0.1, pos:[x, y*(i*0.1), z], size:[sx,sy,sz]});
+        else v.add({type:'sphere', mass:0.1, pos:[x, y*(i*0.1), z], size:[sx*0.5,sx*0.5,sx*0.5]});
     }
 }

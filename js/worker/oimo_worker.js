@@ -1,6 +1,13 @@
-'use strict';
-//importScripts('../../js/libs/oimo.min.js');
+/**   _     _   _     
+*    | |___| |_| |__
+*    | / _ \  _|    |
+*    |_\___/\__|_||_|
+*    @author LoTh / http://lo-th.github.io/labs/
+*/
 
+// OIMO for three.js
+
+'use strict';
 var f = [0,0,0,0];
 var ar;
 var dr;
@@ -33,7 +40,7 @@ self.onmessage = function(e) {
 	}
 }
 
-var W = {};
+var W = { rev : 0.1 };
 
 W.Sim = function(){
 	this.p = 4; // precission

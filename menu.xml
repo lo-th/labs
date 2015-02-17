@@ -8,10 +8,10 @@
 	<demo n='adv_liquid' lib=''></demo>
 </rubrique>
 <rubrique n='physics-3d'>
-	<demo n='base_box' lib=''></demo>
-	<demo n='base_sphere' lib=''></demo>
+	<demo n='oimo_basic' lib=''></demo>
 	<demo n='adv_liquid' lib=''></demo>
 	<demo n='adv_liquid_2' lib=''></demo>
+	<demo n='ammo_basic' lib=''></demo>
 </rubrique>
 <rubrique n='games'>
 	<demo n='city' lib=''></demo>

@@ -1,5 +1,13 @@
+/**   _     _   _     
+*    | |___| |_| |__
+*    | / _ \  _|    |
+*    |_\___/\__|_||_|
+*    @author LoTh / http://lo-th.github.io/labs/
+*/
+
+// LIQUIDFUN for three.js
+
 'use strict';
-//importScripts('../../js/libs/liquidfun.js');
 
 var f = [0,0,0,0];
 var ar;// body position

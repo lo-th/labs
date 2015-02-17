@@ -1,4 +1,4 @@
-var v = new V.View(-90, 45, 130);
+var v = new V.View(-90, 45, 130, true);
 v.tell('The base');
 v.addWorker('liquid', onWorker);
 v.zone({s:300});

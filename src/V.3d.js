@@ -34,7 +34,7 @@ V.MeshList = [ 'plane', 'sphere', 'skull', 'skullhigh', 'head', 'woman', 'babe']
 
 V.Main = null;
 
-V.View = function(h,v,d){
+V.View = function(h,v,d, loadbasic){
     this.renderMode = '';
     window.top.main.previewTheme();
     this.dimentions = {w:window.innerWidth,  h:window.innerHeight, r:window.innerWidth/window.innerHeight };
@@ -78,6 +78,8 @@ V.View = function(h,v,d){
     this.pool = new V.SeaPool(this);
     this.impool = new V.ImgPool(this);
 
+    if(loadbasic)this.loadBasic();
+
     this.postEffect = null;
 
     this.deb = '';
@@ -98,7 +100,9 @@ V.View = function(h,v,d){
 
     this.isWithSerious = false;
 
-    this.pool.load('object', this.initObject, false, true);
+
+
+    //
 
 	window.onresize = function(e) {this.resize(e)}.bind(this);
 }
@@ -224,8 +228,10 @@ V.View.prototype = {
         else v.basic.scale.set(1,1,-1);
         v.scene.add(v.basic);
     },
+    loadBasic:function(){
+        this.pool.load('object', this.initObject, false, true);
+    },
     initObject:function(){
-        //console.log('loaded')
         v.geo['box'] = new THREE.BufferGeometry().fromGeometry(v.pool.getGeometry('object', 'box') );
         v.geo['cylinder'] = new THREE.BufferGeometry().fromGeometry(v.pool.getGeometry('object', 'cylinder') );
     },

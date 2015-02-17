@@ -1,4 +1,4 @@
-var v = new V.View(180, 45, 130);
+var v = new V.View(180, 45, 130, true);
 v.tell('oimo basic');
 v.addWorker('oimo', onWorker);
 

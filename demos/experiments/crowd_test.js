@@ -12,7 +12,7 @@ var select = null;
 //v.zone({s:20, v:true});
 //v.zone({s:20, v:true, pos:[0,0,30]})
 //v.pool.load('boblow', onload);
-v.pool.load('heros', onload);
+v.pool.load('heros', onload, true);
 
 loop();
 

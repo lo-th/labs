@@ -40,6 +40,7 @@ LTH.Menu = function(main){
 
 	this.home = null;
 	this.leftMenu = null;
+	this.topColor = null;
 
 	this.initLogo();
 
@@ -193,6 +194,8 @@ LTH.Menu.prototype = {
 		LTH.cFile = n;
 		//console.log(n)
 
+
+
 		this.clearDiv(this.main.labmenu.content);
 		//this.clearDiv(this.home);
 		//this.content.removeChild(this.home);
@@ -214,6 +217,7 @@ LTH.Menu.prototype = {
 		this.clearDiv(this.leftMenu);
 		this.content.removeChild(this.leftMenu);
 		this.content.removeChild(this.zone);
+		this.content.removeChild(this.topColor);
 		this.icons = [];
 		this.files = [];
 		this.buttons = [];
@@ -263,6 +267,12 @@ LTH.Menu.prototype = {
 	    this.zone.ondrop = function(e){_this.zoneDrop(e)};
 	},
 	initButton:function(){
+		this.topColor = this.doc.createElement('div');
+		this.topColor.className = 'topColor';
+		this.topColor.style.background = this.main.labmenu.colors[LTH.cRubr];
+		this.content.appendChild( this.topColor );
+		
+
 		this.leftMenu = this.doc.createElement('div');
 		this.leftMenu.className = 'bottomLeftMenu';
 		this.content.appendChild( this.leftMenu );

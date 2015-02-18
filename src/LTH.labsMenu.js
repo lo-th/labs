@@ -105,7 +105,7 @@ LTH.labsMenu.prototype = {
 			}
 		} else {
 			this.current = null;
-			this.title.style.background = 'none';
+			this.title.style.background = '#'+this.baseColor//'none';
 			this.title.innerHTML = '';
 			this.subTitle.innerHTML = '';
 		}
@@ -303,17 +303,17 @@ LTH.IconMicro = function(color, type){
 	var width = 30;
 	var Kwidth = '0 0 30 30';
 	var t = [];
-	t[0] = "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' preserveAspectRatio='none' x='0px' y='0px' width='"+width+"px' height='"+width+"px' viewBox='"+Kwidth+"';'>";
+	t[0] = "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' preserveAspectRatio='none' x='0px' y='0px' width='"+width+"px' height='"+width+"px' viewBox='"+Kwidth+"';'><g id='Layer'>";
 	switch(type){
-		case 0:
-		t[1]="<g id='Layer'><path fill='#"+color+"' d='M 26 16 L 26 14 22 14 22 10 20 8 16 8 16 4 14 4 14 8 10 8 8 10 8 14 4 14 4 16 8 16 8 20 10 22 14 22 14 26 16 26 16 22 20 22 22 20 22 16 26 16 M 19 10 L 20 11 20 19 19 20 11 20 10 19 10 11 11 10 19 10 Z'/>";
-		break;
-		case 1:
-		t[1]="<g id='Layer'><path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";
-		break;
-		case 2:
-		t[1]="<g id='Layer'><path fill='#"+color+"' d='M 23 20 L 22 20 22 12 19 12 19 10 18 10 18 12 16 12 16 19 18 19 18 14 20 14 20 22 23 22 23 20 M 7 22 L 10 22 10 10 12 10 12 19 14 19 14 8 8 8 8 20 7 20 7 22 Z'/>";
-		break;
+		case 0: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
+		case 1: t[1]="<path fill='#"+color+"' d='M 26 16 L 26 14 22 14 22 10 20 8 16 8 16 4 14 4 14 8 10 8 8 10 8 14 4 14 4 16 8 16 8 20 10 22 14 22 14 26 16 26 16 22 20 22 22 20 22 16 26 16 M 19 10 L 20 11 20 19 19 20 11 20 10 19 10 11 11 10 19 10 Z'/>";break;
+		case 2: t[1]="<path fill='#"+color+"' d='M 23 20 L 22 20 22 12 19 12 19 10 18 10 18 12 16 12 16 19 18 19 18 14 20 14 20 22 23 22 23 20 M 7 22 L 10 22 10 10 12 10 12 19 14 19 14 8 8 8 8 20 7 20 7 22 Z'/>";break;
+		case 3: t[1]="<path fill='#"+color+"' d='M 21 8 L 21 10 19 12 18 11 12 11 11 12 9 10 9 8 10 7 9 6 6 9 6 13 8 15 7 16 7 20 8 21 14 21 14 24 16 24 16 21 22 21 23 20 23 16 22 15 24 13 24 9 21 6 20 7 21 8 M 23 10 L 23 12 21 14 20 13 22 11 22 9 23 10 M 21 17 L 21 19 9 19 9 17 13 13 17 13 21 17 M 8 9 L 8 11 10 13 9 14 7 12 7 10 8 9 Z'/>";break;
+		case 4: t[1]="<path fill='#"+color+"' d='M 26 16 L 26 14 16 4 14 4 4 14 4 16 14 26 16 26 26 16 M 6 15 L 15 6 24 15 15 24 6 15 M 16 10 L 14 10 14 16 16 16 16 10 M 16 18 L 14 18 14 20 16 20 16 18 Z'/>";break;
+		case 5: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
+		case 6: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
+		case 7: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
+		case 8: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
 	}
 	t[2] = "<use xlink:href='#Layer'/></g></svg>";
 	return t.join("\n");

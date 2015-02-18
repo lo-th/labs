@@ -3,9 +3,9 @@
 <menu>
 	<rubrique n='games' color='9160D9'>
 	<demo n='city' lib='' ic='2'></demo>
-	<demo n='dungeon' lib='rot' ic='0'></demo>
-	<demo n='third_person' lib='' ic='0'></demo>
-	<demo n='third_person2' lib='' ic='0'></demo>
+	<demo n='dungeon' lib='rot' ic='3'></demo>
+	<demo n='third_person' lib='' ic='4'></demo>
+	<demo n='third_person2' lib='' ic='4'></demo>
 </rubrique>	
 <rubrique n='shaders' color='D33E3F'>
 	<demo n='basic' lib='' ic='0'></demo>

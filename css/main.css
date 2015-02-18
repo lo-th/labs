@@ -29,7 +29,7 @@ html, body {
 
 .logo {
 	position:absolute; left:50%; top:50%; margin-left:-64px; margin-top:-53px; width:128px; height:128px; 
-	text-align:center; pointer-events:auto; cursor:pointer;
+	text-align:center; pointer-events:none;/* cursor:pointer;*/
 }
 
 .lmin { 
@@ -44,6 +44,7 @@ html, body {
     transition: 0.2s ease-out;
 }
 .lmax { 
+	pointer-events:auto; cursor:pointer;
 	top:60px;
 	-webkit-transform: scale(1,1);
 	-moz-transform: scale(1,1); 
@@ -180,6 +181,11 @@ html, body {
 	width:36px; height:36px; display:inline-block; margin-left:6px; pointer-events:auto;
 }
 
+.topColor{
+	position: absolute; left:0; top:0; width:100%; height:5px; 
+	box-shadow: -12px -12px 12px -12px rgba(0, 0, 0, 0.3) inset;
+}
+
 /* LABS MENU */
 
 .labsMenu{ position: absolute; left:0; top:0; width:100%; height:100%; pointer-events:auto;}
@@ -187,13 +193,17 @@ html, body {
 .pinsContent{ position: absolute; left:50%; top:50%; margin-left:-400px; margin-top:-400px;width:10px; height:10px; pointer-events:none; z-index:1; }
 
 .labsTitle{ 
-	position: absolute; left:30px; bottom:40px;  
-	font-weight:900; word-spacing: -8px; font-size:30px;
-	padding:4px; padding-left:12px; padding-right:12px; color:#25292e; pointer-events:none; 
+	position: absolute; left:30px; top:28px;  width:200px;
+	font-weight:900; word-spacing: -8px; font-size:26px;
+	padding:0px; padding-left:12px; padding-right:12px; color:#25292e; pointer-events:none;
+	-webkit-transition: 0.3s ease-out;
+    -moz-transition: 0.3s ease-out;
+    -o-transition: 0.3s ease-out;
+    transition: 0.3s ease-out;
 }
 .labsSubTitle{ 
-	position: absolute; left:30px; bottom:90px;  
-	font-weight:900; word-spacing: -4px; font-size:22px;
+	position: absolute; left:30px; top:60px;  width:200px;
+	font-weight:900; word-spacing: -4px; font-size:20px;
 	padding:4px; padding-left:12px; padding-right:12px; color:#d2cec8; pointer-events:none; 
 }
 .pins{

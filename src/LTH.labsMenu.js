@@ -8,6 +8,7 @@
 LTH.labsMenu = function(main){
 	this.main = main;
 	this.baseColor = '25292e';
+	this.topColor= '25292e';
 	this.current = null;
 	this.size = 800;
 	this.decal = 1;
@@ -270,7 +271,7 @@ LTH.labsMenu.prototype = {
 	    var iner = document.createElement('div');
 	    iner.className = 'pinsin';
 
-	    iner.innerHTML = LTH.IconMicro(this.baseColor, this.demosIcones[r][n]);
+	    iner.innerHTML = LTH.IconMicro(this.topColor, this.demosIcones[r][n]);
 	    pn.appendChild( iner );
 
 	    

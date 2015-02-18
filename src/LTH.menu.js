@@ -346,6 +346,8 @@ LTH.Menu.prototype = {
 	isDay:function(){
 		//this.img2.src = './images/logo_w.gif';
 		this.baseColor = "25292e";
+		this.main.labmenu.baseColor = "25292e";
+		this.main.labmenu.topColor = "d2cec8";
 		this.logo.innerHTML = LTH.Logos(this.baseColor);
 		this.main.day = true;
 		this.main.mainClass = 'day';
@@ -357,6 +359,8 @@ LTH.Menu.prototype = {
 	isNight:function (){
 		//this.img2.src = './images/logo.gif';
 		this.baseColor = "d2cec8";
+		this.main.labmenu.baseColor = "d2cec8";
+		this.main.labmenu.topColor = "25292e";
 		this.logo.innerHTML = LTH.Logos(this.baseColor);
 		this.main.day = false;
 		this.main.mainClass = 'night';

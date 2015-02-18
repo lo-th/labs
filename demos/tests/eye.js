@@ -12,7 +12,7 @@ tx0.minFilter = tx0.magFilter = THREE.LinearFilter;
 tx1.format = THREE.RGBFormat;
 tx1.wrapS = tx1.wrapT = THREE.RepeatWrapping;
 tx1.minFilter = tx1.magFilter = THREE.LinearFilter;
-var tx2 = THREE.ImageUtils.loadTexture( 'images/dianna/refl.jpg');
+var tx2 = THREE.ImageUtils.loadTexture( 'images/dianna/eye_r.jpg');
 //var tx3 = THREE.ImageUtils.loadTexture( 'images/dianna/studio2_diff.jpg');
 
 //var mat  = new V.Shader('Eye', {texEyeCol:tx0, texEyeNrm:tx1, env:envbase, texEnvRfl:tx2, texEnvDif:tx3});

@@ -85,6 +85,7 @@ LTH.Main.prototype = {
 	init:function (){
 		this.shader = new LTH.ShaderToy(this);
 		this.editor = new LTH.CodeEditor(this);
+		this.labmenu = new LTH.labsMenu(this);
 		this.menu = new LTH.Menu(this);
 
 		this.transcode = new LTH.Transcode(this, LTH.CODES, endTranscode, true);

@@ -5,21 +5,19 @@
 *    @author LoTh / http://lo-th.github.io/labs/
 */
 
-//var LTH = {};
-
-
-LTH.labsMenu = function(){
+LTH.labsMenu = function(main){
+	this.main = main;
 	this.baseColor = '25292e';
 	this.current = null;
 	this.size = 800;
 	this.decal = 1;
 	this.rdecal = -30;
 	this.center = this.size*0.5;
-	this.radius = 30;//110;
-	this.endRadius = 110;//110;
-	this.line = 0;
+	this.radius = 10;
+	this.endRadius = 110;
+	this.line = 1;
 	this.content = document.createElement('div');
-	document.body.appendChild( this.content );
+	//this.main.menu.content.appendChild( this.content );
 	this.content.className = 'labsMenu';
 
 	this.pins = [];
@@ -28,19 +26,23 @@ LTH.labsMenu = function(){
 	this.anglesStart = [];
 	this.colors = [];
 	this.nDemos = [];
+	this.demosNames = [];
+	this.demosIcones = [];
 	this.rubNames = [];
 	this.points = [];
 
 
 	this.nRubriques = 0;
+	this.isComputed = false;
 
 	this.arcs = LTH.ARCS;
-	this.init();
+
 }
 
 LTH.labsMenu.prototype = {
 	constructor: LTH.labsMenu,
 	init:function (){
+
 		this.title = document.createElement('div');
 	    this.title.className = 'labsTitle';
 	    this.content.appendChild( this.title );
@@ -60,34 +62,31 @@ LTH.labsMenu.prototype = {
 		this.ctx = this.canvas.getContext('2d');
 		this.canvas.width = this.canvas.height = this.size;
 
-		
-
-		var i = 0;
-		for(var key in this.arcs){
-			this.rubNames[i] = key;
-			i++;
-		}
-		this.nRubriques = i;
-		this.compute();
-
-		this.content.onmousemove = function(e){this.mouseMove(e)}.bind(this);
+		if(!this.isComputed) this.compute();
 
 		this.time = 10;
-		this.anim = setTimeout(function(e){this.update()}.bind(this), this.time);
+		this.radius = 10;
+		this.line = 1;
+		this.update();
+	},
+	reset:function(){
 
-		this.draw();
 	},
 	update:function(){
-		this.radius++;
-		this.line+=0.2;
 		if(this.radius==this.endRadius){
 			clearTimeout(this.anim);
+			this.activeMouse();
 			this.draw(true);
 		}else {
 			this.draw();
 			this.time -=0.2;
 			this.anim = setTimeout(function(e){this.update()}.bind(this), this.time);
 		}
+		this.radius++;
+		this.line+=0.2;
+	},
+	activeMouse:function(){
+		this.content.onmousemove = function(e){this.mouseMove(e)}.bind(this);
 	},
 	mouseMove:function(e){
 		var x = e.clientX - (window.innerWidth*0.5);
@@ -119,23 +118,26 @@ LTH.labsMenu.prototype = {
 		}
 	},
 	compute:function(){
-		var n = 0, c, i=0, ndemo=0;
+		var i = 0, c, ndemo=0;
 		for(var key in this.arcs){
 			c = this.arcs[key];
-			this.colors[n] = c.color;
-			this.nDemos[n] = c.demos.length;
-			ndemo += this.nDemos[n];
-			n++;
+			this.colors[i] = c.color;
+			this.demosNames[i] = c.demos;
+			this.demosIcones[i] = c.icon;
+			this.nDemos[i] = c.demos.length;
+			ndemo += this.nDemos[i];
+			i++;
 		}
 
 		var nangle = 360/ndemo;
 		var prec = 0; 
-		var prev=0
-
+		var prev=0;
+		i=0;
 		for(var key in this.arcs){
 			c = this.arcs[key];
 			prec = this.nDemos[i]*nangle;
 
+			this.rubNames[i] = key;
 			this.anglesStart[i] = (prev)+this.decal+this.rdecal;
 			this.anglesEnd[i] = (prev+prec)-this.decal+this.rdecal;
 
@@ -145,6 +147,8 @@ LTH.labsMenu.prototype = {
 			prev += prec;
 			i++;
 		}
+		this.nRubriques = i;
+		this.isComputed = true;
 	},
 	findPoint:function(angle){
 		var a = angle*LTH.ToRad;
@@ -254,33 +258,39 @@ LTH.labsMenu.prototype = {
 		this.ctx.lineWidth = 2;
 		this.ctx.stroke();
 	},
-	addPins:function(x,y,color,n,rubid){
+	addPins:function(x,y,color,n,r){
 		var id = this.pins.length;
 		var pn = document.createElement('div');
 		pn.className = 'pins';
 		pn.style.left = x +'px';
 		pn.style.top = y +'px';
 	    pn.style.background = color;
-	    pn.name = rubid +'_' + n;
+	    pn.name = r +'_' + n;
 
 	    var iner = document.createElement('div');
 	    iner.className = 'pinsin';
-	    var ic = this.arcs[this.rubNames[rubid]].icon[n];
-	    //var ic = this.arcs[rubid].ic[n];
-	    iner.innerHTML = LTH.IconMicro(this.baseColor, ic);
+
+	    iner.innerHTML = LTH.IconMicro(this.baseColor, this.demosIcones[r][n]);
 	    pn.appendChild( iner );
 
 	    
 	    this.pins[id] = pn;
+	    this.pins[id].onclick = function(e){ 
+	    	var r = e.target.name.substring(0,1);//this.rubNames[];
+	    	var n = e.target.name.substring(2,e.target.name.length);
+	    	this.main.menu.resetHome(r, n);
+	    }.bind(this);
 	    this.pins[id].onmouseover = function(e){ 
 	    	e.target.style.background = '#d2cec8';
-	    	var r = this.rubNames[e.target.name.substring(0,1)];
+	    	var r = e.target.name.substring(0,1);//this.rubNames[];
 	    	var n = e.target.name.substring(2,e.target.name.length);
-	    	this.subTitle.innerHTML = (this.arcs[r].demos[n].replace("_", " ")).toUpperCase();
+	    	//this.subTitle.innerHTML = (this.arcs[r].demos[n].replace("_", " ")).toUpperCase();
+	    	this.subTitle.innerHTML = (this.demosNames[r][n].replace("_", " ")).toUpperCase();
 	    }.bind(this);
 		this.pins[id].onmouseout = function(e){ 
 			e.target.style.background = color;
-		};
+			this.subTitle.innerHTML = ''
+		}.bind(this);
 		this.pinsContent.appendChild( this.pins[id] );
 	}
 }

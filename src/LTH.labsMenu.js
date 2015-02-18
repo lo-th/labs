@@ -306,11 +306,15 @@ LTH.IconMicro = function(color, type){
 	t[0] = "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' preserveAspectRatio='none' x='0px' y='0px' width='"+width+"px' height='"+width+"px' viewBox='"+Kwidth+"';'>";
 	switch(type){
 		case 0:
-		t[1]="<g id='Layer'><path fill='#"+color+"' d='M 26 16 L 26 14 22 14 22 10 20 8 16 8 16 4 14 4 14 8 10 8 8 10 8 14 4 14 4 16 8 16 8 20 10 22 14 22 14 26 16 26 16 22 20 22 22 20 22 16 26 16 M 19 10 L 20 11 20 19 19 20 11 20 10 19 10 11 11 10 19 10 Z'/><use xlink:href='#Layer'/></g></svg>";
+		t[1]="<g id='Layer'><path fill='#"+color+"' d='M 26 16 L 26 14 22 14 22 10 20 8 16 8 16 4 14 4 14 8 10 8 8 10 8 14 4 14 4 16 8 16 8 20 10 22 14 22 14 26 16 26 16 22 20 22 22 20 22 16 26 16 M 19 10 L 20 11 20 19 19 20 11 20 10 19 10 11 11 10 19 10 Z'/>";
 		break;
 		case 1:
-		t[1]="<g id='Layer'><path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/><use xlink:href='#Layer'/></g></svg>";
+		t[1]="<g id='Layer'><path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";
+		break;
+		case 2:
+		t[1]="<g id='Layer'><path fill='#"+color+"' d='M 23 20 L 22 20 22 12 19 12 19 10 18 10 18 12 16 12 16 19 18 19 18 14 20 14 20 22 23 22 23 20 M 7 22 L 10 22 10 10 12 10 12 19 14 19 14 8 8 8 8 20 7 20 7 22 Z'/>";
 		break;
 	}
+	t[2] = "<use xlink:href='#Layer'/></g></svg>";
 	return t.join("\n");
 }

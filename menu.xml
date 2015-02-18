@@ -2,7 +2,7 @@
 <!-- LOTH MAIN MENU -->
 <menu>
 	<rubrique n='games' color='9160D9'>
-	<demo n='city' lib='' ic='0'></demo>
+	<demo n='city' lib='' ic='2'></demo>
 	<demo n='dungeon' lib='rot' ic='0'></demo>
 	<demo n='third_person' lib='' ic='0'></demo>
 	<demo n='third_person2' lib='' ic='0'></demo>

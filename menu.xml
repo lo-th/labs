@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!-- LOTH MAIN MENU -->
 <menu>
-<rubrique n='physics-2d'>
-	<demo n='base_box' lib=''></demo>
-	<demo n='base_circle' lib=''></demo>
-	<demo n='base_particle' lib=''></demo>
-	<demo n='adv_liquid' lib=''></demo>
-</rubrique>
-<rubrique n='physics-3d'>
-	<demo n='oimo_basic' lib=''></demo>
-	<demo n='adv_liquid' lib=''></demo>
-	<demo n='adv_liquid_2' lib=''></demo>
-	<demo n='ammo_basic' lib=''></demo>
-</rubrique>
-<rubrique n='games'>
-	<demo n='city' lib=''></demo>
-	<demo n='dungeon' lib='rot'></demo>
-	<demo n='third_person' lib=''></demo>
-	<demo n='third_person2' lib=''></demo>
+	<rubrique n='games' color='9160D9'>
+	<demo n='city' lib='' ic='0'></demo>
+	<demo n='dungeon' lib='rot' ic='0'></demo>
+	<demo n='third_person' lib='' ic='0'></demo>
+	<demo n='third_person2' lib='' ic='0'></demo>
 </rubrique>	
-<rubrique n='shaders'>
-	<demo n='basic' lib=''></demo>
-	<demo n='xray' lib=''></demo>
-	<demo n='fansy' lib=''></demo>
-	<demo n='parallax' lib=''></demo>
-	<demo n='spherical' lib=''></demo>
-	<demo n='shadowmap' lib=''></demo>
-	<demo n='metaball' lib=''></demo>
+<rubrique n='shaders' color='D33E3F'>
+	<demo n='basic' lib='' ic='0'></demo>
+	<demo n='xray' lib='' ic='0'></demo>
+	<demo n='fansy' lib='' ic='0'></demo>
+	<demo n='parallax' lib='' ic='0'></demo>
+	<demo n='spherical' lib='' ic='0'></demo>
+	<demo n='shadowmap' lib='' ic='0'></demo>
+	<demo n='metaball' lib='' ic='0'></demo>
 </rubrique>	
-<rubrique n='experiments'>
-	<demo n='terrain' lib='terrain'></demo>
-	<demo n='seriously' lib='serious'></demo>
-	<demo n='crowd_test' lib=''></demo>
-	<demo n='human' lib=''></demo>
+<rubrique n='experiments' color='FF9500'>
+	<demo n='terrain' lib='terrain' ic='0'></demo>
+	<demo n='seriously' lib='serious' ic='0'></demo>
+	<demo n='crowd_test' lib='' ic='0'></demo>
+	<demo n='human' lib='' ic='0'></demo>
 </rubrique>
-<rubrique n='tests'>
-	<demo n='liquid' lib=''></demo>
-	<demo n='superdroid' lib=''></demo>
-	<demo n='dante' lib=''></demo>
-	<demo n='sam' lib=''></demo>
-	<demo n='eye' lib=''></demo>
+<rubrique n='tests' color='CAD33C'>
+	<demo n='liquid' lib='' ic='0'></demo>
+	<demo n='superdroid' lib='' ic='0'></demo>
+	<demo n='dante' lib='' ic='1'></demo>
+	<demo n='sam' lib='' ic='0'></demo>
+	<demo n='eye' lib='' ic='0'></demo>
+</rubrique>
+<rubrique n='physics-2d' color='32CAF4'>
+	<demo n='base_box' lib='' ic='0'></demo>
+	<demo n='base_circle' lib='' ic='0'></demo>
+	<demo n='base_particle' lib='' ic='0'></demo>
+	<demo n='adv_liquid' lib='' ic='0'></demo>
+</rubrique>
+<rubrique n='physics-3d' color='026AF6'>
+	<demo n='oimo_basic' lib='' ic='0'></demo>
+	<demo n='adv_liquid' lib='' ic='0'></demo>
+	<demo n='adv_liquid_2' lib='' ic='0'></demo>
+	<demo n='ammo_basic' lib='' ic='0'></demo>
 </rubrique>
 </menu>

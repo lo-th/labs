@@ -12,8 +12,10 @@ LTH.CODES = ['full','serious','rot','terrain','liquid','ammo','oimo','crowd'];
 LTH.rubriques = [];
 LTH.demoNames = [];
 LTH.libsNames = [];
+LTH.ARCS = {};
 LTH.cRubr = -1;
 LTH.cFile = 0;
+LTH.ToRad = Math.PI / 180;
 
 var esprima = esprima || {};
 esprima.parse = esprima.parse || {};

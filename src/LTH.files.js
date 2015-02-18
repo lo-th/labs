@@ -22,11 +22,14 @@ LTH.FileSystem.prototype = {
 	    	for(var i=0;i<r.length;i++){
 	    		a = r[i];
 	    		LTH.rubriques[i] = a.attributes[0].value;
+	    		LTH.ARCS[LTH.rubriques[i]] = {color:'#'+a.attributes[1].value, demos:[], icon:[]}
 	    		LTH.demoNames[i] = [];
 	    		LTH.libsNames[i] = [];
 	    		b = a.getElementsByTagName("demo");
 	    		for(var j=0;j<b.length;j++){
 	    			LTH.demoNames[i][j] = b[j].attributes[0].value;
+	    			LTH.ARCS[LTH.rubriques[i]].demos[j] = b[j].attributes[0].value;
+	    			LTH.ARCS[LTH.rubriques[i]].icon[j] = (b[j].attributes[2].value)*1;
 	    			LTH.libsNames[i][j] = b[j].attributes[1].value.split("|").map(function(n){return n;});
 	    		}
 	    	}

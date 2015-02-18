@@ -1,5 +1,6 @@
 [   
     "src/LTH.main.js",
+    "src/LTH.labsMenu.js",
     "src/LTH.menu.js",
     "src/LTH.files.js",
     "src/LTH.shader.js",

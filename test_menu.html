@@ -1,0 +1,70 @@
+
+<!DOCTYPE html><html class=''>
+<head><meta charset='UTF-8'>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="css/consolas.css">
+<link rel="stylesheet" href="css/main.css">
+<script src="src/LTH.labsMenu.js"></script>
+</head><body>
+
+<script>
+
+window.onload = init
+
+
+function init(){
+	var fileSystem = new LTH.FileSystem();
+	fileSystem.loadXML('menu.xml');	
+}
+
+
+//var LTH = {};
+
+LTH.rubriques = [];
+LTH.demoNames = [];
+LTH.libsNames = [];
+
+LTH.ARCS = {};
+
+LTH.ToRad = Math.PI / 180;
+
+LTH.FileSystem = function(main){
+	this.main = main;
+}
+
+LTH.FileSystem.prototype = {
+	constructor: LTH.FileSystem,
+	loadXML:function(url){
+		var xhr;
+		if (window.XMLHttpRequest) xhr = new XMLHttpRequest();// Mozilla/Safari
+	    else if (window.ActiveXObject) xhr = new ActiveXObject("Microsoft.XMLHTTP");// IE
+	    xhr.onload = function(e) {
+	    	var xmlDoc = xhr.responseXML;
+	    	var r = xmlDoc.getElementsByTagName("rubrique");
+	    	var a, b;
+	    	for(var i=0;i<r.length;i++){
+	    		a = r[i];
+	    		LTH.rubriques[i] = a.attributes[0].value;
+	    		LTH.ARCS[LTH.rubriques[i]] = {color:'#'+a.attributes[1].value, demos:[], icon:[] }
+	    		LTH.demoNames[i] = [];
+	    		LTH.libsNames[i] = [];
+	    		b = a.getElementsByTagName("demo");
+	    		for(var j=0;j<b.length;j++){
+	    			LTH.demoNames[i][j] = b[j].attributes[0].value;
+	    			LTH.ARCS[LTH.rubriques[i]].demos[j] = b[j].attributes[0].value;
+	    			LTH.ARCS[LTH.rubriques[i]].icon[j] = (b[j].attributes[2].value)*1;
+	    			LTH.libsNames[i][j] = b[j].attributes[1].value.split("|").map(function(n){return n;});
+	    		}
+	    	}
+
+	    	//this.main.init();
+	    	var l = new LTH.labsMenu();
+	    }.bind(this);
+	    xhr.open('GET', url, true);
+		xhr.send();
+	}
+}
+
+
+</script>
+</body></html>

@@ -20,7 +20,7 @@
 	<demo n='terrain' lib='terrain' ic='0'></demo>
 	<demo n='seriously' lib='serious' ic='6'></demo>
 	<demo n='crowd_test' lib='' ic='0'></demo>
-	<demo n='human' lib='' ic='0'></demo>
+	<demo n='human' lib='' ic='7'></demo>
 </rubrique>
 <rubrique n='tests' color='CAD33C'>
 	<demo n='liquid_mesh' lib='' ic='0'></demo>

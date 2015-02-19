@@ -127,51 +127,7 @@ html, body {
 .day .b   {border:1px solid #25292e;}
 .night .b {border:1px solid #d2cec8;}
 
-/* Rubtrique */
-
-.rub{
-	width:118px; height:118px; font-size:14px; font-weight: bold; cursor:pointer;
-	text-align:center; pointer-events:auto; display:inline-block; border-radius:64px; margin: 10px; padding-top:50px;
-	border:1px solid #25292e;
-}
-
-.night .rub   {
-	box-shadow: 0px -2px 6px 6px rgba(0, 0, 0, 0.1) inset, 0px -2px 6px 6px rgba(255, 255, 255, 0.03);
-	background:#25292e; color:#d2cec8;
-	-webkit-transition: 0.2s ease-out;
-    -moz-transition: 0.2s ease-out;
-    -o-transition: 0.2s ease-out;
-    transition: 0.2s ease-out;
-    border:1px solid rgba(0,0,0,0.3);
-}
-
-.night .rubover {
-	box-shadow: 0px 3px 6px 6px rgba(255, 255, 255, 0.5) inset, 0px 6px 12px 12px rgba(0, 0, 0, 0.3);
-	background:#d2cec8; color:#25292e;
-    -webkit-transition: 0.2s ease-out;
-    -moz-transition: 0.2s ease-out;
-    -o-transition: 0.2s ease-out;
-    transition: 0.2s ease-out;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
-    border:1px solid #FFFFFF;
-}
-
-.day .rub {
-	box-shadow: 0px -2px 6px 6px rgba(255, 255, 255, 0.1) inset, 0px -2px 6px 6px rgba(0, 0, 0, 0.03);
-	background:#d2cec8; color:#25292e;
-	-webkit-transition: 0.2s ease-out;
-    -moz-transition: 0.2s ease-out;
-    -o-transition: 0.2s ease-out;
-    transition: 0.2s ease-out;  
-}
-.day .rubover {
-	box-shadow: 0px 3px 6px 6px rgba(0, 0, 0, 0.5) inset, 0px 6px 12px 12px rgba(255, 255, 255, 0.3);
-	background:#25292e; color:#d2cec8;
-    -webkit-transition: 0.2s ease-out;
-    -moz-transition: 0.2s ease-out;
-    -o-transition: 0.2s ease-out;
-    transition: 0.2s ease-out;
-}
+/* EXTRA */
 
 .minilogoOut{
 	position:absolute; right:25px; top:25px; width:220px; height:36px; text-align: right; pointer-events:none;

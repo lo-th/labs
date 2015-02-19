@@ -23,7 +23,7 @@
 	<demo n='human' lib='' ic='0'></demo>
 </rubrique>
 <rubrique n='tests' color='CAD33C'>
-	<demo n='liquid' lib='' ic='0'></demo>
+	<demo n='liquid_mesh' lib='' ic='0'></demo>
 	<demo n='superdroid' lib='' ic='0'></demo>
 	<demo n='dante' lib='' ic='1'></demo>
 	<demo n='sam' lib='' ic='0'></demo>

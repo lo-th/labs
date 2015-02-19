@@ -26,7 +26,7 @@ LTH.Menu = function(main){
 	this.files = [];
 	this.buttons = [];
 
-	//this.currentFile = -1;
+	this.currentFile = -1;
 	this.inModif =  -1;
 	this.colorSelect = '#d2cec8';
 	this.colorModif = '#FF0073';
@@ -168,20 +168,43 @@ LTH.Menu.prototype = {
 		this.title.innerHTML = 'LOTH LABS';
 
 		this.main.labmenu.init();
+		/*this.home = this.doc.createElement('div');
+		this.home.style.cssText = "position:absolute; left:10%; top:160px; width:80%; height:400px; text-align:center;";
+		this.content.appendChild( this.home  );
+		var rub;
+		for(var i=0; i<LTH.rubriques.length ; i++){
+			rub = this.doc.createElement('div');
+			rub.className = 'rub';
+			rub.name = i;
+			rub.innerHTML = LTH.rubriques[i].toUpperCase();
+			rub.onclick = function(e){ this.resetHome(e) }.bind(this);
+			rub.onmouseover = function(e){ e.target.className = 'rub rubover'; };
+			rub.onmouseout = function(e){ e.target.className = 'rub'; };
+			this.home.appendChild( rub );
+		}*/
 		this.isHome = true;
 	},
 	resetHome:function(r, n){
 		this.stopBlink();
 		this.micrologo.style.display = 'none';
 
-		LTH.cRubr = r;
+		//LTH.cRubr = e.target.name;
+		LTH.cRubr = r;//e.target.name.substring(0,1)
+		//this.main.startDemo = n;
 		LTH.cFile = n;
+		this.currentFile = n;
+		//console.log(n)
+
+
 
 		this.clearDiv(this.main.labmenu.content);
+		//this.clearDiv(this.home);
+		//this.content.removeChild(this.home);
 		this.isHome = false;
-		this.initMenu();
+		this.initMenu(n);
 		
 		if(this.main.happ)history.pushState(null, null, 'index.html');
+		//e.preventDefault();
 	},
 	resetMenu:function(){
 
@@ -205,6 +228,7 @@ LTH.Menu.prototype = {
 		this.doc.body.onmousemove = function(e){this.showHideMenu(e)}.bind(this);
 		this.content.className = 'menu exemple';
 		this.logo.className = 'logo lmin';
+
 
 		var mode = 'basic';
 		if(LTH.rubriques[LTH.cRubr] === "shaders") mode = 'shader';
@@ -434,21 +458,21 @@ LTH.Menu.prototype = {
 	},
 	iconOver:function (e){
 		e.target.className = 'ic icover';
+	    e.preventDefault();
 	    var id = e.target.name;
-	    if(id!==LTH.cFile){
+	    if(id!==this.currentFile){
 		    var child = this.icons[id].childNodes;
 		    child[0].style.border ='2px solid ' + this.colorOver;
 		}
-		e.preventDefault();
 	},
 	unselected:function (e){
 		e.target.className = 'ic icout';
+	    e.preventDefault();
 	    var id = e.target.name;
-	    if(id!==LTH.cFile){
+	    if(id!==this.currentFile){
 		    var child = this.icons[id].childNodes;
 		    child[0].style.border ='2px solid rgba(0,0,0,0)';
 		}
-		e.preventDefault();
 	},
 	addIconLink:function (blob, name, type){
 		window.URL = window.webkitURL || window.URL;
@@ -472,10 +496,10 @@ LTH.Menu.prototype = {
 	openFile:function (e){
 	    e.preventDefault();
 	    var id = e.target.name;
-	    if(LTH.cFile!==id){
+	    if(this.currentFile!==id){
 	    	LTH.cFile = id;
 	    	this.resetModified();
-	        //this.currentFile = id;
+	        this.currentFile = id;
 	    	this.main.loadFile('demos/'+LTH.rubriques[LTH.cRubr]+'/'+this.files[id]);
 	    	this.resetIcon();
 	    }
@@ -484,12 +508,11 @@ LTH.Menu.prototype = {
 		var i = this.icons.length, child;
 		while(i--){
 			child = this.icons[i].childNodes;
-		    if(i==LTH.cFile){
-		    	if(i==this.inModif) child[0].style.border ='2px solid '+ this.colorModif;
-		    	else child[0].style.border ='2px solid '+ this.colorSelect;
+		    if(i==this.currentFile){
+		    	if(i==this.inModif)child[0].style.border ='2px solid '+this.colorModif;
+		    	else child[0].style.border ='2px solid '+this.colorSelect;
 		    }
 		    else child[0].style.border ='2px solid rgba(0,0,0,0)';
-
 		    if(plus){
 		    	if(i==this.inModif){
 		    		child[1].style.color = this.colorModif;
@@ -502,10 +525,10 @@ LTH.Menu.prototype = {
 		}
 	},
 	modified:function(){
-		this.inModif = LTH.cFile;
-		var child = this.icons[LTH.cFile].childNodes;
-		this.icons[LTH.cFile].draggable = true;
-		this.icons[LTH.cFile].classList.add('dragout');
+		this.inModif = this.currentFile;
+		var child = this.icons[this.currentFile].childNodes;
+		this.icons[this.currentFile].draggable = true;
+		this.icons[this.currentFile].classList.add('dragout');
 		child[0].style.border ='2px solid '+this.colorModif;
 		child[1].style.color = this.colorModif;
 		child[2].style.backgroundColor = this.colorModif;
@@ -518,7 +541,7 @@ LTH.Menu.prototype = {
 			this.icons[i].draggable = false;
 			this.icons[i].classList.remove('dragout');
 			child = this.icons[i].childNodes;
-			if(i==LTH.cFile) child[0].style.border ='1px solid '+this.colorSelect;
+			if(i==this.currentFile) child[0].style.border ='1px solid '+this.colorSelect;
 		    child[1].style.color = this.colorSelect;
 		    child[2].style.backgroundColor = this.colorSelect;
 		}

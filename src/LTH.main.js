@@ -14,7 +14,7 @@ LTH.demoNames = [];
 LTH.libsNames = [];
 LTH.ARCS = {};
 LTH.cRubr = -1;
-LTH.cFile = 0;
+LTH.cFile = -1;
 LTH.ToRad = Math.PI / 180;
 
 var esprima = esprima || {};
@@ -52,7 +52,7 @@ LTH.Main = function(){
 	this.day = false;
 	this.mode = 'basic';
 
-	this.startDemo = 0;
+	//this.startDemo = 0;
 	this.numLesson = 4;
 
 	this.items = [];

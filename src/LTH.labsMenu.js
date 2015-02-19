@@ -279,15 +279,14 @@ LTH.labsMenu.prototype = {
 	    
 	    this.pins[id] = pn;
 	    this.pins[id].onclick = function(e){ 
-	    	var r = e.target.name.substring(0,1);//this.rubNames[];
-	    	var n = e.target.name.substring(2,e.target.name.length);
+	    	var r = e.target.name.substring(0,1)*1;
+	    	var n = e.target.name.substring(2,e.target.name.length)*1;
 	    	this.main.menu.resetHome(r, n);
 	    }.bind(this);
 	    this.pins[id].onmouseover = function(e){ 
 	    	e.target.style.background = '#'+this.baseColor;
-	    	var r = e.target.name.substring(0,1);//this.rubNames[];
-	    	var n = e.target.name.substring(2,e.target.name.length);
-	    	//this.subTitle.innerHTML = (this.arcs[r].demos[n].replace("_", " ")).toUpperCase();
+	    	var r = e.target.name.substring(0,1)*1;
+	    	var n = e.target.name.substring(2,e.target.name.length)*1;
 	    	this.subTitle.innerHTML = (this.demosNames[r][n].replace("_", " ")).toUpperCase();
 	    }.bind(this);
 		this.pins[id].onmouseout = function(e){ 

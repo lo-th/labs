@@ -109,7 +109,7 @@ LTH.labsMenu.prototype = {
 		} else {
 			this.current = null;
 			this.title.style.background = '#'+this.topColor;
-			this.title.innerHTML = '';
+			//this.title.innerHTML = '';
 			this.subTitle.innerHTML = '';
 		}
 

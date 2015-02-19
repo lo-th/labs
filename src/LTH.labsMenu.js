@@ -7,7 +7,7 @@
 
 LTH.labsMenu = function(main){
 	this.main = main;
-	this.baseColor = '25292e';
+	this.baseColor = 'd2cec8';
 	this.topColor= '25292e';
 	this.current = null;
 	this.size = 800;
@@ -47,10 +47,12 @@ LTH.labsMenu.prototype = {
 		this.title = document.createElement('div');
 	    this.title.className = 'labsTitle';
 	    this.content.appendChild( this.title );
+	    this.title.style.color = '#'+this.topColor;
 
 	    this.subTitle = document.createElement('div');
 	    this.subTitle.className = 'labsSubTitle';
 	    this.content.appendChild( this.subTitle );
+	    this.subTitle.style.color = '#'+this.baseColor;
 
 		this.canvas = document.createElement('canvas');
 		this.canvas.className = 'labsCanvas';
@@ -106,7 +108,7 @@ LTH.labsMenu.prototype = {
 			}
 		} else {
 			this.current = null;
-			this.title.style.background = '#'+this.baseColor//'none';
+			this.title.style.background = '#'+this.topColor;
 			this.title.innerHTML = '';
 			this.subTitle.innerHTML = '';
 		}
@@ -282,7 +284,7 @@ LTH.labsMenu.prototype = {
 	    	this.main.menu.resetHome(r, n);
 	    }.bind(this);
 	    this.pins[id].onmouseover = function(e){ 
-	    	e.target.style.background = '#d2cec8';
+	    	e.target.style.background = '#'+this.baseColor;
 	    	var r = e.target.name.substring(0,1);//this.rubNames[];
 	    	var n = e.target.name.substring(2,e.target.name.length);
 	    	//this.subTitle.innerHTML = (this.arcs[r].demos[n].replace("_", " ")).toUpperCase();
@@ -311,8 +313,8 @@ LTH.IconMicro = function(color, type){
 		case 2: t[1]="<path fill='#"+color+"' d='M 23 20 L 22 20 22 12 19 12 19 10 18 10 18 12 16 12 16 19 18 19 18 14 20 14 20 22 23 22 23 20 M 7 22 L 10 22 10 10 12 10 12 19 14 19 14 8 8 8 8 20 7 20 7 22 Z'/>";break;
 		case 3: t[1]="<path fill='#"+color+"' d='M 21 8 L 21 10 19 12 18 11 12 11 11 12 9 10 9 8 10 7 9 6 6 9 6 13 8 15 7 16 7 20 8 21 14 21 14 24 16 24 16 21 22 21 23 20 23 16 22 15 24 13 24 9 21 6 20 7 21 8 M 23 10 L 23 12 21 14 20 13 22 11 22 9 23 10 M 21 17 L 21 19 9 19 9 17 13 13 17 13 21 17 M 8 9 L 8 11 10 13 9 14 7 12 7 10 8 9 Z'/>";break;
 		case 4: t[1]="<path fill='#"+color+"' d='M 26 16 L 26 14 16 4 14 4 4 14 4 16 14 26 16 26 26 16 M 6 15 L 15 6 24 15 15 24 6 15 M 16 10 L 14 10 14 16 16 16 16 10 M 16 18 L 14 18 14 20 16 20 16 18 Z'/>";break;
-		case 5: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
-		case 6: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
+		case 5: t[1]="<path fill='#"+color+"' d='M 21.35 21.35 Q 24 18.75 24 15 24 11.25 21.35 8.6 18.75 6 15 6 11.25 6 8.6 8.6 6 11.25 6 15 6 18.75 8.6 21.35 11.25 24 15 24 18.75 24 21.35 21.35 M 14.95 7.95 Q 17.9 7.95 19.9 10 21.95 12.05 21.95 14.95 21.95 17.9 19.9 19.9 17.9 21.95 14.95 21.95 12.05 21.95 10 19.9 7.95 17.9 7.95 14.95 7.95 12.05 10 10 12.05 7.95 14.95 7.95 M 20 17 Q 20 15.75 19.1 14.85 18.25 14 17 14 15.75 14 14.85 14.85 14 15.75 14 17 14 18.25 14.85 19.1 15.75 20 17 20 18.25 20 19.1 19.1 20 18.25 20 17 M 17 16 Q 17.4 16 17.7 16.3 18 16.6 18 17 18 17.4 17.7 17.7 17.4 18 17 18 16.6 18 16.3 17.7 16 17.4 16 17 16 16.6 16.3 16.3 16.6 16 17 16 Z'/>";break;
+		case 6: t[1]="<path fill='#"+color+"' d='M 25 8.5 L 20.7 4.05 6 9 4 10 4 18 6 22 10 26 25 20 25 8.5 M 8.4 10.35 L 19.8 6.45 22.6 9.05 10.6 12.7 8.4 10.35 M 6 11.7 L 7 11 10 14 10 23 7.75 20.8 6 17 6 11.7 M 23 10 L 23 18.4 11 23 11 13.65 23 10 M 21.6 17.8 L 21.6 11.75 12.5 14.65 12.5 21.2 21.6 17.8 M 20.75 13.05 L 20.75 16.95 13.6 19.65 13.6 15.3 20.75 13.05 Z'/>";break;
 		case 7: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
 		case 8: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
 	}

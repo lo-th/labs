@@ -18,7 +18,7 @@
 </rubrique>	
 <rubrique n='experiments' color='FF9500'>
 	<demo n='terrain' lib='terrain' ic='0'></demo>
-	<demo n='seriously' lib='serious' ic='0'></demo>
+	<demo n='seriously' lib='serious' ic='6'></demo>
 	<demo n='crowd_test' lib='' ic='0'></demo>
 	<demo n='human' lib='' ic='0'></demo>
 </rubrique>
@@ -27,7 +27,7 @@
 	<demo n='superdroid' lib='' ic='0'></demo>
 	<demo n='dante' lib='' ic='1'></demo>
 	<demo n='sam' lib='' ic='0'></demo>
-	<demo n='eye' lib='' ic='0'></demo>
+	<demo n='eye' lib='' ic='5'></demo>
 </rubrique>
 <rubrique n='physics-2d' color='32CAF4'>
 	<demo n='base_box' lib='' ic='0'></demo>

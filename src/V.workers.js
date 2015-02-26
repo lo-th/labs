@@ -63,6 +63,18 @@ V.Worker = function(parent, name){
             this.update = this.upAmmo;
             this.postMess = this.postAmmo;
         break;
+        case 'traffic':
+            url = 'js/worker/traffic_worker.js';
+            sourceURL = '../../js/libs/traffic.min.js';
+            max = 1000;
+            max2 = 10;
+            max3 = 10;
+            max4 = 0;
+            nValue = 3;
+            nValue2 = 3;
+            this.update = this.upTraffic;
+            this.postMess = this.postTraffic;
+        break;
     }
 
     if(window.top.main.transcode.useTrans){
@@ -138,6 +150,32 @@ V.Worker.prototype = {
         this.computeTime();
     },
     postCrowd:function(){
+        this.w.postMessage({m:'run', ar:this.ar},[this.ar.buffer]);
+    },
+
+    // TRAFFIC ---------------------------------------------
+
+    upTraffic:function(e){
+        if(e.data.init){
+            this.postMess();
+            return;
+        }
+        if(e.data.w && !this.isReady) this.isReady = true;
+        this.fps = e.data.fps;
+        this.ar = e.data.ar;
+
+        var m = this.root.meshs;
+        var i = m.length, id;
+        while(i--){
+            id = i*3;
+            m[i].position.x = this.ar[id];
+            m[i].position.z = this.ar[id+1];
+            m[i].rotation.y = this.ar[id+2];//-V.PI90;
+        }
+
+        this.computeTime();
+    },
+    postTraffic:function(){
         this.w.postMessage({m:'run', ar:this.ar},[this.ar.buffer]);
     },
 

@@ -42,10 +42,19 @@ V.SeaPool.prototype = {
         //loader.invertZ = true;
         //loader.flipZ = true;
     },
-    getGeometry:function(obj, name){
-        var g = this.meshes[obj][name].geometry;
-        var mtx = new THREE.Matrix4().makeScale(1, 1, -1);
-        g.applyMatrix(mtx);
+    getGeometry:function(obj, name, noRevers){
+        noRevers = noRevers || false;
+        var g = this.meshes[obj][name].geometry, mtx;
+        if(!noRevers){
+            mtx = new THREE.Matrix4().makeScale(1, 1, -1);
+            g.applyMatrix(mtx);
+            g.verticesNeedUpdate = true;
+            g.normalsNeedUpdate = true;
+        }
+        g.computeFaceNormals();
+    //g.normalizeNormals();
+    g.computeVertexNormals(true);
+    g.computeTangents() ;
         return g;
     }
 }

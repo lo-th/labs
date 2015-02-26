@@ -7,7 +7,7 @@
 
 var LTH = {};
 
-LTH.CODES = ['full','serious','rot','terrain','liquid','ammo','oimo','crowd'];
+LTH.CODES = ['full','serious','rot','terrain','liquid','ammo','oimo','crowd','traffic'];
 
 LTH.rubriques = [];
 LTH.demoNames = [];

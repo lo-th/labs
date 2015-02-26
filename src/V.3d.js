@@ -29,6 +29,7 @@ V.round = Math.round;
 V.lerp = function (a, b, percent) { return a + (b - a) * percent; }
 V.rand = function (a, b, n) { return V.lerp(a, b, Math.random()).toFixed(n || 3)*1;}
 V.randInt = function (a, b, n) { return V.lerp(a, b, Math.random()).toFixed(n || 0)*1;}
+V.randColor = function () { return '#'+Math.floor(Math.random()*16777215).toString(16);}
 
 V.MeshList = [ 'plane', 'sphere', 'skull', 'skullhigh', 'head', 'woman', 'babe'];
 
@@ -674,4 +675,42 @@ V.Cursor.prototype = {
 			document.body.style.cursor = this.type[this.current];
 		}
 	}
+}
+
+
+
+V.randCarColor = function () {
+    var carcolors = [
+    [0xFFFFFF, 0xD0D1D3, 0XEFEFEF, 0xEEEEEE],//white
+    [0x252122, 0x302A2B, 0x27362B, 0x2F312B],//black
+    [0x8D9495, 0xC1C0BC, 0xCED4D4, 0xBEC4C4],//silver
+    [0x939599, 0x424242, 0x5A5A5A, 0x747675],//gray
+    [0xC44920, 0xFF4421, 0x600309, 0xD9141E],//red
+    [0x4AD1FB, 0x275A63, 0x118DDC, 0x2994A6],//blue
+    [0xA67936, 0x874921, 0xD7A56B, 0x550007],//brown
+    [0x5FF12C, 0x188047, 0x8DAE29, 0x1AB619],//green
+    [0xFFF10A, 0xFFFFBD, 0xFCFADF, 0xFFBD0A],//yellow/gold
+    [0xB92968, 0x5C1A4F, 0x001255, 0xFFB7E7]//other
+    ];
+    var l;
+    var p = V.randInt(0,100);
+    var n = V.randInt(0,3);
+
+    if(p<23)l=0;
+    else if(p<44)l=1;
+    else if(p<62)l=2;
+    else if(p<76)l=3;
+    else if(p<84)l=4;
+    else if(p<90)l=5;
+    else if(p<96)l=6;
+    else if(p<97)l=7;
+    else if(p<98)l=8;
+    else l=9;
+
+    var base =carcolors[l][n];
+
+    var resl = base.toString(16);
+    if(resl.length<6) resl = '#0'+resl;
+    else resl = '#'+resl;
+    return resl;
 }

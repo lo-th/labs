@@ -109,7 +109,6 @@ LTH.labsMenu.prototype = {
 		} else {
 			this.current = null;
 			this.title.style.background = '#'+this.topColor;
-			//this.title.innerHTML = '';
 			this.subTitle.innerHTML = '';
 		}
 
@@ -179,7 +178,6 @@ LTH.labsMenu.prototype = {
 		var i=this.nRubriques;
 		while(i--){
 			this.ctx.strokeStyle = this.colors[i];
-			//if(isEnd) this.liner(i, this.nDemos[i]);
 			this.ctx.beginPath();
 			this.ctx.arc(this.center, this.center, this.radius, (this.anglesStart[i]-60)*LTH.ToRad,(this.anglesEnd[i]-60)*LTH.ToRad, false);
 			this.ctx.lineWidth = this.line;
@@ -202,6 +200,7 @@ LTH.labsMenu.prototype = {
 		if(this.startPins==this.endPins){
 			clearTimeout(this.anim);
 		}else {
+			// show icon
 			j = this.prevPins.length;
 			while(j--){
 				this.prevPins[j].style.display = 'block';
@@ -211,7 +210,6 @@ LTH.labsMenu.prototype = {
 			while(j--){
 				this.pins[j].className = 'pins pinson';
 				this.prevPins[j] = this.pins[j].childNodes[0];
-				//this.pins[j].childNodes[0].className = 'pinsin pinsinon';
 			}
 			while(i--){
 				p = this.points[i];
@@ -229,35 +227,25 @@ LTH.labsMenu.prototype = {
 		}
 	},
 	liner:function(p, c, i){
+		var p1, p2;
+		switch(i){
+			case 0: p1 = p[0]; p2 = p[1]; break;
+			case 1: p1 = p[1]; p2 = p[2]; break;
+			case 2: p1 = p[1]; p2 = p[3]; break;
+			case 3: p1 = p[2]; p2 = p[4]; break;
+			case 4: p1 = p[3]; p2 = p[5]; break;
+			case 5: p1 = p[4]; p2 = p[6]; break;
+			case 6: p1 = p[5]; p2 = p[7]; break;
+			case 7: p1 = p[6]; p2 = p[8]; break;
+			case 8: p1 = p[7]; p2 = p[9]; break;
+			case 9: p1 = p[8]; p2 = p[10]; break;
+			case 10: p1 = p[9]; p2 = p[12]; break;
+			case 11: p1 = p[10]; p2 = p[13]; break;
+		}
 		this.ctx.strokeStyle = c;
 		this.ctx.beginPath();
-		this.ctx.moveTo(p[0].x, p[0].y);
-		if(i==0) this.ctx.lineTo(p[1].x, p[1].y);
-		if(i==1){
-			this.ctx.moveTo(p[1].x, p[1].y);
-		    this.ctx.lineTo(p[2].x, p[2].y);
-		}
-		if(i==2){
-			this.ctx.moveTo(p[1].x, p[1].y);
-		    this.ctx.lineTo(p[3].x, p[3].y);
-		}
-		if(i==3){
-			this.ctx.moveTo(p[2].x, p[2].y);
-			this.ctx.lineTo(p[4].x, p[4].y);
-		}
-		if(i==4){
-			this.ctx.moveTo(p[3].x, p[3].y);
-		    this.ctx.lineTo(p[5].x, p[5].y);
-		}
-		if(i==5){
-			this.ctx.moveTo(p[4].x, p[4].y);
-			this.ctx.lineTo(p[6].x, p[6].y);
-		}
-		if(i==6){
-			this.ctx.moveTo(p[5].x, p[5].y);
-			this.ctx.lineTo(p[7].x, p[7].y);
-		}
-
+		this.ctx.moveTo(p1.x, p1.y);
+		this.ctx.lineTo(p2.x, p2.y);
 		this.ctx.lineWidth = 2;
 		this.ctx.stroke();
 	},

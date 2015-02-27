@@ -1,4 +1,4 @@
-var v = new V.View(90, 60, 10);
+var v = new V.View(90, 80, 10);
 var geo = [];
 var player;
 
@@ -16,9 +16,18 @@ function loop(){
     if(player){
         player.update( v.clock.getDelta() );
         if(fullLoaded){
+            var level = player.miniMap.level;
             //console.log(player.obj.position.y)
-            if(player.obj.position.y>2){player.miniMap.meshs[0].visible=false;player.miniMap.meshs[1].visible=true; }
-            else{player.miniMap.meshs[0].visible=true;player.miniMap.meshs[1].visible=false; }
+            if(player.obj.position.y>2 && level==0){
+                player.miniMap.meshs[0].visible=false; 
+                player.miniMap.meshs[1].visible=true; 
+                player.miniMap.changeLevel(1);
+            }
+            if(player.obj.position.y<2 && level==1){
+                player.miniMap.meshs[0].visible=true;
+                player.miniMap.meshs[1].visible=false;
+                player.miniMap.changeLevel(0);
+            }
         }
     }
     v.render();
@@ -48,7 +57,8 @@ V.deepShader={
     ].join("\n")
 };
 
-V.Minimap = function(debug){
+V.Minimap = function(revers, debug){
+    this.level = 0;
     this.meshs = [];
 	this.debug = debug || false;
     this.ar8 = typeof Uint8Array!="undefined"?Uint8Array:Array;
@@ -56,6 +66,10 @@ V.Minimap = function(debug){
     this.cc = {r:255, g:0, b:0, a:255}; 
 
     this.camy = 30;
+
+    this.content = document.createElement('div');
+    this.content.style.cssText = 'position:absolute; bottom:10px; right:100px; width:64px; height:64px; border:3px solid #74818b;';
+    document.body.appendChild( this.content );
 
     this.miniGlCanvas = document.createElement('canvas');
     this.miniTop = document.createElement('canvas');
@@ -71,18 +85,17 @@ V.Minimap = function(debug){
     this.mapTest.width = 16;
     this.mapTest.height = 16;
 
-    this.miniGlCanvas.style.cssText = 'position:absolute; bottom:10px; right:100px; border:3px solid #74818b;';
-    this.miniTop.style.cssText = 'position:absolute; bottom:13px; right:103px;';
-    this.mapTest.style.cssText = 'position:absolute; bottom:35px; right:135px;';
-    this.mmCanvas.style.cssText = 'position:absolute; bottom:100px; right:100px; border:3px solid #74818b;';
+    this.miniGlCanvas.style.cssText = 'position:absolute; top:0px; left:0px;';
+    this.miniTop.style.cssText = 'position:absolute; top:0px; left:0px;';
+    this.mapTest.style.cssText = 'position:absolute; top:24px; left:24px;';
+    this.mmCanvas.style.cssText = 'position:absolute; top:-66px; left:0px;';
 
-    var body = document.body;
+    this.content.appendChild( this.miniGlCanvas );
+    this.content.appendChild( this.miniTop );
+    this.content.appendChild( this.mapTest );
 
-    body.appendChild( this.miniGlCanvas );
-    body.appendChild( this.miniTop );
-    body.appendChild( this.mapTest );
-
-    if(this.debug)body.appendChild( this.mmCanvas );
+    //if(this.debug)body.appendChild( this.mmCanvas );
+    if(this.debug)this.content.appendChild( this.mmCanvas );
 
     this.posY = 0;
     this.oldColors = [];
@@ -146,6 +159,7 @@ V.Minimap.prototype = {
         this.renderer.render( this.scene, this.camera );
         this.gl.readPixels(this.zsize[0], this.zsize[1], this.zsize[2], this.zsize[2], this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.zone);
 
+
         if(this.debug){
         	// revers y pixel data
 	        var m = 0, n =  0;
@@ -163,13 +177,12 @@ V.Minimap.prototype = {
 	    }
 
         // collision
-        var i = 9;
+        var i = 8;//9;
         while(i--){ this.lock[i] = this.colorTest(this.pp[i]); }
 
         // height
         this.posY = this.zone[this.pp[8]+1]/10;
         this.player.position.y = this.posY;
-
 
         if(this.ctxTest) this.drawMapTest();
         
@@ -198,8 +211,15 @@ V.Minimap.prototype = {
         // test max height
         if((z[n]-w) > 10) b = 1;
         else this.oldColors[n] = z[n];
-
         return b;
+    },
+    changeLevel:function(n){
+        
+        var i = 8;//9;
+        while(i--){ this.oldColors[this.pp[i]] = this.zone[this.pp[i]]; }
+        this.level = n;
+        //this.zone = new V.AR8(max);
+        //this.zoneInv = new V.AR8(max);
     },
     setMapTestSize:function(s){
         this.zsize = [(this.miniSize.w*0.5)-s, (this.miniSize.h*0.5)-s, s*2];
@@ -209,8 +229,9 @@ V.Minimap.prototype = {
         //[          front,  back,  left,        right,                fl,   fr,     bl,  br,       middle];
         //             0       1      2             3                  4     5       6    7         8
         this.pp = [max-(s*4), s*4, max*0.5, max*0.5 + (((s*4)*2)-4), 211*4, 222*4, 34*4, 45*4,  max*0.5+(s*4)];
-        this.zone = new this.ar8(max);
-        this.zoneInv = new this.ar8(max);
+
+        this.zone = new V.AR8(max);
+        this.zoneInv = new V.AR8(max);
     },
     initTopMap:function(){
         var ctx3 = this.miniTop.getContext("2d");
@@ -230,18 +251,18 @@ V.Minimap.prototype = {
         this.ctxTest.clearRect ( 0 , 0 , 16 , 16 );
         var id = this.ctxTest.createImageData(16,16);
         var d  = id.data;
-        var i = 7;
-        while(i--)d[i] = 0;
+        var i = 8;//7;
+        while(i--) d[i] = 0;
 
         if(this.lock[1]) this.dp(d, this.pp[0]);
         if(this.lock[0]) this.dp(d, this.pp[1]);
         if(this.lock[2]) this.dp(d, this.pp[2]);
         if(this.lock[3]) this.dp(d, this.pp[3]);
-        if(this.lock[6]) this.dp(d, this.pp[4]);
-        if(this.lock[7]) this.dp(d, this.pp[5]);
         if(this.lock[4]) this.dp(d, this.pp[6]);
         if(this.lock[5]) this.dp(d, this.pp[7]);
-
+        if(this.lock[6]) this.dp(d, this.pp[4]);
+        if(this.lock[7]) this.dp(d, this.pp[5]);
+        
         this.ctxTest.putImageData( id, 0, 0);
     },
     dp:function(d, p) {
@@ -310,7 +331,7 @@ V.Player.prototype = {
 
         while(i--){
             name = this.hero.animations[i].name;
-            console.log(name)
+            //console.log(name)
             this.weights[name] = 0;
             if(name=='idle') this.weights[name] = 1;
             this.hero.animations[i].play( 0, this.weights[name] );
@@ -540,7 +561,7 @@ V.Player.prototype = {
 
 var modelName = 'bob';
 
-player = new V.Player();
+player = new V.Player(true);
 v.pool.load('museum', onload);
 
 function onload(){

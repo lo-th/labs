@@ -433,6 +433,7 @@ V.Blob.prototype.update = function (r) {
 //---------------------------------------------------
 
 V.Nav = function(parent, h, v, d){
+	this.isFocus = false;
     this.isRevers = false;
     this.cammode = 'normal';
     this.EPS = 0.000001;
@@ -460,7 +461,7 @@ V.Nav = function(parent, h, v, d){
     this.root.canvas.onclick = function(e) {this.onMouseClick(e)}.bind( this );
     this.root.canvas.onmousemove = function(e) {this.onMouseMove(e)}.bind( this );
     this.root.canvas.onmousedown = function(e) {this.onMouseDown(e)}.bind( this );
-    this.root.canvas.onmouseout = function(e) {this.onMouseUp(e)}.bind( this );
+    this.root.canvas.onmouseout = function(e) {this.onMouseOut(e)}.bind( this );
     this.root.canvas.onmouseup = function(e) {this.onMouseUp(e)}.bind( this );
     this.root.canvas.onmousewheel = function(e) {this.onMouseWheel(e)}.bind( this );
     //this.root.canvas.onDOMMouseScroll = function(e) {this.onMouseWheel(e)}.bind( this );
@@ -536,7 +537,7 @@ V.Nav.prototype = {
         e.preventDefault();
         e.stopPropagation();
         //document.body.contentEditable=true
-        window.top.focus();
+        //window.top.focus();
     },
     onMouseUp:function(e){
         this.mouse.down = false;
@@ -545,7 +546,20 @@ V.Nav.prototype = {
         e.preventDefault();
         e.stopPropagation();
     },
+    onMouseOut:function(e){
+    	this.isFocus = false;
+        this.mouse.down = false;
+        this.cursor.change();
+        if (typeof mainUp == 'function') { mainUp(); }
+        e.preventDefault();
+        e.stopPropagation();
+    },
     onMouseMove:function(e){
+    	if(!this.isFocus){
+    		self.focus();
+    		window.top.main.blur();
+    		this.isFocus = true;
+    	}
         if (this.mouse.down && this.mouse.move && !this.lockView) {
             if(this.mouse.button==3){
                 this.cursor.change('drag');
@@ -607,7 +621,8 @@ V.Nav.prototype = {
 	},
     // ACTIVE KEYBOARD
     bindKeys:function(){
-        window.top.onkeydown = function(e) {
+    	//this.root.canvas.onkeydown = function(e) {
+    	window.onkeydown = function(e) {
         //window.top.onkeydown = function(e) {
             e = e || window.event;
             switch ( e.keyCode ) {
@@ -621,8 +636,9 @@ V.Nav.prototype = {
                 case 16:                   this.key.shift = 1;  break; // shift
             }
         }.bind(this);
-        window.top.onkeyup = function(e) {
-       // window.top.onkeyup = function(e) {
+        //this.root.canvas.onkeyup = function(e) {
+        window.onkeyup = function(e) {
+        //window.top.onkeyup = function(e) {
             e = e || window.event;
             switch( e.keyCode ) {
                 case 38: case 87: case 90: this.key.up = 0;     break; // up, W, Z

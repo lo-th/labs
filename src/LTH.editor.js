@@ -85,6 +85,9 @@ LTH.CodeEditor.prototype = {
 	close:function (){
 		this.editor.getInputField().blur();
 	},
+	blur:function (){
+		this.editor.getInputField().blur();
+	},
 	validate:function( value ){
 		var editor = this.editor;
 		var mode = this.mode;

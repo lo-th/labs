@@ -375,6 +375,11 @@ LTH.Main.prototype = {
 	},
 	callSave:function(){
 		this.fileSystem.save();
+	},
+	blur:function(){
+		console.log('blur call !!!');
+		this.editor.blur();
+
 	}
 }
 

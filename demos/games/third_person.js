@@ -65,7 +65,7 @@ V.Minimap = function(revers, debug){
     this.miniSize = { w:64, h:64, f:0.25 };
     this.cc = {r:255, g:0, b:0, a:255}; 
 
-    this.camy = 30;
+    this.camy = 100;
 
     this.content = document.createElement('div');
     this.content.style.cssText = 'position:absolute; bottom:10px; right:100px; width:64px; height:64px; border:3px solid #74818b;';
@@ -114,7 +114,7 @@ V.Minimap.prototype = {
         this.renderer.setClearColor( 0xff0000, 1 );
         this.scene = new THREE.Scene();
 
-        var w = 2;//6;// 500*this.miniSize.f;
+        var w = 2//2;//6;// 500*this.miniSize.f;
         this.camera = new THREE.OrthographicCamera( -w , w , w , -w , 0.1, this.camy*4 );
         this.camera.position.x = 0;
         this.camera.position.z = 0;
@@ -127,7 +127,6 @@ V.Minimap.prototype = {
         this.player.add(this.camera);
 
         this.gl = this.renderer.getContext();
-        //this.gl = this.rr.getContext();
         this.initTopMap();
 
         this.deepShader = new THREE.ShaderMaterial({
@@ -150,15 +149,13 @@ V.Minimap.prototype = {
         this.scene.add(mesh);
         this.meshs[this.meshs.length] = mesh;
     },
-    updatePosition:function(x,y,z){
-        this.player.position.x = x;
-        this.player.position.z = z;
-        this.player.rotation.y = y;
+    updatePosition:function(v,r){
+    	this.player.position.copy(v);
+        this.player.rotation.y = r;
     },
     drawMap:function(){
         this.renderer.render( this.scene, this.camera );
         this.gl.readPixels(this.zsize[0], this.zsize[1], this.zsize[2], this.zsize[2], this.gl.RGBA, this.gl.UNSIGNED_BYTE, this.zone);
-
 
         if(this.debug){
         	// revers y pixel data
@@ -182,7 +179,7 @@ V.Minimap.prototype = {
 
         // height
         this.posY = this.zone[this.pp[8]+1]/10;
-        this.player.position.y = this.posY;
+        //this.player.position.y = this.posY;
 
         if(this.ctxTest) this.drawMapTest();
         
@@ -209,8 +206,8 @@ V.Minimap.prototype = {
         // test out
         if(z[n]==c.r && z[n+1]==c.g && z[n+2]==c.b && z[n+3]==c.a) b = 1;
         // test max height
-        if((z[n]-w) > 10) b = 1;
-        else this.oldColors[n] = z[n];
+        //if((z[n]-w) > 10) b = 1;
+        //else this.oldColors[n] = z[n];
         return b;
     },
     changeLevel:function(n){
@@ -401,16 +398,13 @@ V.Player.prototype = {
         this.easeRot.x = Math.sin(this.easeRot.y) * this.ease.x + Math.cos(this.easeRot.y) * this.ease.z;
         this.easeRot.z = Math.cos(this.easeRot.y) * this.ease.x - Math.sin(this.easeRot.y) * this.ease.z;
 
-        //this.setRotation(-(this.navigation.cam.h+90)*HeroGame.ToRad);
         this.setRotation(-(this.easeRot.y+(90*V.ToRad)));
-        //this.setRotation(-(this.parent.nav.cam.h+90)*HeroGame.ToRad)
 
-        //if(this.revers)this.level.x = this.levelOrigin.x + this.easeRot.x;
-        //else 
         this.level.x = this.levelOrigin.x-this.easeRot.x;
         this.level.z = this.levelOrigin.z+this.easeRot.z;
 
         // update 2d map
+        this.miniMap.updatePosition(this.levelOrigin, -this.easeRot.y);
         this.miniMap.drawMap();
 
         // test pixel collision
@@ -477,7 +471,7 @@ V.Player.prototype = {
         this.levelOrigin.y += this.ease.y;
 
         // update 2d map
-        this.miniMap.updatePosition(this.levelOrigin.x, -this.easeRot.y, this.levelOrigin.z);
+        //this.miniMap.updatePosition(this.levelOrigin, -this.easeRot.y);
 
         //this.player.position.lerp(this.levelOrigin, 0.1);
         this.lerp(this.levelOrigin, 0.5);

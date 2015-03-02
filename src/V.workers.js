@@ -55,11 +55,11 @@ V.Worker = function(parent, name){
             url = 'js/worker/ammo_worker.js';
             sourceURL = '../../js/libs/ammo.min.js';
             max = 1000;
-            max2 = 10;
+            max2 = 20;
             max3 = 10;
             max4 = 0;
             nValue = 8;
-            nValue2 = 3;
+            nValue2 = 40;
             this.update = this.upAmmo;
             this.postMess = this.postAmmo;
         break;
@@ -231,6 +231,7 @@ V.Worker.prototype = {
         if(e.data.w && !this.isReady) this.isReady = true;
         this.fps = e.data.fps;
         this.ar = e.data.ar;
+        this.dr = e.data.dr;
         var m = this.root.meshs;
         var i = m.length, id;
         while(i--){
@@ -241,11 +242,32 @@ V.Worker.prototype = {
             }
         }
 
+        m = this.root.cars;
+        i = m.length;
+        var j = 4;
+        var wm, w;
+        while(i--){
+            id = i*40;
+            if(this.dr[id]){
+                m[i].position.set( this.dr[id+5], this.dr[id+6], this.dr[id+7] );
+                m[i].quaternion.set( this.dr[id+1], this.dr[id+2], this.dr[id+3], this.dr[id+4] );
+            }
+            while(j--){
+                w = 8*(j+1);
+                wm = this.root.wheels[j];
+                wm.position.set( this.dr[id+w+5], this.dr[id+w+6], this.dr[id+w+7] );
+                wm.quaternion.set( this.dr[id+w+1], this.dr[id+w+2], this.dr[id+w+3], this.dr[id+w+4] );
+            }
+        }
+        
+        
+        
+
         this.computeTime();
 
     },
     postAmmo:function(){
-        this.w.postMessage({m:'run', m2:this.msg, drn:this.drn, drc:this.drc, ar:this.ar, dr:this.dr},[this.ar.buffer]);
+        this.w.postMessage({m:'run', m2:this.msg, key:this.root.nav.key, ar:this.ar, dr:this.dr},[this.ar.buffer, this.dr.buffer]);
     },
 
 

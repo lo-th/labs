@@ -41,5 +41,6 @@
 	<demo n='adv_liquid' lib='' ic='0'></demo>
 	<demo n='adv_liquid_2' lib='' ic='0'></demo>
 	<demo n='ammo_basic' lib='' ic='0'></demo>
+	<demo n='ammo_car' lib='' ic='0'></demo>
 </rubrique>
 </menu>

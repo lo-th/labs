@@ -115,7 +115,7 @@ V.Minimap.prototype = {
         this.scene = new THREE.Scene();
 
         var w = 2//2;//6;// 500*this.miniSize.f;
-        this.camera = new THREE.OrthographicCamera( -w , w , w , -w , 0.1, this.camy*4 );
+        this.camera = new THREE.OrthographicCamera( -w , w , w , -w , 0.1, this.camy*10 );
         this.camera.position.x = 0;
         this.camera.position.z = 0;
         this.camera.position.y = this.camy;
@@ -152,6 +152,7 @@ V.Minimap.prototype = {
     updatePosition:function(v,r){
     	this.player.position.copy(v);
         this.player.rotation.y = r;
+
     },
     drawMap:function(){
         this.renderer.render( this.scene, this.camera );
@@ -404,14 +405,13 @@ V.Player.prototype = {
         this.level.z = this.levelOrigin.z+this.easeRot.z;
 
         // update 2d map
-        this.miniMap.updatePosition(this.levelOrigin, -this.easeRot.y);
+        //this.miniMap.updatePosition(this.levelOrigin, -this.easeRot.y);
         this.miniMap.drawMap();
 
         // test pixel collision
         var nohitx = 0;
         var nohitz = 0;
         var lock = this.miniMap.lock;
-
      
     	if(rot >= 45 && rot <= 135){
             if(this.level.z < this.levelOrigin.z) if(!lock[0] && !lock[4] && !lock[5]) nohitz = 1;
@@ -471,7 +471,7 @@ V.Player.prototype = {
         this.levelOrigin.y += this.ease.y;
 
         // update 2d map
-        //this.miniMap.updatePosition(this.levelOrigin, -this.easeRot.y);
+        this.miniMap.updatePosition(this.levelOrigin, -this.easeRot.y);
 
         //this.player.position.lerp(this.levelOrigin, 0.1);
         this.lerp(this.levelOrigin, 0.5);

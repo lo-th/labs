@@ -8,11 +8,12 @@
 V.SeaPool = function(parent){
     this.root = parent;
     this.meshes = {};
+    this.callback = {};
 }
 V.SeaPool.prototype = {
     constructor: V.SeaPool,
     load:function(name, callback, displayList, noLoader){
-        this.callback = callback || function(){};
+        this.callback[name] = callback || function(){};
         this.noLoader = noLoader || false;
         var list = "";
         var loader = new THREE.SEA3D( true );
@@ -34,7 +35,7 @@ V.SeaPool.prototype = {
                 list+=m.name+',';
             }
             if(displayList) console.log(list);
-            this.callback();
+            this.callback[name]();
         }.bind(this);
 
         loader.parser = THREE.SEA3D.DEFAULT;
@@ -141,4 +142,47 @@ V.ImgPool.prototype = {
         tx.needsUpdate = true;
         return tx;
     }
+}
+
+
+V.getVertex = function(geo, size) {
+    var v = [], n;
+    var pp, i;
+    var isB = false;
+    pp = geo.vertices;
+    if(pp == undefined ){//is buffer
+        pp = geo.attributes.position.array;
+        isB = true;
+        i = pp.length/3;
+    } else {
+        i = pp.length
+    }
+    while(i--){
+        n = i*3;
+        if(isB){// buffer geometry
+            v[n+0]=pp[n+0]*size[0];
+            v[n+1]=pp[n+1]*size[1];
+            v[n+2]=pp[n+2]*size[2];
+        }else{
+            v[n+0]=pp[i].x*size[0];
+            v[n+1]=pp[i].y*size[1];
+            v[n+2]=pp[i].z*size[2];
+        }
+    }
+    return v;
+}
+
+V.getFaces = function(geo, size) {
+    var v = [], n, face, va, vb, vc;
+    var pp = geo.faces;
+    var pv = geo.vertices;
+    var i = pp.length;
+    while(i--){
+        n = i*9; face = pp[i];
+        va = pv[face.a]; vb = pv[face.b]; vc = pv[face.c];
+        v[n+0]=va.x*size[0]; v[n+1]=va.y*size[1]; v[n+2]=va.z*size[2];
+        v[n+3]=vb.x*size[0]; v[n+4]=vb.y*size[1]; v[n+5]=vb.z*size[2];
+        v[n+6]=vc.x*size[0]; v[n+7]=vc.y*size[1]; v[n+8]=vc.z*size[2];
+    }
+    return v;
 }

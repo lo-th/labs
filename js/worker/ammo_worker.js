@@ -52,9 +52,9 @@ self.onmessage = function (e) {
 
 		//drn = e.data.drn;
 
-		if(world==null) world = new AMMO.World(e.data);//sim.init(e.data);
+		if(world==null) world = new AMMO.World(e.data);
 		else world.isWorld = true;
-				
+
 		world.step();
 
 		f[1] = Date.now();
@@ -108,8 +108,10 @@ AMMO.copyV3 = function (a,b) { b.setX(a[0]); b.setY(a[1]); b.setZ(a[2]); }
 AMMO.World = function(obj){
 	
 	//this.mtx = new Float32Array(AMMO.MAX_BODY*8);
-	this.jmtx = new Float32Array(AMMO.MAX_JOINT*8);
-	this.mtxCar = new Float32Array(AMMO.MAX_CAR*(8+(8*AMMO.MAX_CAR_WHEEL)));
+	//this.jmtx = new Float32Array(AMMO.MAX_JOINT*8);
+	//this.mtxCar = new Float32Array(AMMO.MAX_CAR*(8+(8*AMMO.MAX_CAR_WHEEL)));
+
+	this.last = 0;
 
 	this.Broadphase = obj.broadphase || "SAP";
 	this.gravity = obj.G || -10;
@@ -157,7 +159,6 @@ AMMO.World.prototype = {
 			this.world = new Ammo.btDiscreteDynamicsWorld(this.dispatcher, this.broadphase, this.solver, this.collisionConfig);
 			this.world.setGravity(AMMO.V3(0, this.gravity, 0));
 			this.worldscale(10);
-
 
 			this.bodys = [];
 			this.joints = [];
@@ -236,8 +237,10 @@ AMMO.World.prototype = {
 
     step:function(dt){
     	//dt = dt || 1;
-    	//var now = Date.now();
-    	//this.dt = now - this.last;
+    	var now = Date.now();
+    	this.dt = now - this.last;
+
+    	this.world.stepSimulation( this.dt, this.iteration );
     	
     	var i;
     	i = this.BODYID;
@@ -248,9 +251,9 @@ AMMO.World.prototype = {
 	    	this.cars[i].getMatrix(i);
 	    }
 
-	    this.world.stepSimulation( this.dt, this.iteration );
+	    
 
-	    //this.last = now;
+	    this.last = now;
 	    //this.upInfo();
     },
     upInfo:function(){
@@ -713,15 +716,13 @@ AMMO.Vehicle.prototype = {
         //this.parent.world.addVehicle(this.vehicle, this.wheelShape);
         this.parent.world.addRigidBody(this.body);
 	    this.body.activate();
-
-	    console.log("car added")
     },
     getMatrix:function(id){
     	var m = dr;
     	var n = id*40;
     	var p = precission;
 
-		m[n+0] = parseInt(this.vehicle.getCurrentSpeedKmHour());//.toFixed(0);//this.body.getActivationState();
+		m[n+0] = this.vehicle.getCurrentSpeedKmHour().toFixed(0)*1;//this.body.getActivationState();
 
 		//var t = this.body.getCenterOfMassTransform();
 		//var t = this.vehicle.getChassisWorldTransform(); 
@@ -734,10 +735,10 @@ AMMO.Vehicle.prototype = {
 	    m[n+3] = rot.z().toFixed(p)*1;
 	    m[n+4] = rot.w().toFixed(p)*1;
 
-	    if(this.type=='basic'){
-	    	m[n+5] = (pos.x()+this.massCenter[0]).toFixed(p)*AMMO.WORLD_SCALE;
+	    if(this.type==='basic'){
+	    	/*m[n+5] = (pos.x()+this.massCenter[0]).toFixed(p)*AMMO.WORLD_SCALE;
 	        m[n+6] = (pos.y()+this.massCenter[1]).toFixed(p)*AMMO.WORLD_SCALE;
-	        m[n+7] = (pos.z()+this.massCenter[2]).toFixed(p)*AMMO.WORLD_SCALE;
+	        m[n+7] = (pos.z()+this.massCenter[2]).toFixed(p)*AMMO.WORLD_SCALE;*/
 	    }else{
 	    	m[n+5] = pos.x().toFixed(p)*AMMO.WORLD_SCALE;
 	        m[n+6] = pos.y().toFixed(p)*AMMO.WORLD_SCALE;
@@ -777,10 +778,13 @@ AMMO.Vehicle.prototype = {
 
     	if(key.up===1)this.engine+=this.incEngine;//this.gas = 1; //
     	if(key.down===1)this.engine-=this.incEngine;//this.gas = -1; //
+    	if (this.engine > this.maxEngineForce) this.engine = this.maxEngineForce;
+    	if (this.engine < -this.maxEngineForce) this.engine = -this.maxEngineForce;
+		
     	if(key.up===0 && key.down===0){
-    		if(this.engine>1)this.engine *= 0.9;
+    		if(this.engine>1) this.engine *= 0.9;
     		else if (this.engine<-1)this.engine *= 0.9;
-    		else {this.engine = 0; this.breaking=100;}
+    		else {this.engine = 0; this.breaking=10;}
     	}
     	/*
     	if(key[2]==1)this.steering+=this.incSteering;
@@ -814,16 +818,13 @@ AMMO.Vehicle.prototype = {
            //vehicle.setEngineForce(vehicle.getEngineForce()-(vehicle.getEngineForce()*lus*2.0));
         }*/
 
-        if (this.engine > this.maxEngineForce) this.engine = this.maxEngineForce;
-    	if (this.engine < -this.maxEngineForce) this.engine = -this.maxEngineForce;
-		
+        
     	var i = this.nWheels;
     	while(i--){
     		this.vehicle.applyEngineForce( this.engine, i );
     		this.vehicle.setBrake( this.breaking, i );
     		if(i==0 || i==1) this.vehicle.setSteeringValue( this.steering, i );
     	}
-console.log('drive', key.up, key.down)
     	//this.steering *= 0.9;
 
     }

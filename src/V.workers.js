@@ -244,19 +244,22 @@ V.Worker.prototype = {
 
         m = this.root.cars;
         i = m.length;
-        var j = 4;
-        var wm, w;
+        var wm, w, j;
         while(i--){
             id = i*40;
             if(this.dr[id]){
+                this.root.speeds[i] = this.dr[id];
                 m[i].position.set( this.dr[id+5], this.dr[id+6], this.dr[id+7] );
                 m[i].quaternion.set( this.dr[id+1], this.dr[id+2], this.dr[id+3], this.dr[id+4] );
-            }
-            while(j--){
-                w = 8*(j+1);
-                wm = this.root.wheels[j];
-                wm.position.set( this.dr[id+w+5], this.dr[id+w+6], this.dr[id+w+7] );
-                wm.quaternion.set( this.dr[id+w+1], this.dr[id+w+2], this.dr[id+w+3], this.dr[id+w+4] );
+                this.root.nav.move(m[i].position);
+                //m[i].updateMatrixWorld();
+                j = 4;
+                while(j--){
+                    w = 8*(j+1);
+                    wm = this.root.wheels[j];
+                    wm.position.set( this.dr[id+w+5], this.dr[id+w+6], this.dr[id+w+7] );
+                    wm.quaternion.set( this.dr[id+w+1], this.dr[id+w+2], this.dr[id+w+3], this.dr[id+w+4] );
+                }
             }
         }
         

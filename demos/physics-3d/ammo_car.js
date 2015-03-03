@@ -13,7 +13,11 @@ loop();
 
 function loop(){
     v.render();
-    if(car) v.tell('y'+car.position.y);
+    if(car){
+        v.tell('ammo car '+ v.speeds[0] +'km/h');
+        //v.nav.move(car.position);
+
+    }
     requestAnimationFrame( loop );
 }
 
@@ -26,10 +30,10 @@ function onload(){
     for(var m in v.pool.meshes.c1gt){
         mesh = v.pool.meshes.c1gt[m];
         if(m == 'body'){ carM = mesh; map['body'] = mesh.material.map; }
-        if(m == 'wheel_av_l'){ wheels[0] = new THREE.Group(); mesh.rotation.x = V.PI; mesh.position.set(0,0,0); wheels[0].add(mesh); map['wheel'] = mesh.material.map;}//{ wheels[0] = mesh;  map['wheel'] = mesh.material.map;}
-        if(m == 'wheel_av_r'){ wheels[1] = mesh;}
-        if(m == 'wheel_ar_r') wheels[2] = mesh;//{ wheels[2] = new THREE.Group(); mesh.rotation.x = V.PI; mesh.position.set(0,0,0); wheels[2].add(mesh); }///wheels[2] = mesh;
-        if(m == 'wheel_ar_l') { wheels[3] = new THREE.Group(); mesh.rotation.x = V.PI; mesh.position.set(0,0,0); wheels[3].add(mesh); }//wheels[3] = mesh;
+        if(m == 'wheel_av_l'){ wheels[0] = new THREE.Group(); mesh.rotation.x = V.PI; mesh.position.set(0,0,0); wheels[0].add(mesh); map['wheel'] = mesh.material.map;}
+        if(m == 'wheel_av_r'){ wheels[1] = mesh; }
+        if(m == 'wheel_ar_r'){ wheels[2] = mesh; }
+        if(m == 'wheel_ar_l'){ wheels[3] = new THREE.Group(); mesh.rotation.x = V.PI; mesh.position.set(0,0,0); wheels[3].add(mesh); }
         if(m == 'axe_l') wheels[4] = mesh;
         if(m == 'axe_r') wheels[5] = mesh;
         if(m == 'steeringWheel') wheels[6] = mesh;
@@ -104,7 +108,6 @@ function onWorker(){
 
 
     v.w.room({w:200, h:30, d:500, m:3});
-
 
     var x,y,z,tt;
     var sx,sy,sz;

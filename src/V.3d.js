@@ -87,7 +87,9 @@ V.View = function(h,v,d, loadbasic){
     this.f = [0,0,0,0];
 
     this.meshs = [];
+
     this.cars = [];
+    this.speeds = [];
     this.wheels = [];
 
     this.lines = [];

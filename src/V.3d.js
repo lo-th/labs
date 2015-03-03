@@ -73,6 +73,8 @@ V.View = function(h,v,d, loadbasic){
     this.scene.add(this.base);
     this.scene.add(this.content);
     this.scene.add(this.skinned);
+
+    this.environment = null;
     this.initGeo();
     this.initMat();
 
@@ -105,10 +107,6 @@ V.View = function(h,v,d, loadbasic){
     this.isW = false;
 
     this.isWithSerious = false;
-
-
-
-    //
 
 	window.onresize = function(e) {this.resize(e)}.bind(this);
 }
@@ -311,6 +309,9 @@ V.View.prototype = {
 	    this.geo = geo;
     },
     initMat:function(){
+        this.environment = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
+        this.environment.mapping = THREE.SphericalReflectionMapping;
+
     	var mat = {};
     	mat['none'] = new THREE.MeshBasicMaterial( { transparent:true, opacity:0, fog:false, depthTest:false, depthWrite:false});
         mat['zone'] = new THREE.MeshBasicMaterial( { color:0X00FF00, transparent:true, opacity:0.1, fog:false, depthTest:false, depthWrite:false});
@@ -321,11 +322,9 @@ V.View.prototype = {
         mat['base2'] = new THREE.MeshBasicMaterial( { color:0X00FF00, map:THREE.ImageUtils.loadTexture( 'images/grid1.jpg' ) });
         mat['solid'] = new THREE.MeshBasicMaterial( { color:0XFF0073, transparent:true, opacity:0.05,  depthWrite:false });
 
-        var tx = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
-        tx.mapping = THREE.SphericalReflectionMapping;
-        mat['shad_box'] = new THREE.MeshBasicMaterial({color:0XE74C3C, envMap:tx, reflectivity:0.4});
-        mat['shad_sphere'] = new THREE.MeshBasicMaterial({color:0X2980B9, envMap:tx, reflectivity:0.4});
-        mat['shad_cylinder'] = new THREE.MeshBasicMaterial({color:0X8E44AD, envMap:tx, reflectivity:0.4});
+        mat['shad_box'] = new THREE.MeshBasicMaterial({color:0XE74C3C, envMap:this.environment, reflectivity:0.4});
+        mat['shad_sphere'] = new THREE.MeshBasicMaterial({color:0X2980B9, envMap:this.environment, reflectivity:0.4});
+        mat['shad_cylinder'] = new THREE.MeshBasicMaterial({color:0X8E44AD, envMap:this.environment, reflectivity:0.4});
     	this.mat = mat;
     },
     addWorker:function(name, fun){

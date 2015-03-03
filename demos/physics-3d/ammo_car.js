@@ -18,8 +18,8 @@ function loop(){
 }
 
 function onload(){
-    var environment = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
-    environment.mapping = THREE.SphericalReflectionMapping;
+    //var environment = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
+    //environment.mapping = THREE.SphericalReflectionMapping;
 
     var mesh;
     var map = {};
@@ -44,13 +44,13 @@ function onload(){
     }
 
      // create new materials
-    shaders[0] = new THREE.MeshBasicMaterial({ envMap:environment, reflectivity:0.6, map:map.body, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// body
-    shaders[1] = new THREE.MeshBasicMaterial({ envMap:environment, reflectivity:0.6, map:map.door, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// door
-    shaders[2] = new THREE.MeshBasicMaterial({ envMap:environment, reflectivity:0.9, map:map.body, transparent:true, color:0xFFFFFF, side:THREE.DoubleSide });// glass
-    shaders[3] = new THREE.MeshBasicMaterial({ envMap:environment, reflectivity:0.4, map:map.wheel, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// wheel
-    shaders[4] = new THREE.MeshBasicMaterial({ envMap:environment, reflectivity:0.2, map:map.interior, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// interior
-    shaders[5] = new THREE.MeshBasicMaterial({ envMap:environment, reflectivity:0.4, map:map.headLight, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// headLight
-    shaders[6] = new THREE.MeshBasicMaterial({ envMap:environment, reflectivity:0.4, color:0x333333 });
+    shaders[0] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.6, map:map.body, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// body
+    shaders[1] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.6, map:map.door, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// door
+    shaders[2] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.9, map:map.body, transparent:true, color:0xFFFFFF, side:THREE.DoubleSide });// glass
+    shaders[3] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.4, map:map.wheel, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// wheel
+    shaders[4] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.2, map:map.interior, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// interior
+    shaders[5] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.4, map:map.headLight, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// headLight
+    shaders[6] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.4, color:0x333333 });
     // apply material
     for(var m in v.pool.meshes.c1gt){
         mesh = v.pool.meshes.c1gt[m];

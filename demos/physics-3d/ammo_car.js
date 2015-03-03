@@ -13,11 +13,7 @@ loop();
 
 function loop(){
     v.render();
-    if(car){
-        v.tell('ammo car '+ v.speeds[0] +'km/h');
-        //v.nav.move(car.position);
-//wheels[6].rotation.z +=0.1
-    }
+    if(car) v.tell('ammo car '+ v.speeds[0] +'km/h');
     requestAnimationFrame( loop );
 }
 
@@ -46,6 +42,7 @@ function onload(){
         if(m == 'shape') shape = mesh;
         if(m == 'shape_min') shapemin = mesh;
     }
+
      // create new materials
     shaders[0] = new THREE.MeshBasicMaterial({ envMap:environment, reflectivity:0.6, map:map.body, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// body
     shaders[1] = new THREE.MeshBasicMaterial({ envMap:environment, reflectivity:0.6, map:map.door, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// door
@@ -54,7 +51,7 @@ function onload(){
     shaders[4] = new THREE.MeshBasicMaterial({ envMap:environment, reflectivity:0.2, map:map.interior, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// interior
     shaders[5] = new THREE.MeshBasicMaterial({ envMap:environment, reflectivity:0.4, map:map.headLight, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// headLight
     shaders[6] = new THREE.MeshBasicMaterial({ envMap:environment, reflectivity:0.4, color:0x333333 });
-
+    // apply material
     for(var m in v.pool.meshes.c1gt){
         mesh = v.pool.meshes.c1gt[m];
         if(m == 'body' || m == 'hood' || m == 'MotorAndBorder' || m == 'bottomCar') mesh.material = shaders[0];
@@ -67,8 +64,6 @@ function onload(){
     }
 
     var s = 0.2;
-    //car.scale.set(s, s, -s);
-    
     carM.scale.set(s, s, -s);
     carM.rotation.y = V.PI;
     carM.position.y = -2.3
@@ -88,26 +83,26 @@ function onload(){
 
     v.steering[0] = wheels[6];
 
+    // init worker
     v.addWorker('ammo', onWorker);
 }
 
 function onWorker(){
-    var obj = {};
     var centroidY = -2.3;
-    obj.type= 'c1gt';
-    obj.pos = [0,4,0];
-    //obj.size = [18.5,5,34.4];
-    obj.size = [18.5,5,34.4];
-    obj.wPos = [7.9,centroidY,12];
-    obj.wRadius =  3.4;
-    obj.wDeepth = 2.6;
-    obj.nWheels = 4;
-    obj.mass = 400;
-    obj.massCenter = [0,centroidY,0];
-    obj.type='c1gt';
-    obj.v = V.getVertex(shape.geometry, [-0.02,0.02,0.02]);
-    v.w.post({m:'car', obj:obj });
+    var obj = {
+        type:'c1gt',
+        pos:[0,4,0],
+        size:[18.5,5,34.4],
+        wPos:[7.9,centroidY,12],
+        wRadius:3.4,
+        wDeepth:2.6,
+        nWheels:4,
+        mass:400,
+        massCenter:[0,centroidY,0],
+        v:V.getVertex(shape.geometry, [-0.02,0.02,0.02])
+    };
 
+    v.w.post({m:'car', obj:obj });
 
     v.w.room({w:200, h:30, d:500, m:3});
 

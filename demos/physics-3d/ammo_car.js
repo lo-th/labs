@@ -18,9 +18,6 @@ function loop(){
 }
 
 function onload(){
-    //var environment = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
-    //environment.mapping = THREE.SphericalReflectionMapping;
-
     var mesh;
     var map = {};
     for(var m in v.pool.meshes.c1gt){
@@ -99,7 +96,13 @@ function onWorker(){
         nWheels:4,
         mass:400,
         massCenter:[0,centroidY,0],
-        v:V.getVertex(shape.geometry, [-0.02,0.02,0.02])
+        carshape:V.getVertex(shape.geometry, [-0.02,0.02,0.02]),
+        setting:{ 
+            engine:600, stiffness: 40, 
+            relaxation: 0.85, compression: 0.82, 
+            travel: 500, force: 6000, frictionSlip: 20.5, 
+            reslength: 0.1, roll: 0.1 
+        }
     };
 
     v.w.post({m:'car', obj:obj });

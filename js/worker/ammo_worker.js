@@ -235,10 +235,10 @@ AMMO.World.prototype = {
 		this.joints[id] = new AMMO.Constraint(obj, this );
     },
 
-    step:function(dt){
-    	//dt = dt || 1;
-    	var now = Date.now();
-    	this.dt = now - this.last;
+    step:function( ){
+
+    	//var now = Date.now();
+    	//this.dt = now - this.last;
 
     	this.world.stepSimulation( this.dt, this.iteration );
     	
@@ -253,13 +253,8 @@ AMMO.World.prototype = {
 
 	    
 
-	    this.last = now;
-	    //this.upInfo();
-    },
-    upInfo:function(){
-    	//this.infos[1] = this.BODYID;
-    	//this.infos[2] = this.CARID;
-    	//if (this.last - 1000 > this.tt[0]) { this.tt[0] = this.last; this.infos[0] = this.tt[1]; this.tt[1] = 0; } this.tt[1]++;
+	    //this.last = now;
+
     },
     getByName:function(name){
         var i, result = null;
@@ -613,7 +608,7 @@ AMMO.Vehicle = function(obj, Parent){
 
     //this.shape = new Ammo.btBoxShape(AMMO.V3(this.size[0]*0.5, this.size[1]*0.5, this.size[2]*0.5, true)); 
     //if(obj.v) this.shape = new AMMO.Rigid({type:'mesh', v:obj.v, mass:obj.mass }, null);
-    if(obj.v) this.shape = new AMMO.Rigid({type:'convex', v:obj.v, mass:obj.mass}, null);
+    if(obj.carshape) this.shape = new AMMO.Rigid({type:'convex', v:obj.carshape, mass:obj.mass}, null);
     else this.shape = new AMMO.Rigid({type:'box', size:this.size}, null);
     
     this.compound = new Ammo.btCompoundShape();

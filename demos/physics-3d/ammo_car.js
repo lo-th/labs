@@ -16,7 +16,7 @@ function loop(){
     if(car){
         v.tell('ammo car '+ v.speeds[0] +'km/h');
         //v.nav.move(car.position);
-
+//wheels[6].rotation.z +=0.1
     }
     requestAnimationFrame( loop );
 }
@@ -85,6 +85,8 @@ function onload(){
         v.wheels[j] = wheels[j];
         v.scene.add( v.wheels[j] );
     }
+
+    v.steering[0] = wheels[6];
 
     v.addWorker('ammo', onWorker);
 }

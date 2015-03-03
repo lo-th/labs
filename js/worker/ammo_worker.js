@@ -730,20 +730,19 @@ AMMO.Vehicle.prototype = {
 	    var rot = t.getRotation();
 	    var pos = t.getOrigin();
 
-	    m[n+1] = rot.x().toFixed(p)*1;
-	    m[n+2] = rot.y().toFixed(p)*1;
-	    m[n+3] = rot.z().toFixed(p)*1;
-	    m[n+4] = rot.w().toFixed(p)*1;
-
 	    if(this.type==='basic'){
-	    	/*m[n+5] = (pos.x()+this.massCenter[0]).toFixed(p)*AMMO.WORLD_SCALE;
-	        m[n+6] = (pos.y()+this.massCenter[1]).toFixed(p)*AMMO.WORLD_SCALE;
-	        m[n+7] = (pos.z()+this.massCenter[2]).toFixed(p)*AMMO.WORLD_SCALE;*/
+	    	m[n+1] = (pos.x()+this.massCenter[0]).toFixed(p)*AMMO.WORLD_SCALE;
+	        m[n+2] = (pos.y()+this.massCenter[1]).toFixed(p)*AMMO.WORLD_SCALE;
+	        m[n+3] = (pos.z()+this.massCenter[2]).toFixed(p)*AMMO.WORLD_SCALE;
 	    }else{
-	    	m[n+5] = pos.x().toFixed(p)*AMMO.WORLD_SCALE;
-	        m[n+6] = pos.y().toFixed(p)*AMMO.WORLD_SCALE;
-	        m[n+7] = pos.z().toFixed(p)*AMMO.WORLD_SCALE;
+	    	m[n+1] = pos.x().toFixed(p)*AMMO.WORLD_SCALE;
+	        m[n+2] = pos.y().toFixed(p)*AMMO.WORLD_SCALE;
+	        m[n+3] = pos.z().toFixed(p)*AMMO.WORLD_SCALE;
 	    }
+	    m[n+4] = rot.x().toFixed(p)*1;
+	    m[n+5] = rot.y().toFixed(p)*1;
+	    m[n+6] = rot.z().toFixed(p)*1;
+	    m[n+7] = rot.w().toFixed(p)*1;
 
 	    var i = this.nWheels;
 	    var w;
@@ -752,16 +751,15 @@ AMMO.Vehicle.prototype = {
 	    	rot = t.getRotation();
 	        pos = t.getOrigin();
 	        w = 8*(i+1);
-	        if(i==0) m[n+w+0] = this.steering;
-	        else m[n+w+0] = i;
-	        m[n+w+1] = rot.x().toFixed(p)*1;
-		    m[n+w+2] = rot.y().toFixed(p)*1;
-		    m[n+w+3] = rot.z().toFixed(p)*1;
-		    m[n+w+4] = rot.w().toFixed(p)*1;
-
-		    m[n+w+5] = pos.x().toFixed(p)*AMMO.WORLD_SCALE;
-		    m[n+w+6] = pos.y().toFixed(p)*AMMO.WORLD_SCALE;
-		    m[n+w+7] = pos.z().toFixed(p)*AMMO.WORLD_SCALE;
+	        if(i==0) m[n+w] = this.steering;
+	        else m[n+w] = i;
+	        m[n+w+1] = pos.x().toFixed(p)*AMMO.WORLD_SCALE;
+		    m[n+w+2] = pos.y().toFixed(p)*AMMO.WORLD_SCALE;
+		    m[n+w+3] = pos.z().toFixed(p)*AMMO.WORLD_SCALE;
+	        m[n+w+4] = rot.x().toFixed(p)*1;
+		    m[n+w+5] = rot.y().toFixed(p)*1;
+		    m[n+w+6] = rot.z().toFixed(p)*1;
+		    m[n+w+7] = rot.w().toFixed(p)*1;
 	    }
     },
     drive:function(){

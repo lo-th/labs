@@ -91,6 +91,7 @@ V.View = function(h,v,d, loadbasic){
     this.cars = [];
     this.speeds = [];
     this.wheels = [];
+    this.steering = [];
 
     this.lines = [];
     this.anchors = {};

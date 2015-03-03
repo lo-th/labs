@@ -233,33 +233,36 @@ V.Worker.prototype = {
         this.ar = e.data.ar;
         this.dr = e.data.dr;
         var m = this.root.meshs;
-        var i = m.length, id;
+        var i = m.length, id, o;
+        o = this.ar;
         while(i--){
             id = i*8;
-            if(this.ar[id]){
-                m[i].position.set( this.ar[id+1], this.ar[id+2], this.ar[id+3] );
-                if(m.type!=='BLOB') m[i].quaternion.set( this.ar[id+4], this.ar[id+5], this.ar[id+6], this.ar[id+7] );
+            if(o[id]){
+                m[i].position.set( o[id+1], o[id+2], o[id+3] );
+                if(m.type!=='BLOB') m[i].quaternion.set( o[id+4], o[id+5], o[id+6], o[id+7] );
             }
         }
 
         m = this.root.cars;
+        o = this.dr;
         i = m.length;
         var wm, w, j;
         while(i--){
             id = i*40;
-            if(this.dr[id]){
-                this.root.speeds[i] = this.dr[id];
-                m[i].position.set( this.dr[id+5], this.dr[id+6], this.dr[id+7] );
-                m[i].quaternion.set( this.dr[id+1], this.dr[id+2], this.dr[id+3], this.dr[id+4] );
-                this.root.nav.move(m[i].position);
-                //m[i].updateMatrixWorld();
-                j = 4;
-                while(j--){
-                    w = 8*(j+1);
-                    wm = this.root.wheels[j];
-                    wm.position.set( this.dr[id+w+5], this.dr[id+w+6], this.dr[id+w+7] );
-                    wm.quaternion.set( this.dr[id+w+1], this.dr[id+w+2], this.dr[id+w+3], this.dr[id+w+4] );
-                }
+            //if(this.dr[id]){
+            this.root.speeds[i] = o[id];
+            this.root.nav.move(m[i].position);
+            this.root.steering[i].rotation.z += o[id+8]*0.5;
+
+            m[i].position.set( o[id+1], o[id+2], o[id+3] );
+            m[i].quaternion.set( o[id+4], o[id+5], o[id+6], o[id+7] );
+            
+            j = 4;
+            while(j--){
+                w = id+(8*(j+1));
+                wm = this.root.wheels[j];
+                wm.position.set( o[w+1], o[w+2], o[w+3] );
+                wm.quaternion.set( o[w+4], o[w+5], o[w+6], o[w+7] );
             }
         }
         

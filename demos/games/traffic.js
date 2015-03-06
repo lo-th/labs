@@ -8,6 +8,7 @@ var workerOn = false;
 //v.scene.add(ball);
 var env = new V.Environment();
 var envbase = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
+
 v.zone({s:500});
 var select = null;
 //v.zone({s:20, v:true});
@@ -54,7 +55,8 @@ function onload(){
     }
     img.src = 'images/cars.png';
 
-	//v.addWorker('crowd', onWorker);
+    // init worker
+	v.addWorker('traffic', onWorker);
 }
 
 function carTest(tx){
@@ -69,6 +71,12 @@ function carTest(tx){
 		c.scale.set(2, 2, -2);
 	}
 }
+
+function onWorker(){
+	console.log('ok')
+}
+
+
 /*
 function addClone(x,y,z){
 	var r = V.randInt(0,1);

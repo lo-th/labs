@@ -140,7 +140,7 @@ fs: [
 	'float iris_U = 0.0;',
 	'float iris_V = 0.0;',
 	
-	'float iris_depth = 1.0 - pow( iris_size, 3.0 );',
+	'float iris_depth = 1.0 - pow( abs(iris_size), 3.0 );',
 	'float iris_shading_curvature = arg_iris_shading_curvature;',
 	'vec3 _norm_P = normalize( mPosition );',
 	'float _measured_eye_radius = length( mPosition );',
@@ -236,7 +236,8 @@ fs: [
 					// Cat Eye
 					'float cateyeShift = 0.1;',
 					'_final_pupil_size = _final_pupil_size * ( 1.0 + cateyeShift );',
-					'_r =  sqrt( pow( pow( _iris_ST.x, 0.7), 2.0 ) + pow( _iris_ST.y * ( _final_pupil_size * ( 1.0 + cateyeShift ) + cateyeShift ), 2.0 ));',
+					//'_r =  sqrt( pow( pow( abs(_iris_ST.x), 0.7), 2.0 ) + pow( _iris_ST.y * ( _final_pupil_size * ( 1.0 + cateyeShift ) + cateyeShift ), 2.0 ));',
+					'_r =   sqrt( pow( abs(pow( abs(_iris_ST.x), 0.7)), 2.0 ) + pow( abs(_iris_ST.y * ( _final_pupil_size * ( 1.0 + cateyeShift ) + cateyeShift )), 2.0 ) );',
 				'}else {',
 					// Human Eye
 					'_r = length( _iris_ST_orient );',
@@ -292,7 +293,7 @@ fs: [
 	'const float fresBias = 0.002;',
 	'const float fresScale = 0.5;',
 	'const float fresPow = 6.0;',
-	'float fresnel = fresBias + fresScale * pow( 1.0 + dot( oView, fNormalSpec ), fresPow );',		
+	'float fresnel = fresBias + fresScale * pow( abs(1.0 + dot( oView, fNormalSpec )), fresPow );',		
 	
 	// eye texture
 	'vec3 eyeTexIris = vec3( 0.8 );',
@@ -304,9 +305,9 @@ fs: [
 	'vec3 eyeTex = mix( eyeTexSclera, eyeTexIris, cornea_mask );',		
 
 	//sRGB to linear
-	'eyeTex = pow(eyeTex, vec3(2.2));',
-	'envTex = pow(envTex, vec3(2.2));',
-	'envTex = envTex * 10.0;  envTex = pow(envTex, vec3(1.6));',// exposure and gamma increase to match HDR
+	'eyeTex = pow(abs(eyeTex), vec3(2.2));',
+	'envTex = pow(abs(envTex), vec3(2.2));',
+	'envTex = envTex * 10.0;  envTex = pow(abs(envTex), vec3(1.6));',// exposure and gamma increase to match HDR
 
 	// experiment with diffuse lighting vs baked hdr diffuse
 	'vec3 composites = vec3(1.0);',
@@ -324,7 +325,7 @@ fs: [
 			//spec
 			'vec3 dirHalfVector = normalize( dirLgtVector + normalize( -vPosition ) );',
 			'float dirDotNormalHalf = max( dot( fNormalSpec, dirHalfVector ), 0.0 );',
-			'float specular = max( pow( dirDotNormalHalf, 1000.0 ), 0.0 ) * 5.0;',
+			'float specular = max( pow( abs(dirDotNormalHalf), 1000.0 ), 0.0 ) * 5.0;',
 			
 			// Dome light
 			'vec3 hemiLightDirection = vec3( 0.0, 1.0, 0.0 );',				
@@ -345,14 +346,14 @@ fs: [
 			//'vec3 sphericalDiffCatarax = pow( sphericalRefl( texEnvRfl,  oNormal  ), vec3(2.0)) * vec3( 0.8, 0.79, 0.77);',
 			//'vec3 sphericalDiffCatarax =  mix( eyeTex, ev+eyeTex, 1.0 );',
 			'vec3 sphericalDiffCatarax =  mix( eyeTex, ev, 1.0 );',
-			'sphericalDiff = pow( sphericalDiff, vec3(2.0)) * 1.5;', // really arbitrary color correct
+			'sphericalDiff = pow( abs(sphericalDiff), vec3(2.0)) * 1.5;', // really arbitrary color correct
 
 			'composites = mix( eyeTex * sphericalDiff, sphericalDiffCatarax, cornea_fade * 10.0 * cornea_mask);',
 			'composites = composites * ( 1.0 - fresnel ) + ( envTex * fresnel );',
 	'}',
 
 	// linear to sRGB
-	'composites =  pow( composites, vec3(1.0 / 2.2));',
+	'composites =  pow( abs(composites), vec3(1.0 / 2.2));',
 	/*'vec3 ev = texture2D( env, vN ).xyz;',
 	'ev *= composites;',
 
@@ -447,7 +448,7 @@ vs: [
 
 'vec3 corneaVertexDisp(vec3 eyeP, vec3	eyeN, float	iris_size, float cornea_bump_amount, float cornea_bump_radius_mult, out vec3 outN){',
 	'vec3 _norm_P = normalize( eyeP );',
-	'float iris_depth = 1.0 - pow(  iris_size, 3.0 );',
+	'float iris_depth = 1.0 - pow(  abs(iris_size), 3.0 );',
 	'float _measured_eye_radius = length( eyeP );',
 	'float _iris_rad = sqrt( max( 0.0, 1.0 - iris_depth * iris_depth ) );',
 	'float _bump_t = 1.0;',
@@ -455,7 +456,7 @@ vs: [
 	'{',
 		'_bump_t = min( 1.0, sqrt( max( 0.0, 1.0 - _norm_P[2] * _norm_P[2] ) ) / ( _iris_rad * cornea_bump_radius_mult ) );',
 	'}',
-	'float _bump_factor = pow( 1.0 - pow( _bump_t, 2.5 ), 1.0 );',
+	'float _bump_factor = pow( abs(1.0 - pow( abs(_bump_t), 2.5 )), 1.0 );',
 	'_bump_factor *= cornea_bump_amount * _iris_rad * _measured_eye_radius;',
 	
 	// faking bulging cornea normals yolo
@@ -510,7 +511,7 @@ vs: [
     //'vec3 vPos = normalize( vec3( modelViewMatrix * vec4(position,1.0) ) );',
     //'vNormal = normalize( normalMatrix * normal );',
 	'vec3 r = reflect(  normalize( vPosition ), vNormal );',
-	'float m = 2. * sqrt( pow( r.x, 2. ) + pow( r.y, 2. ) + pow( r.z + 1., 2. ) );',
+	'float m = 2. * sqrt( pow( abs(r.x), 2. ) + pow( abs(r.y), 2. ) + pow( abs(r.z + 1.), 2. ) );',
 	'vN = r.xy / m + .5;',
 	'vU = uv;',
 	

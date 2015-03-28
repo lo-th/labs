@@ -1,4 +1,5 @@
 var v = new V.View(180, 45, 130, true);
+v.mirror(600);
 var wheels = [];
 var doors = [];
 var shaders = [];

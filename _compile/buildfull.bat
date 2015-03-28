@@ -1,0 +1,1 @@
+python build.py --include full --minify --output ../build/full.min.js

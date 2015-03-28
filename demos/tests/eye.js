@@ -1,4 +1,5 @@
 var v = new V.View(180, 45, 300);
+v.mirror(300);
 v.tell('eye test with spherical');
 var env = new V.Environment();
 var envbase = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
@@ -19,8 +20,11 @@ var tx2 = THREE.ImageUtils.loadTexture( 'images/dianna/eye_r.jpg');
 var mat  = new V.Shader('Eye', {texEyeCol:tx0, texEyeNrm:tx1, env:envbase, texEnvRfl:tx2});//, texEnvDif:tx3});
 env.add(mat);
 //var ball = new THREE.Mesh( new THREE.IcosahedronGeometry( 50, 4 ), mat );
-var ball = new THREE.Mesh( new THREE.SphereGeometry( 50, 32,26 ), mat );
+var ball = new THREE.Mesh( new THREE.SphereGeometry( 25, 32,26 ), mat );
 v.scene.add(ball);
+ball.position.y = 25;
+
+v.nav.moveto(0,25,0);
 
 loop();
 

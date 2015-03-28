@@ -1,15 +1,19 @@
 var v = new V.View(180, 45, 130, true);
+v.mirror(300);
 v.tell('oimo basic');
 v.addWorker('oimo', onWorker);
 
 loop();
 
 function loop(){
+    //groundMirror.render();
     v.render();
     requestAnimationFrame( loop );
 }
 
 function onWorker(){
+    
+
     v.w.room({w:50, h:30, d:50, m:3});
     var x,y,z,tt;
     var sx,sy,sz;

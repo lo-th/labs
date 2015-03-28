@@ -17,12 +17,16 @@ V.PostEffect = function(parent, name, adv, callback){
 V.PostEffect.prototype = {
     constructor: V.PostEffect,
     init:function(adv){
-        var w = this.root.dimentions.w;
-        var h = this.root.dimentions.h;
+        var R = this.root;
+        var w = R.dimentions.w;
+        var h = R.dimentions.h;
 
-        this.composer = new THREE.EffectComposer( this.root.renderer );
-        this.renderModel = new THREE.RenderPass( this.root.scene, this.root.nav.camera );
-        this.composer.addPass( this.renderModel);
+        var cc = new THREE.Color(0x25292e);
+
+
+        this.composer = new THREE.EffectComposer( R.renderer );
+        this.renderModel = new THREE.RenderPass( R.scene, R.nav.camera, null, cc, 0);
+        this.composer.addPass(this.renderModel);
 
         if(this.name == 'ssao'){
             this.isAdvancedSSAO = adv || false;
@@ -47,20 +51,20 @@ V.PostEffect.prototype = {
             this.depthTarget = new THREE.WebGLRenderTarget( w, h, this.depthParam );
        
             this.fxaa = new THREE.ShaderPass( THREE.FXAAShader );
-            var dpr = 1;
+            //var dpr = 1;
             this.fxaa.uniforms.resolution.value.set( 1 / w, 1 / h );
             this.composer.addPass( this.fxaa );
 
             this.ao = new THREE.ShaderPass( THREE.SSAOShader );
             this.ao.uniforms.tDepth.value = this.depthTarget;
             this.ao.uniforms.size.value.set( w, h );
-            this.ao.uniforms.cameraNear.value = this.root.nav.camera.near;
-            this.ao.uniforms.cameraFar.value = this.root.nav.camera.far;
+            this.ao.uniforms.cameraNear.value = R.nav.camera.near;
+            this.ao.uniforms.cameraFar.value = R.nav.camera.far;
             this.ao.needsSwap = true;
-            this.ao.renderToScreen = true;
             this.composer.addPass( this.ao );
-
-            this.root.renderer.autoClear = true;
+            this.ao.renderToScreen = true;
+            
+            R.renderer.autoClear = true;
             this.isActive = true;
         }
         if(this.name == 'metaball'){
@@ -71,28 +75,49 @@ V.PostEffect.prototype = {
             this.blobmin = new V.Shader('Gauss_min', {gauss:this.gauss, transparent:true, blending:THREE.NormalBlending, depthTest:false, depthWrite:true }, false, fun )
             this.metaball = new V.Shader('Metaball', { }, false, fun );
         }
+        if(this.name == 'distortion'){
+            this.fxaa = new THREE.ShaderPass( THREE.FXAAShader );
+            //var dpr = 1;
+            this.fxaa.uniforms.resolution.value.set( 1 / w, 1 / h );
+            var fun = function(){this.testShader()}.bind(this);
+            this.effect = new V.Shader('Distortion', { }, false, fun );
+        }
     },
     testShader:function(){
+        var R = this.root;
         this.shaderLoaded++;
-        if(this.shaderLoaded==3){
-            if(this.name == 'metaball'){
-                var w = this.root.dimentions.w;
-                var h = this.root.dimentions.h;
+        if(this.name == 'distortion'){
+            this.updateDistortionEffect();
+            var passs = new THREE.ShaderPass( this.effect );
+            
+            this.composer.addPass( passs );
+            this.composer.addPass( this.fxaa );
+            //passs.renderToScreen = true;
+            this.fxaa.renderToScreen = true;
+            
+            R.renderer.autoClear = true;
+            this.isActive = true;
+             
+        }
+        if(this.name == 'metaball'){
+            if(this.shaderLoaded==3){
+                var w = R.dimentions.w;
+                var h = R.dimentions.h;
                 this.glowParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, stencilBufer: false };
                 
                 this.rootTarget = new THREE.WebGLRenderTarget(  w, h, this.glowParameters );
-                this.renderModelRoot = new THREE.RenderPass( this.root.scene, this.root.nav.camera );
-                this.rootcomposer = new THREE.EffectComposer( this.root.renderer, this.rootTarget );
+                this.renderModelRoot = new THREE.RenderPass( R.scene, R.nav.camera );
+                this.rootcomposer = new THREE.EffectComposer( R.renderer, this.rootTarget );
                 this.rootcomposer.addPass( this.renderModelRoot );
 
                 this.glowTargetxy = new THREE.WebGLRenderTarget(  w, h, this.glowParameters );
-                this.renderModelGlowxy = new THREE.RenderPass( this.root.sceneBlob, this.root.nav.camera, this.blobxy );
-                this.glowcomposerxy = new THREE.EffectComposer( this.root.renderer, this.glowTargetxy );
+                this.renderModelGlowxy = new THREE.RenderPass( R.sceneBlob, R.nav.camera, this.blobxy );
+                this.glowcomposerxy = new THREE.EffectComposer( R.renderer, this.glowTargetxy );
                 this.glowcomposerxy.addPass( this.renderModelGlowxy );
 
                 this.glowTarget = new THREE.WebGLRenderTarget(  w, h, this.glowParameters );
-                this.renderModelGlow = new THREE.RenderPass( this.root.sceneBlob, this.root.nav.camera, this.blobmin );
-                this.glowcomposer = new THREE.EffectComposer( this.root.renderer, this.glowTarget );
+                this.renderModelGlow = new THREE.RenderPass( R.sceneBlob, R.nav.camera, this.blobmin );
+                this.glowcomposer = new THREE.EffectComposer( R.renderer, this.glowTarget );
                 this.glowcomposer.addPass( this.renderModelGlow );
 
                 this.renderTarget = new THREE.WebGLRenderTarget(w, h, this.glowParameters );
@@ -153,6 +178,9 @@ V.PostEffect.prototype = {
             this.glowcomposer.render();
             //
         }
+        //if(this.name == 'distortion'){
+            //this.composer.render();
+        //}
         this.composer.render();
     },
     resize:function(w, h){
@@ -170,7 +198,29 @@ V.PostEffect.prototype = {
             //this.meta.uniforms.tDiffuseMin.value = this.glowcomposer.renderTarget2;
             this.meta.uniforms.size.value.set( w, h );
         }
+        if(this.name == 'distortion'){
+            this.fxaa.uniforms.resolution.value.set( 1 / w, 1 / h );
+            this.updateDistortionEffect();
+        }
         this.composer.setSize( w, h );
+    },
+    updateDistortionEffect:function(){
+        var R = this.root;
+        var params = {
+            horizontalFOV:      140,
+            strength:           0.5,
+            cylindricalRatio:   2,
+        }
+        
+        var height = Math.tan((params.horizontalFOV*V.ToRad)*0.5) / R.nav.camera.aspect;
+
+        R.nav.camera.fov = (Math.atan(height) * 2) * V.ToDeg;
+        R.nav.camera.updateProjectionMatrix();
+        
+        this.effect.uniforms[ "strength" ].value = params.strength;
+        this.effect.uniforms[ "height" ].value = height;
+        this.effect.uniforms[ "aspectRatio" ].value = R.nav.camera.aspect;
+        this.effect.uniforms[ "cylindricalRatio" ].value = params.cylindricalRatio;
     },
     deformSsao:function( g, map ){
         g.computeBoundingBox();

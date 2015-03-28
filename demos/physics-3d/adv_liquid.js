@@ -1,4 +1,5 @@
 var v = new V.View(180, 45, 130);
+//v.mirror(300);
 v.tell('The base');
 v.metaball(onShader);
 

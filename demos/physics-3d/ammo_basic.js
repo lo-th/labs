@@ -1,4 +1,5 @@
 var v = new V.View(180, 45, 130, true);
+v.mirror(300);
 v.tell('ammo basic');
 v.addWorker('ammo', onWorker);
 

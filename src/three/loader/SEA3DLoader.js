@@ -5,10 +5,12 @@
  * 	http://sea3d.poonya.com/
  */
 
+
 //
 //	Mesh
 //
- var THREE, Audio;
+//var THREE=THREE||{};
+var Audio;
 // Local Animation
 THREE.Object3D.prototype.UPDATEMATRIXWORLD = THREE.Mesh.prototype.updateMatrixWorld;
 THREE.Object3D.prototype.updateMatrixWorld = function(force) {

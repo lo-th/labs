@@ -15,10 +15,11 @@ V.AR16 = typeof Uint16Array!="undefined"?Uint16Array:Array;
 V.AR32 = typeof Float32Array!="undefined"?Float32Array:Array;
 
 V.PI = Math.PI;
-V.PI90 = Math.PI*0.5;
+V.PI90 = V.PI*0.5;
 V.PI270 = V.PI+V.PI90;
-V.TwoPI = 2.0 * Math.PI;
-V.ToRad = Math.PI / 180;
+V.TwoPI = 2.0 * V.PI;
+V.ToRad = V.PI / 180;
+V.ToDeg = 180 / V.PI;
 V.Resolution = { w:1600, h:900, d:200, z:10, f:40 };
 V.sqrt = Math.sqrt;
 V.abs = Math.abs;
@@ -52,9 +53,10 @@ V.View = function(h,v,d, loadbasic){
     this.info = info;
     this.loader = loader;
 
-    this.renderer = new THREE.WebGLRenderer({canvas:canvas, precision: "mediump", antialias:true, alpha: true, stencil:false });
+    this.renderer = new THREE.WebGLRenderer({canvas:canvas, precision:"mediump", antialias:true, alpha:true, stencil:false });
     //this.renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha: true });
     this.renderer.setSize( this.dimentions.w, this.dimentions.h );
+    this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setClearColor( 0x000000, 0 );
     this.renderer.autoClear = false;
 
@@ -102,6 +104,7 @@ V.View = function(h,v,d, loadbasic){
 
     this.model = "skull";
     this.basic = null;
+    this.groundMirror = null;
 
     this.w = null;
     this.isW = false;
@@ -128,6 +131,8 @@ V.View.prototype = {
         if(this.isWithSerious) this.renderer.resetGLState();
         // tween update
 		if(TWEEN)TWEEN.update();
+
+        if(this.groundMirror) this.groundMirror.render();
         
         // render
         if(this.postEffect!==null && this.postEffect.isActive){
@@ -166,8 +171,31 @@ V.View.prototype = {
         this.renderMode = 'metaball';
         this.postEffect = new V.PostEffect(this,'metaball', false, callback);
     },
+    distortion:function(){
+        this.renderMode = 'distortion';
+        this.postEffect = new V.PostEffect(this,'distortion', false);
+    },
     deformSsao:function( g, map ){
         this.postEffect.deformSsao( g, map );
+    },
+    mirror:function(size, sets){
+        size = size || 100;
+        sets = sets || {};
+        var settings = { 
+            clipBias: sets.bias || 0.003, 
+            textureWidth:this.dimentions.w, 
+            textureHeight:this.dimentions.h, 
+            color: sets.color || 0x777777, 
+            alpha: sets.alpha || 0.02, 
+            power: sets.power || 1, 
+            radius: sets.radius || 1.0 
+        };
+        this.groundMirror = new THREE.Mirror( v.renderer, v.nav.camera, settings );
+        var mirrorMesh = new THREE.Mesh( this.geo.plane, this.groundMirror.material );
+        mirrorMesh.scale.set(size, size, size);
+        mirrorMesh.add( this.groundMirror );
+        mirrorMesh.rotateX( - V.PI90 );
+        this.scene.add( mirrorMesh );
     },
     resize:function(){
     	this.dimentions.w = window.innerWidth;

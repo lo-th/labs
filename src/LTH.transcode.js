@@ -7,11 +7,10 @@
 
 var URL = window.URL || window.webkitURL;
 
-LTH.Transcode = function(main, list, callback, debug){
+LTH.Transcode = function(main, callback){
 	this.main = main;
-	this.list = list;
+	this.list = LTH.CODES;
 	this.callback = callback || function(){};
-	this.isDebug = debug || false;
 	this.canvas = document.createElement("canvas");
 	this.gl = null;
 	this.ctx = null;
@@ -21,9 +20,9 @@ LTH.Transcode = function(main, list, callback, debug){
 
 	this.codes = {};
 	this.useTrans = false;
-	this.isWebGl = false;
 
-	this.init();
+	if(!this.main.useDirect)this.init();
+	else this.callback();
 }
 
 LTH.Transcode.prototype = {
@@ -65,18 +64,15 @@ LTH.Transcode.prototype = {
 	canvas3d:function(image){
 		var w = this.size.w;
 	    var h = this.size.h;
-	    
-	    if(this.gl==null) this.create3dContext();
-	    var gl = this.gl;
 	    var data;
 
-	    if (!gl) {
-	    	this.isWebGl = false;
+	    if (!this.main.detector.webgl) {
 	    	this.ctx = this.canvas.getContext('2d');
 	    	this.ctx.drawImage(image, 0, 0);
 	    	data = this.ctx.getImageData(0, 0, this.size.w, this.size.h).data;
 	    } else {
-	    	this.isWebGl = true;
+	    	if(this.gl==null) this.create3dContext();
+	    	var gl = this.gl;
 		    var positionLocation = gl.getAttribLocation(this.program, "a_position");
 		    var texCoordLocation = gl.getAttribLocation(this.program, "a_texCoord");
 		    var texCoordBuffer = gl.createBuffer();
@@ -124,10 +120,10 @@ LTH.Transcode.prototype = {
 			pix = pix == 127 ? 10 : pix;
 			string += String.fromCharCode(pix);
 		}
-		if(this.isDebug){
+		//if(this.isDebug){
 			this.main.menu.title.innerHTML = 'WELCOME<br>LOADING CODES<br>'+this.name.toUpperCase() + ' ' + (Date.now()-this.time)+' MS';
 		    //console.log(this.name, Date.now()-this.time+'ms');
-		}
+		//}
 
 		if(this.name=='full'){
 			if(string.substring(3, 8)=='three') this.useTrans = false;//console.log(string.substring(3, 8));

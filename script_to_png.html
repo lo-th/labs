@@ -3,7 +3,7 @@
 <head>
 <title>SCRIPT to PNG</title>
 <link rel="stylesheet" href="css/consolas.css">
-<link href="css/codemirror.css" rel="stylesheet">
+<link rel="stylesheet" href="css/main.css">
 <style>
 body {
     background-color:#25292e;
@@ -81,7 +81,7 @@ document.body.appendChild( content );
 var current = 1;
 
 
-var editor = CodeMirror(this.content, {
+var editor = CodeMirror( content, {
     lineNumbers: true,
     matchBrackets: true,
     indentWithTabs: true,

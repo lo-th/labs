@@ -1,0 +1,17 @@
+[
+    "src/three/three.js",
+    "src/three/Mirror.js",
+    "src/three/postprocessing/EffectComposer.js",
+    "src/three/postprocessing/RenderPass.js",
+    "src/three/postprocessing/MaskPass.js",
+    "src/three/postprocessing/ShaderPass.js",
+    "src/three/shaders/CopyShader.js",
+    "src/three/shaders/SSAOShader.js",
+    "src/three/shaders/FXAAShader.js",
+    "src/three/shaders/DepthDef.js",
+	"src/three/loader/SEA3D.js",
+	"src/three/loader/SEA3DLoader.js",
+	"src/three/loader/SEA3DLZMA.js",
+	"src/three/dat.gui.js",
+    "src/three/Tween.js"
+]

@@ -1,6 +1,6 @@
-var v = new V.View(180, 45, 200);
+var v = new V.View(180, 45, 100);
 v.tell('traffic simulation');
-
+v.mirror(300);
 var cars_geo = [];
 
 var workerOn = false;
@@ -15,7 +15,7 @@ var select = null;
 //v.zone({s:20, v:true, pos:[0,0,30]})
 //v.pool.load('boblow', onload);
 v.pool.load('cars', onload, true);
-
+//v.distortion();
 loop();
 
 function loop(){

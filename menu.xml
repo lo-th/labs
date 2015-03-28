@@ -28,6 +28,7 @@
 	<demo n='dante' lib='' ic='1'></demo>
 	<demo n='sam' lib='' ic='0'></demo>
 	<demo n='eye' lib='' ic='5'></demo>
+	<demo n='stress_test' lib='' ic='0'></demo>
 </rubrique>
 <rubrique n='physics-2d' color='32CAF4'>
 	<demo n='base_box' lib='' ic='0'></demo>

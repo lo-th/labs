@@ -6,6 +6,7 @@
 */
 
 var LTH = {};
+var useDirect = useDirect || false;
 
 LTH.CODES = ['full','serious','rot','terrain','liquid','ammo','oimo','crowd','traffic'];
 
@@ -31,7 +32,7 @@ function init(){
 }
 
 function endTranscode(){
-    main.menu.initHomeland(main.transcode.isWebGl);
+    main.menu.initHomeland(main.detector.webgl);
 }
 
 //----------------------------------------
@@ -41,6 +42,15 @@ function endTranscode(){
 //----------------------------------------
 
 LTH.Main = function(){
+
+	this.detector = {
+	    canvas: !! window.CanvasRenderingContext2D,
+		webgl: ( function () { try { var canvas = document.createElement( 'canvas' ); return !! ( window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ) ); } catch ( e ) { return false; } } )(),
+		workers: !! window.Worker,
+		fileapi: window.File && window.FileReader && window.FileList && window.Blob
+	}
+
+	this.useDirect = useDirect;
 	this.menuSize = 60;
 
 	this.doc = document;
@@ -53,7 +63,7 @@ LTH.Main = function(){
 	this.mode = 'basic';
 
 	//this.startDemo = 0;
-	this.numLesson = 4;
+	//this.numLesson = 4;
 
 	this.items = [];
 
@@ -61,11 +71,11 @@ LTH.Main = function(){
 	this.viewType = 'vertical';
 
 	this.scriptText = 14;
-	this.currentLesson = -1;
+	//this.currentLesson = -1;
 	//this.codeLoaded = false;
 	this.isFirst = false;
 
-	this.transcode =null;
+	this.transcode = null;
 	this.menu = null;
 	this.editor = null;
 	this.editorVertex = null;
@@ -87,15 +97,15 @@ LTH.Main.prototype = {
 		this.editor = new LTH.CodeEditor(this);
 		this.labmenu = new LTH.labsMenu(this);
 		this.menu = new LTH.Menu(this);
-
-		this.transcode = new LTH.Transcode(this, LTH.CODES, endTranscode, true);
+		// load png code if useDirect = false
+		this.transcode = new LTH.Transcode(this, endTranscode);
 
 	    window.onresize = function(e) {this.resize(e)}.bind(this);
 	},
-	initHome:function(){
+	/*initHome:function(){
 		console.log('end');
 		this.menu.initHomeland(this.transcode.isWebGl);
-	},
+	},*/
 	switchMode:function(mode){
 		if(mode!==this.mode){
 			if(this.mode==='shader') this.clearShader();
@@ -286,11 +296,12 @@ LTH.Main.prototype = {
 					"<meta charset='utf-8'>",
 					"<link rel='stylesheet' href='css/consolas.css'>",
 					"<link rel='stylesheet' href='css/basic.css'>",
-					"<script src='js/libs/three.min.js'></script>",
+					"<script src='build/full.min.js'></script>",
+					/*"<script src='js/libs/three.min.js'></script>",
 					"<script src='js/libs/three.post.js'></script>",
 					"<script src='js/libs/sea3d.min.js'></script>",
 					"<script src='js/libs/tween.min.js'></script>",
-					"<script src='js/libs/gui.min.js'></script>",
+					"<script src='js/libs/gui.min.js'></script>",*/
 					options,
 					"<script src='build/v3d.min.js'></script>",
 					"</head><body class='"+this.mainClass+"'>",
@@ -304,41 +315,6 @@ LTH.Main.prototype = {
 					"</body></html>"
 				].join("\n");
 			}
-
-			// extra libs
-			/*options = '';
-			ops = LTH.libsNames[LTH.cRubr][LTH.cFile];
-			i = ops.length;
-			while(i--) {if(ops[i]!=='')options+="<script src='js/libs/"+ops[i]+".min.js'></script>";}
-
-	        var myContent = [
-			    "<!DOCTYPE html>",
-				"<html lang='en'>",
-				"<head>",
-				"<title>prev</title>",
-				"<meta charset='utf-8'>",
-				"<link rel='stylesheet' href='css/consolas.css'>",
-				"<link rel='stylesheet' href='css/basic.css'>",
-				"<script src='" + transcode.codes.full + "' type='text/javascript' charset='UTF-8'></script>",
-				//"<script src='js/libs/three.min.js'></script>",
-				//"<script src='js/libs/three.post.js'></script>",
-				//"<script src='js/libs/sea3d.min.js'></script>",
-				//"<script src='js/libs/tween.min.js'></script>",
-				//"<script src='js/libs/gui.min.js'></script>",
-				options,
-				"<script src='build/v3d.min.js'></script>",
-				"</head><body class='"+this.mainClass+"'>",
-				"<script>",
-				"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
-				"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
-				"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
-				"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
-				value,
-				"</script>",
-				"</body></html>"
-			].join("\n");*/
-
-			//console.log(myContent)
 
 			this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;
 			this.previewMain = this.preview.contentWindow;
@@ -357,12 +333,12 @@ LTH.Main.prototype = {
 			else this.menu.modified();
 		}
 	},
-	checkCurrent:function(){
+	/*checkCurrent:function(){
 		for(var i=0; i< this.numLesson; i++){
 			if(this.items[i].name==this.currentLesson) this.items[i].style.background = '#881288';
 			else this.items[i].style.background = '#121212';
 		}
-	},
+	},*/
 	loadFile:function(name){
 		this.isFirst = true;
 		this.fileSystem.load(name);

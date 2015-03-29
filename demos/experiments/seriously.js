@@ -3,6 +3,8 @@ var isSerious = false;
 var noiseTexture, seriously, simplex, noiseTarget, glitch, chroma, vignette, blend;
 var b1, b2, actif = '', prevy=0, prevr = 0;
 var v = new V.View(110, 65, 100);
+//v.mirror(300, {pos:new THREE.Vector3(0,-14.2,0)});
+
 v.tell('seriously<br><br>Move tv button bro !');
 v.pool.load('tv', onload);
 
@@ -88,14 +90,14 @@ function onload(){
     tx.flipY = false;
     tx2.flipY = false;
 
-    var tvmat = new THREE.MeshBasicMaterial( { map:tx });
+    var tvmat = new THREE.MeshBasicMaterial( { map:tx, envMap:v.environment, reflectivity:0.4 });
     m.tv.material = tvmat;
     b1 = m.tv.children[1];
     b2 = m.tv.children[0];
     b1.material = tvmat;
     b2.material = tvmat;
-    m.border.material = new THREE.MeshBasicMaterial( { color:0x292421 });
-    m.screen.material = new THREE.MeshBasicMaterial( { color:0XFFFFFF });
+    m.border.material = new THREE.MeshBasicMaterial( { color:0x292421, envMap:v.environment, reflectivity:0.4 });
+    m.screen.material = new THREE.MeshBasicMaterial( { color:0XFFFFFF, envMap:v.environment, reflectivity:0.4 });
     m.ground.material = new V.Shader('MapShad', {tmap:tx2});
     initSerious(m.screen.material);
 }

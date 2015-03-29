@@ -181,7 +181,10 @@ LTH.Menu.prototype = {
 		this.isHome = false;
 		this.initMenu();
 		
-		if(this.main.happ)history.pushState(null, null, 'index.html');
+		if(this.main.happ){
+		    if(this.main.useDirect) history.pushState(null, null, 'indexdev.html');
+		    else history.pushState(null, null, 'index.html');
+		}
 	},
 	resetMenu:function(){
 

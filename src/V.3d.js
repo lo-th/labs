@@ -193,8 +193,9 @@ V.View.prototype = {
         this.groundMirror = new THREE.Mirror( v.renderer, v.nav.camera, settings );
         var mirrorMesh = new THREE.Mesh( this.geo.plane, this.groundMirror.material );
         mirrorMesh.scale.set(size, size, size);
-        mirrorMesh.add( this.groundMirror );
+        mirrorMesh.position.copy(sets.pos || new THREE.Vector3());
         mirrorMesh.rotateX( - V.PI90 );
+        mirrorMesh.add( this.groundMirror );
         this.scene.add( mirrorMesh );
     },
     resize:function(){
@@ -204,6 +205,7 @@ V.View.prototype = {
 		this.renderer.setSize( this.dimentions.w, this.dimentions.h );
 		this.nav.camera.aspect = this.dimentions.r;
 		this.nav.camera.updateProjectionMatrix();
+        if(this.groundMirror !==null) this.groundMirror.resize(this.dimentions.w, this.dimentions.h, v.nav.camera);
         if(this.postEffect!==null && this.postEffect.isActive){
             this.postEffect.resize(this.dimentions.w, this.dimentions.h);
         }

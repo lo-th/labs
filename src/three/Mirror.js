@@ -170,7 +170,7 @@ THREE.Mirror = function ( renderer, camera, options ) {
 	this.mirrorCamera = this.camera.clone();
 	this.mirrorCamera.matrixAutoUpdate = true;
 
-	this.textureParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, stencilBufer: false };
+	this.textureParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBufer: false };
 
 	this.texture = new THREE.WebGLRenderTarget( width, height, this.textureParameters );
 	this.tempTexture = new THREE.WebGLRenderTarget( width, height, this.textureParameters );
@@ -193,8 +193,7 @@ THREE.Mirror = function ( renderer, camera, options ) {
 	this.material.uniforms.power.value = power;
 	this.material.uniforms.radius.value = radius;
 	this.material.uniforms.textureMatrix.value = this.textureMatrix;
-	this.material.uniforms.size.value.x = width;
-	this.material.uniforms.size.value.y = height;
+	this.material.uniforms.size.value.set( width, height );
 
 
 	if ( !THREE.Math.isPowerOfTwo(width) || !THREE.Math.isPowerOfTwo( height ) ) {
@@ -211,6 +210,20 @@ THREE.Mirror = function ( renderer, camera, options ) {
 
 THREE.Mirror.prototype = Object.create( THREE.Object3D.prototype );
 THREE.Mirror.prototype.constructor = THREE.Mirror;
+
+THREE.Mirror.prototype.resize = function ( w,h,camera ) {
+	this.camera = camera;
+	//this.textureMatrix = new THREE.Matrix4();
+	this.mirrorCamera = this.camera.clone();
+	this.mirrorCamera.matrixAutoUpdate = true;
+	var width = w;
+	var height = h;
+	this.textureParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBufer: false };
+	this.texture = new THREE.WebGLRenderTarget( width, height, this.textureParameters );
+	this.tempTexture = new THREE.WebGLRenderTarget( width, height, this.textureParameters );
+	this.material.uniforms.mirrorSampler.value = this.texture;
+	this.material.uniforms.size.value.set( width, height );
+};
 
 THREE.Mirror.prototype.renderWithMirror = function ( otherMirror ) {
 

@@ -7,6 +7,7 @@
 
 var LTH = {};
 var useDirect = useDirect || false;
+var useDirectDebug = useDirectDebug || false;
 
 LTH.CODES = ['full','serious','rot','terrain','liquid','ammo','oimo','crowd','traffic'];
 
@@ -51,6 +52,7 @@ LTH.Main = function(){
 	}
 
 	this.useDirect = useDirect;
+	this.useDirectDebug = useDirectDebug;
 	this.menuSize = 60;
 
 	this.doc = document;
@@ -287,33 +289,73 @@ LTH.Main.prototype = {
 				ops = LTH.libsNames[LTH.cRubr][LTH.cFile];
 				i = ops.length;
 				while(i--) {if(ops[i]!=='')options+="<script src='js/libs/"+ops[i]+".min.js'></script>";}
+				if(this.useDirectDebug){
+					myContent = [
+					    "<!DOCTYPE html>",
+						"<html lang='en'>",
+						"<head>",
+						"<title>prev</title>",
+						"<meta charset='utf-8'>",
+						"<link rel='stylesheet' href='css/consolas.css'>",
+						"<link rel='stylesheet' href='css/basic.css'>",
+						"<script src='src/three/three.js'></script>",
+						"<script src='src/three/Mirror.js'></script>",
+						"<script src='src/three/postprocessing/EffectComposer.js'></script>",
+						"<script src='src/three/postprocessing/RenderPass.js'></script>",
+						"<script src='src/three/postprocessing/ShaderPass.js'></script>",
+						"<script src='src/three/postprocessing/MaskPass.js'></script>",
+						"<script src='src/three/shaders/CopyShader.js'></script>",
+						"<script src='src/three/shaders/SSAOShader.js'></script>",
+						"<script src='src/three/shaders/FXAAShader.js'></script>",
+						"<script src='src/three/shaders/DepthDef.js'></script>",
+						"<script src='src/three/loader/SEA3D.js'></script>",
+						"<script src='src/three/loader/SEA3DLoader.js'></script>",
+						"<script src='src/three/loader/SEA3DLZMA.js'></script>",
+						"<script src='src/three/Tween.js'></script>",
+						"<script src='src/three/dat.gui.js'></script>",
+						options,
+						"<script src='src/V.3d.js'></script>",
+						"<script src='src/V.postprocess.js'></script>",
+						"<script src='src/V.particles.js'></script>",
+						"<script src='src/V.shaders.js'></script>",
+						"<script src='src/V.skylab.js'></script>",
+						"<script src='src/V.workers.js'></script>",
+						"<script src='src/V.pool.js'></script>",
+						"<script src='src/V.gui.js'></script>",
+						"</head><body class='"+this.mainClass+"'>",
+						"<script>",
+						"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
+						"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
+						"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
+						"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
+						value,
+						"</script>",
+						"</body></html>"
+					].join("\n");
+				}else{  // minified
+					myContent = [
+					    "<!DOCTYPE html>",
+						"<html lang='en'>",
+						"<head>",
+						"<title>prev</title>",
+						"<meta charset='utf-8'>",
+						"<link rel='stylesheet' href='css/consolas.css'>",
+						"<link rel='stylesheet' href='css/basic.css'>",
+						"<script src='build/full.min.js'></script>",
+						options,
+						"<script src='build/v3d.min.js'></script>",
+						"</head><body class='"+this.mainClass+"'>",
+						"<script>",
+						"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
+						"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
+						"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
+						"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
+						value,
+						"</script>",
+						"</body></html>"
+					].join("\n");
+				}
 
-		        myContent = [
-				    "<!DOCTYPE html>",
-					"<html lang='en'>",
-					"<head>",
-					"<title>prev</title>",
-					"<meta charset='utf-8'>",
-					"<link rel='stylesheet' href='css/consolas.css'>",
-					"<link rel='stylesheet' href='css/basic.css'>",
-					"<script src='build/full.min.js'></script>",
-					/*"<script src='js/libs/three.min.js'></script>",
-					"<script src='js/libs/three.post.js'></script>",
-					"<script src='js/libs/sea3d.min.js'></script>",
-					"<script src='js/libs/tween.min.js'></script>",
-					"<script src='js/libs/gui.min.js'></script>",*/
-					options,
-					"<script src='build/v3d.min.js'></script>",
-					"</head><body class='"+this.mainClass+"'>",
-					"<script>",
-					"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
-					"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
-					"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
-					"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
-					value,
-					"</script>",
-					"</body></html>"
-				].join("\n");
 			}
 
 			this.previewDoc = this.preview.contentDocument || this.preview.contentWindow.document;

@@ -1,9 +1,14 @@
 var v = new V.View(180, 45, 130, true);
 v.mirror(600);
+
+var isShadeUpdated = false;
 var wheels = [];
 var doors = [];
 var shaders = [];
 var car, carM, carHide, shape, shapemin;
+
+var sky;// = new V.Skylab(v);
+
 v.tell('ammo car');
 // active keyboard
 v.nav.bindKeys();
@@ -14,6 +19,8 @@ loop();
 
 function loop(){
     v.render();
+    if(!isShadeUpdated){if(sky)if(sky.isRender)upShader();}
+    else sky.update();
     if(car) v.tell('ammo car '+ v.speeds[0] +'km/h');
     requestAnimationFrame( loop );
 }
@@ -83,6 +90,30 @@ function onload(){
 
     // init worker
     v.addWorker('ammo', onWorker);
+
+    sky = new V.Skylab(v);
+     
+}
+
+function upShader(){
+    var i = shaders.length;
+    while(i--){
+        shaders[i].envMap = v.environment//sky.env; 
+        
+        //shaders[i].map.needsUpdate = true;
+    }
+    v.mat.shad_box.envMap = v.environment;
+    v.mat.shad_sphere.envMap = v.environment;
+    v.mat.shad_cylinder.envMap = v.environment;
+
+    v.mat.shad_box.reflectivity = 0.6;
+    v.mat.shad_cylinder.reflectivity = 0.6;
+    v.mat.shad_sphere.reflectivity = 0.6;
+
+    v.mat.shad_box.color.setHex(0xEEEEEE);
+    v.mat.shad_cylinder.color.setHex(0xEEEEEE);
+    v.mat.shad_sphere.color.setHex(0xEEEEEE);
+    isShadeUpdated = true;
 }
 
 function onWorker(){

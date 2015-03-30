@@ -54,6 +54,7 @@ V.View = function(h,v,d, loadbasic){
     this.loader = loader;
 
     this.renderer = new THREE.WebGLRenderer({canvas:canvas, precision:"mediump", antialias:true, alpha:true, stencil:false });
+    //logarithmicDepthBuffer: true
     //this.renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha: true });
     this.renderer.setSize( this.dimentions.w, this.dimentions.h );
     this.renderer.setPixelRatio( window.devicePixelRatio );
@@ -476,7 +477,7 @@ V.Nav = function(parent, h, v, d){
 	this.cursor = new V.Cursor();
     this.lockView = false;
 
-	this.camera = new THREE.PerspectiveCamera( V.Resolution.f, this.root.dimentions.r, 0.1, 1000 );
+	this.camera = new THREE.PerspectiveCamera( V.Resolution.f, this.root.dimentions.r, 0.1, 2000 );
 	this.mouse3d = new THREE.Vector3();
 	this.selectName = '';
 
@@ -484,7 +485,7 @@ V.Nav = function(parent, h, v, d){
 	this.raycaster = new THREE.Raycaster();
 	this.target = new THREE.Vector3();
     this.position = new THREE.Vector3();
-	this.cam = { horizontal:h||0, vertical:v||90, distance:d||20, automove:false, theta:0 };
+	this.cam = { horizontal:h||0, vertical:v||90, distance:d||20, automove:false, theta:0, phi:0 };
     this.mouse = { x:0, y:0, ox:0, oy:0, h:0, v:0, mx:0, my:0, px:0, py:0, pz:0, r:0, down:false, move:true, button:0 };
     this.key = { up:0, down:0, left:0, right:0, ctrl:0, action:0, space:0, shift:0 };
 
@@ -523,8 +524,9 @@ V.Nav.prototype = {
         var d = this.cam.distance;
         var phi = this.cam.vertical*V.ToRad;
         var theta = this.cam.horizontal*V.ToRad;
-        this.cam.theta = theta;
         phi = Math.max( this.EPS, Math.min( Math.PI - this.EPS, phi ) );
+        this.cam.theta = theta;
+        this.cam.phi = phi;
         p.x = d * Math.sin(phi) * Math.cos(theta);
         p.y = d * Math.cos(phi);
         p.z = d * Math.sin(phi) * Math.sin(theta);

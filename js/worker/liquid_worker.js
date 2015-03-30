@@ -74,12 +74,14 @@ W.Sim.prototype = {
 	init:function(data){
 	    // timeStep, velocityIterations, positionIterations
 		this.d = data.d || [0.01667, 8, 3];
+		//this.d = data.d || [0.01667, 10, 10];
 		this.gravity = new b2Vec2(0, -10);
 		world = new b2World( this.gravity, data.sleep || false );
+		//world.SetAutoClearForces(true);
 	},
 	step:function(){
 		var p = this.p, d = this.d, i, id, b, pos, id2;
-		world.Step(d[0], d[1], d[2]);
+		//world.Step(d[0], d[1], d[2]);
 		//i = world.bodies.length;//
 		i = this.bodys.length;
 		while(i--){
@@ -87,12 +89,8 @@ W.Sim.prototype = {
 			b = this.bodys[i];
 			pos = b.GetPosition();
 			id=i*4;
-			/*ar[id] = pos.x.toFixed(p)*1;
-			ar[id+1] = pos.y.toFixed(p)*1;
-			ar[id+2] = -b.GetAngle().toFixed(p)*1;*/
 
-
-
+			//this.killLinearVelocity(b);
 			id2 = 2*i;
             var pold = new b2Vec2(oldPos[id2], oldPos[id2+1]);
             var direction = new b2Vec2();
@@ -107,14 +105,16 @@ W.Sim.prototype = {
             b2Vec2.MulScalar(impulse, direction, t);
             // le limiteur de vitesse final
             if(impulse.Length() < 10) b.SetLinearVelocity(impulse);
-            //if(impulse.Length() < 10) b.ApplyForceToCenter(impulse, true);*/
+            //if(impulse.Length() < 10) b.ApplyForceToCenter(impulse, true);
+            oldPos[id2] = pos.x;
+            oldPos[id2+1] = pos.y;
+            
 
             ar[id] = pos.x.toFixed(p)*W.SCALE;
 			ar[id+1] = pos.y.toFixed(p)*W.SCALE;
 			ar[id+2] = -b.GetAngle().toFixed(p)*1;
 
-            oldPos[id2] = pos.x;
-            oldPos[id2+1] = pos.y;
+            
 
 
 			//ar[id+3] = b.IsActive();
@@ -140,6 +140,9 @@ W.Sim.prototype = {
 		    }
 	    }
 
+	    world.Step(d[0], d[1], d[2]);
+	    //world.ClearForces();
+
 	},
 	clear:function(){
 	    if (world !== null){
@@ -163,12 +166,27 @@ W.Sim.prototype = {
         fixtureDef.filter.categoryBits = obj.config[2] || this.groups[1];
         fixtureDef.filter.maskBits = obj.config[3] || this.groups[0];
 
+        fixtureDef.isSensor = obj.sensor || false;
+
         var bodyDef = new b2BodyDef();
 	    bodyDef.position = new b2Vec2(pos[0]*W.INV_SCALE, pos[2]*W.INV_SCALE);
 	    bodyDef.allowSleep = obj.canSleep || false;
 	    bodyDef.awake = true;
 	    bodyDef.bullet = obj.bullet || false; // prevented from tunneling
 	    bodyDef.fixedRotation = obj.fixRot || false; // no need rotation
+	    //bodyDef.linearDamping = obj.linear || 0;
+	    //bodyDef.angularDamping = obj.angular || 0.01;
+
+	    //console.log(bodyDef.linearDamping, bodyDef.angularDamping )
+
+	    /*if(bodyDef.bullet){
+	        bodyDef.linearDamping = 0.2;
+	        bodyDef.angularDamping = 10.0;
+	    }else{
+	        bodyDef.linearDamping = 4.0;
+	        bodyDef.angularDamping = 6.0;  
+	    }*/
+
 	    //bodyDef.doSleep = obj.canSleep || true; // never sleep
 	    bodyDef.type = fixtureDef.density <= 0.0 ? b2_staticBody : b2_dynamicBody;
 	    
@@ -186,6 +204,9 @@ W.Sim.prototype = {
 	    body.CreateFixtureFromDef(fixtureDef);
 
 	    if(!notAdd) this.bodys[this.bodys.length] = body;
+	},
+	killLinearVelocity:function(body){
+		if(body.GetLinearVelocity().x !== 0 || body.GetLinearVelocity().y !== 0) body.SetLinearVelocity(new b2Vec2(0,0));
 	},
 
 

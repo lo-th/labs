@@ -1,9 +1,10 @@
 [   
     "src/V.3d.js",
-    "src/V.gui.js",
-    "src/V.particles.js",
-    "src/V.pool.js",
     "src/V.postprocess.js",
+    "src/V.particles.js",
     "src/V.shaders.js",
-    "src/V.workers.js"
+    "src/V.skylab.js",
+    "src/V.workers.js",
+    "src/V.pool.js",
+    "src/V.gui.js"
 ]

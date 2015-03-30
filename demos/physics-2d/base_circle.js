@@ -24,7 +24,7 @@ function onWorker(){
 		sx = V.rand(0.1, 1);
 		x = V.rand(-20, 20);
 		y = V.rand(-20, 20);
-		v.add({type:'sphere', mass:1, pos:[x, sx, y], size:[sx,sx,sx]});
+		v.add({type:'sphere', mass:0.1, pos:[x, sx, y], size:[sx,sx,sx] });
 	}
 }
 

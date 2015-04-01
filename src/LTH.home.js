@@ -259,11 +259,8 @@ LTH.labsMenu.prototype = {
 	    var iner = document.createElement('div');
 	    iner.className = 'pinsin';
 
-	    console.log(this.demosIcones[r][n])
-
 	    iner.innerHTML = LTH.IconMicro(this.topColor, this.demosIcones[r][n]);
 	    pn.appendChild( iner );
-
 	    
 	    this.pins[id] = pn;
 	    this.pins[id].onclick = function(e){ 
@@ -293,7 +290,6 @@ LTH.IconMicro = function(color, type){
 	var width = 30;
 	var Kwidth = '0 0 30 30';
 	var t = [];
-	//t[0] = "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' preserveAspectRatio='none' x='0px' y='0px' width='"+width+"px' height='"+width+"px' viewBox='"+Kwidth+"';'><g id='Layer'>";
 	t[0] = "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' preserveAspectRatio='none' x='0px' y='0px' width='"+width+"px' height='"+width+"px' viewBox='"+Kwidth+"';'><g>";
 	switch(type){
 		case 0: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
@@ -313,7 +309,6 @@ LTH.IconMicro = function(color, type){
 		case 14: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
 		case 15: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
 	}
-	//t[2] = "<use xlink:href='#Layer'/></g></svg>";
 	t[2] = "</g></svg>";
 	return t.join("\n");
 }

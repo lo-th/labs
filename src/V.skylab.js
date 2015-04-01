@@ -133,11 +133,13 @@ turbidity:	 { type: "f", value:2 },
 reileigh:	 { type: "f", value:1 },
 mieCoefficient:	 { type: "f", value:0.005 },
 mieDirectionalG: { type: "f", value:0.8 },
-sunPosition: 	 { type: "v3", value: new THREE.Vector3() }
+sunPosition: 	 { type: "v3", value: new THREE.Vector3() },
+moonPosition: 	 { type: "v3", value: new THREE.Vector3() }
 },
 fs:[
 'uniform sampler2D skySampler;',
 'uniform vec3 sunPosition;',
+'uniform vec3 moonPosition;',
 'varying vec3 vWorldPosition;',
 
 'vec3 cameraPos = vec3(0., 0., 0.);',
@@ -149,6 +151,7 @@ fs:[
 'uniform float mieDirectionalG;',
 
 'vec3 sunDirection = normalize(sunPosition);',
+'vec3 moonDirection = normalize(moonPosition);',
 'float reileighCoefficient = reileigh;',
 
 // constants for atmospheric scattering

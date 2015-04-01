@@ -13,8 +13,9 @@ loop();
 
 function loop(){
     requestAnimationFrame( loop );
+    v.render();
     if(player){
-        player.update( v.clock.getDelta() );
+        player.update( v.delta );
         if(fullLoaded){
             var level = player.miniMap.level;
             //console.log(player.obj.position.y)
@@ -30,7 +31,7 @@ function loop(){
             }
         }
     }
-    v.render();
+    
 }
 
 V.deepShader={
@@ -348,9 +349,9 @@ V.Player.prototype = {
         v.nav.moveCamera()
     },
     update:function(delta){
-    	TWEEN.update();
+    	//TWEEN.update();
     	this.delta = delta;
-    	THREE.AnimationHandler.update( this.delta );
+    	//THREE.AnimationHandler.update( this.delta );
         this.move();
     },
     move:function(k) {

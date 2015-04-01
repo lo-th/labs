@@ -62,6 +62,7 @@ V.View = function(h,v,d, loadbasic){
     this.renderer.autoClear = false;
 
     this.clock = new THREE.Clock();
+    this.delta = 0;
 
     this.z = null;
     this.zones = [];
@@ -119,14 +120,14 @@ V.View.prototype = {
     constructor: V.View,
     render:function(){
         var i;
-        
+        this.delta = this.clock.getDelta();
         // worker test
         if(this.w && !this.isW){
             if(this.w.isReady){ this.wFun(); this.isW=true; }
         }
 
         // three animation update
-        THREE.AnimationHandler.update( this.clock.getDelta() );
+        THREE.AnimationHandler.update( this.delta );
 
         // serious update
         if(this.isWithSerious) this.renderer.resetGLState();

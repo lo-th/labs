@@ -2,6 +2,7 @@ var v = new V.View(180, 45, 100);
 v.tell('traffic simulation');
 v.mirror(300);
 var cars_geo = [];
+var cars_geo_high = [];
 
 var workerOn = false;
 //var ball = new THREE.Mesh( new THREE.SphereGeometry(2,12,10), new THREE.MeshBasicMaterial({color:0xFF3300}));
@@ -26,8 +27,8 @@ function loop(){
 function onload(){
 	var i = 14;
 	while(i--){
-		if(i<9) cars_geo[i] = v.pool.getGeometry('cars', 'car00'+(i+1), true);
-		else cars_geo[i] = v.pool.getGeometry('cars', 'car0'+(i+1), true);
+		if(i<9) cars_geo[i] = v.pool.getGeometry('cars', 'mcar00'+(i+1), true);
+		else cars_geo[i] = v.pool.getGeometry('cars', 'mcar0'+(i+1), true);
 	}
 
 	var canvas = document.createElement( 'canvas' );

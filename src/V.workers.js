@@ -13,6 +13,8 @@ V.Worker = function(parent, name){
     this.update = null;
     this.postMess = null;
 
+    this.testNewAmmo = window.top.main.useDirectDebug;
+
     var url, max, max2, max3, max4, nValue, nValue2, sourceURL;
     switch(this.name){
         case 'crowd':
@@ -52,7 +54,8 @@ V.Worker = function(parent, name){
             this.postMess = this.postOimo;
         break;
         case 'ammo':
-            url = 'js/worker/ammo_worker.js';
+            if(this.testNewAmmo) url = 'js/worker/ammo_worker_new.js';
+            else url = 'js/worker/ammo_worker.js';
             sourceURL = '../../js/libs/ammo.min.js';
             max = 1000;
             max2 = 20;
@@ -113,6 +116,8 @@ V.Worker.prototype = {
         var d = this.d;
         d[1] = d[0]-(Date.now()-d[2]);
         d[1] = d[1]<0 ? 0 : d[1];
+
+        //console.log(d[1])
 
         setTimeout(function(){
             this.d[2] = Date.now();
@@ -273,7 +278,7 @@ V.Worker.prototype = {
 
     },
     postAmmo:function(){
-        this.w.postMessage({m:'run', m2:this.msg, key:this.root.nav.key, ar:this.ar, dr:this.dr},[this.ar.buffer, this.dr.buffer]);
+        this.w.postMessage({m:'run', time:this.d[1], m2:this.msg, key:this.root.nav.key, ar:this.ar, dr:this.dr},[this.ar.buffer, this.dr.buffer]);
     },
 
 

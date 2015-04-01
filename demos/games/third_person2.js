@@ -13,8 +13,8 @@ loop();
 
 function loop(){
     requestAnimationFrame( loop );
-    if(player)player.update( v.clock.getDelta() );
     v.render();
+    if(player)player.update( v.delta );
 }
 
 V.deepShader={
@@ -314,9 +314,9 @@ V.Player.prototype = {
         v.nav.moveCamera()
     },
     update:function(delta){
-    	TWEEN.update();
+    	//TWEEN.update();
     	this.delta = delta;
-    	THREE.AnimationHandler.update( this.delta );
+    	//THREE.AnimationHandler.update( this.delta );
         this.move();
     },
     move:function(k) {

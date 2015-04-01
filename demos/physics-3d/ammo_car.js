@@ -121,6 +121,7 @@ function onWorker(){
     var obj = {
         type:'c1gt',
         pos:[0,4,0],
+        rot:[0,30,0],
         size:[18.5,5,34.4],
         wPos:[7.9,centroidY,12],
         wRadius:3.4,
@@ -133,7 +134,7 @@ function onWorker(){
             engine:600, stiffness: 40, 
             relaxation: 0.85, compression: 0.82, 
             travel: 500, force: 6000, frictionSlip: 20.5, 
-            reslength: 0.1, roll: 0.1 
+            reslength: 0.1, roll: 0//.1 
         }
     };
 
@@ -143,7 +144,7 @@ function onWorker(){
 
     var x,y,z,tt;
     var sx,sy,sz;
-    for(var i = 0; i<100; i++){
+    for(var i = 0; i<60; i++){
         sx = V.rand(3, 8);
         sy = V.rand(3, 8);
         sz = V.rand(3, 8);

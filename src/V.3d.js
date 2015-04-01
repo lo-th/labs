@@ -33,7 +33,6 @@ V.randInt = function (a, b, n) { return V.lerp(a, b, Math.random()).toFixed(n ||
 V.randColor = function () { return '#'+Math.floor(Math.random()*16777215).toString(16);}
 
 V.MeshList = [ 'plane', 'sphere', 'skull', 'skullhigh', 'head', 'woman', 'babe'];
-
 V.Main = null;
 
 V.View = function(h,v,d, loadbasic){
@@ -78,6 +77,7 @@ V.View = function(h,v,d, loadbasic){
     this.scene.add(this.content);
     this.scene.add(this.skinned);
 
+    this.sky = null;
     this.environment = null;
     this.initGeo();
     this.initMat();
@@ -113,6 +113,8 @@ V.View = function(h,v,d, loadbasic){
 
     this.isWithSerious = false;
 
+    
+
 	window.onresize = function(e) {this.resize(e)}.bind(this);
 }
 
@@ -135,6 +137,8 @@ V.View.prototype = {
 		if(TWEEN)TWEEN.update();
 
         if(this.groundMirror) this.groundMirror.render();
+
+        if(this.sky) this.sky.update();
         
         // render
         if(this.postEffect!==null && this.postEffect.isActive){
@@ -161,6 +165,9 @@ V.View.prototype = {
         var precision   = Math.pow(10, nFractDigit);
         var i       = Math.floor(Math.log(bytes) / Math.log(1024));
         return Math.round(bytes*precision / Math.pow(1024, i))/precision + ' ' + sizes[i];
+    },
+    initSky:function(){
+        this.sky = new V.Skylab(this);
     },
     initGui:function(isWithModel){
         this.gui = new V.Gui(isWithModel);

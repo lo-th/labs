@@ -54,9 +54,13 @@ V.Worker = function(parent, name){
             this.postMess = this.postOimo;
         break;
         case 'ammo':
-            if(this.testNewAmmo) url = 'js/worker/ammo_worker_new.js';
-            else url = 'js/worker/ammo_worker.js';
-            sourceURL = '../../js/libs/ammo.min.js';
+            if(this.testNewAmmo){
+                url = 'js/worker/ammo_worker_new.js';
+                sourceURL = '../../js/libs/ammo.min.js';
+            } else {
+                url = 'js/worker/ammo_worker.js';
+                sourceURL = '../../js/libs/ammo.js';
+            }
             max = 1000;
             max2 = 20;
             max3 = 10;

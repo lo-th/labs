@@ -1,4 +1,6 @@
 var v = new V.View(180, 45, 130, true);
+v.initSky();
+v.sky.autocycle = true;
 v.mirror(600);
 
 var isShadeUpdated = false;
@@ -7,7 +9,7 @@ var doors = [];
 var shaders = [];
 var car, carM, carHide, shape, shapemin;
 
-var sky;// = new V.Skylab(v);
+//var sky;// = new V.Skylab(v);
 
 v.tell('ammo car');
 // active keyboard
@@ -19,8 +21,6 @@ loop();
 
 function loop(){
     v.render();
-    if(!isShadeUpdated){if(sky)if(sky.isRender)upShader();}
-    else sky.update();
     if(car) v.tell('ammo car '+ v.speeds[0] +'km/h');
     requestAnimationFrame( loop );
 }
@@ -90,30 +90,7 @@ function onload(){
 
     // init worker
     v.addWorker('ammo', onWorker);
-
-    sky = new V.Skylab(v);
      
-}
-
-function upShader(){
-    var i = shaders.length;
-    while(i--){
-        shaders[i].envMap = v.environment//sky.env; 
-        
-        //shaders[i].map.needsUpdate = true;
-    }
-    v.mat.shad_box.envMap = v.environment;
-    v.mat.shad_sphere.envMap = v.environment;
-    v.mat.shad_cylinder.envMap = v.environment;
-
-    v.mat.shad_box.reflectivity = 0.6;
-    v.mat.shad_cylinder.reflectivity = 0.6;
-    v.mat.shad_sphere.reflectivity = 0.6;
-
-    v.mat.shad_box.color.setHex(0xEEEEEE);
-    v.mat.shad_cylinder.color.setHex(0xEEEEEE);
-    v.mat.shad_sphere.color.setHex(0xEEEEEE);
-    isShadeUpdated = true;
 }
 
 function onWorker(){
@@ -139,7 +116,6 @@ function onWorker(){
     };
 
     v.w.post({m:'car', obj:obj });
-
     v.w.room({w:200, h:30, d:500, m:3});
 
     var x,y,z,tt;
@@ -156,4 +132,6 @@ function onWorker(){
         if(tt==1) v.add({type:'sphere', mass:0.1, pos:[x, y*(i*0.1), z], size:[sx*0.5,sx*0.5,sx*0.5]});
         if(tt==2) v.add({type:'cylinder', mass:0.1, pos:[x, y*(i*0.1), z], size:[sx*0.5,sy,sx*0.5]});
     }
+
+    console.log('ok')
 }

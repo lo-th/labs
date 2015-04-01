@@ -21,6 +21,7 @@
 	<demo n='seriously' lib='serious' ic='6'></demo>
 	<demo n='crowd_test' lib='' ic='12'></demo>
 	<demo n='human' lib='' ic='7'></demo>
+	<demo n='skylab' lib='' ic='0'></demo>
 </rubrique>
 <rubrique n='tests' color='CAD33C'>
 	<demo n='liquid_mesh' lib='' ic='0'></demo>
@@ -37,10 +38,10 @@
 	<demo n='adv_liquid' lib='' ic='10'></demo>
 </rubrique>
 <rubrique n='physics-3d' color='026AF6'>
-	<demo n='oimo_basic' lib='' ic='0'></demo>
-	<demo n='adv_liquid' lib='' ic='0'></demo>
-	<demo n='adv_liquid_2' lib='' ic='0'></demo>
-	<demo n='ammo_basic' lib='' ic='0'></demo>
-	<demo n='ammo_car' lib='' ic='9'></demo>
+	<demo n='oimo_basic' lib='' ic='0' b='1'></demo>
+	<demo n='adv_liquid' lib='' ic='0' b='1'></demo>
+	<demo n='adv_liquid_2' lib='' ic='0' b='1'></demo>
+	<demo n='ammo_basic' lib='' ic='0' b='2'></demo>
+	<demo n='ammo_car' lib='' ic='9' b='2'></demo>
 </rubrique>
 </menu>

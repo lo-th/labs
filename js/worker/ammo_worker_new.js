@@ -32,8 +32,8 @@ var time = 0;
 self.onmessage = function (e) {
 	var m = e.data.m;
 	if(m==='init'){
-		//importScripts(e.data.url);
-		importScripts("../../js/libs/ammo.min.last.js");
+		importScripts(e.data.url);
+		//importScripts("../../js/libs/ammo.js");
 		self.postMessage({init:true});
 	}
 	if(m === 'room') world.room(e.data.obj);

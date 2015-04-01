@@ -9,6 +9,7 @@ V.Skylab = function(parent){
 	this.root = parent;
 	this.env = null;
 	this.isRender = false;
+	this.autocycle = false;
 
 	this.settings = {
 		distance:400000,
@@ -30,12 +31,16 @@ V.Skylab.prototype = {
     constructor: V.Skylab,
     init:function(){
 
-    	this.position = new THREE.Vector3(0,0,0.6);
+    	this.position = new THREE.Vector3();
 		this.target = new THREE.Vector3();
 
 		var pars = { minFilter: THREE.LinearMipmapLinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat };
     	this.root.environment = new THREE.WebGLRenderTarget(256,256,pars);
     	this.root.environment.mapping = THREE.SphericalReflectionMapping;
+
+    	this.root.mat.shad_box.envMap = this.root.environment;
+    	this.root.mat.shad_sphere.envMap = this.root.environment;
+    	this.root.mat.shad_cylinder.envMap = this.root.environment
 
     	//this.env = new THREE.WebGLRenderTarget(256,256,pars);
     	//this.env.mapping = THREE.SphericalReflectionMapping;
@@ -47,7 +52,9 @@ V.Skylab.prototype = {
 			fragmentShader: skyShader.fs,
 			vertexShader: skyShader.vs,
 			uniforms: this.uniforms,
-			side: THREE.BackSide
+			side: THREE.BackSide,
+			//depthTest:false, 
+			depthWrite:false
 		});
 		
 		/*var distance = 1000;
@@ -65,7 +72,10 @@ V.Skylab.prototype = {
 
     	this.skytest = new THREE.Mesh(new THREE.BufferGeometry().fromGeometry( new THREE.SphereGeometry(800, 20, 12) ), this.material);
     	this.scene = new THREE.Scene();
-		this.camera = new THREE.PerspectiveCamera( 60, 1, 0.1, 5 );
+
+    	var s = 1;
+    	this.camera = new THREE.OrthographicCamera( -s, s, s, -s, 0.1, 2 );
+		//this.camera = new THREE.PerspectiveCamera( 120, 1, 0.1, 5 );
 		
 		this.scene.add(this.camera);
 		this.scene.add(this.sky);
@@ -85,25 +95,27 @@ V.Skylab.prototype = {
     },
     orbit:function(){
         var p = this.position;
-        var d = 0.9;
+        var d = 1;
         var phi = this.root.nav.cam.phi+V.PI;
-        var theta = this.root.nav.cam.theta+V.PI;
+        var theta = this.root.nav.cam.theta;//+V.PI;
         p.x = d * Math.sin(phi) * Math.cos(theta);
         p.y = d * Math.cos(phi);
         p.z = d * Math.sin(phi) * Math.sin(theta);
+        this.camera.position.copy(this.position);
+        this.camera.lookAt(this.target);
         //p.add(this.target);
     },
     update:function(){
     	//var r = this.root.nav.camera.quaternion;
     	//this.sky.rotation.y =  -this.root.nav.cam.theta;
     	//this.skytest.rotation.y =  -this.root.nav.cam.theta//quaternion.copy(r);
-    	this.settings.elevation -= 0.001;
-    	if(this.settings.elevation >1) this.settings.elevation  = -1.0;
-    	if(this.settings.elevation <-1) this.settings.elevation  = 1.0;
+    	if(this.autocycle){
+    		this.settings.elevation -= 0.001;
+    		if(this.settings.elevation >1) this.settings.elevation  = -1.0;
+    		if(this.settings.elevation <-1) this.settings.elevation  = 1.0;
+    	}
     	this.sunPosition();
     	this.orbit();
-        this.camera.position.copy(this.position);
-        this.camera.lookAt(this.target);
     	this.render();
     },
     render:function(){

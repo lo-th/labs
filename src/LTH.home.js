@@ -115,7 +115,7 @@ LTH.labsMenu.prototype = {
 	findRubrique:function(angle){
 		var i=this.nRubriques;
 		while(i--){
-			if(angle<this.anglesEnd[i] && angle>this.anglesStart[i]) this.current =this.rubNames[i];
+			if(angle<this.anglesEnd[i] && angle>this.anglesStart[i]) this.current = this.rubNames[i];
 		}
 	},
 	compute:function(){
@@ -259,6 +259,8 @@ LTH.labsMenu.prototype = {
 	    var iner = document.createElement('div');
 	    iner.className = 'pinsin';
 
+	    console.log(this.demosIcones[r][n])
+
 	    iner.innerHTML = LTH.IconMicro(this.topColor, this.demosIcones[r][n]);
 	    pn.appendChild( iner );
 
@@ -291,7 +293,8 @@ LTH.IconMicro = function(color, type){
 	var width = 30;
 	var Kwidth = '0 0 30 30';
 	var t = [];
-	t[0] = "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' preserveAspectRatio='none' x='0px' y='0px' width='"+width+"px' height='"+width+"px' viewBox='"+Kwidth+"';'><g id='Layer'>";
+	//t[0] = "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' preserveAspectRatio='none' x='0px' y='0px' width='"+width+"px' height='"+width+"px' viewBox='"+Kwidth+"';'><g id='Layer'>";
+	t[0] = "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' preserveAspectRatio='none' x='0px' y='0px' width='"+width+"px' height='"+width+"px' viewBox='"+Kwidth+"';'><g>";
 	switch(type){
 		case 0: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
 		case 1: t[1]="<path fill='#"+color+"' d='M 26 16 L 26 14 22 14 22 10 20 8 16 8 16 4 14 4 14 8 10 8 8 10 8 14 4 14 4 16 8 16 8 20 10 22 14 22 14 26 16 26 16 22 20 22 22 20 22 16 26 16 M 19 10 L 20 11 20 19 19 20 11 20 10 19 10 11 11 10 19 10 Z'/>";break;
@@ -310,6 +313,7 @@ LTH.IconMicro = function(color, type){
 		case 14: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
 		case 15: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
 	}
-	t[2] = "<use xlink:href='#Layer'/></g></svg>";
+	//t[2] = "<use xlink:href='#Layer'/></g></svg>";
+	t[2] = "</g></svg>";
 	return t.join("\n");
 }

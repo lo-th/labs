@@ -56,10 +56,10 @@ V.Worker = function(parent, name){
         case 'ammo':
             if(this.testNewAmmo){
                 url = 'js/worker/ammo_worker_new.js';
-                sourceURL = '../../js/libs/ammo.min.js';
+                sourceURL = '../../js/libs/ammo.js';
             } else {
                 url = 'js/worker/ammo_worker.js';
-                sourceURL = '../../js/libs/ammo.js';
+                sourceURL = '../../js/libs/ammo.min.js';
             }
             max = 1000;
             max2 = 20;

@@ -563,6 +563,7 @@ AMMO.Vehicle = function(obj, Parent){
 	this.size = obj.size || [1,1,1];
 	this.pos = obj.pos || [0,0,0];
 	this.rot = obj.rot || [0,0,0];
+	this.quat = obj.quat || [0,0,0,0];
 	this.phy = obj.phy || [0.5,0];
 	this.limiteY = obj.limiteY || 20;
 	this.massCenter = obj.massCenter || [0,0.05,0];
@@ -619,21 +620,28 @@ AMMO.Vehicle = function(obj, Parent){
     localTrans.setOrigin(AMMO.V3(this.massCenter[0],this.massCenter[1],this.massCenter[2]));
     this.compound.addChildShape(localTrans, this.shape);
 
-    this.transform = new Ammo.btTransform();
+    /*this.transform = new Ammo.btTransform();
     this.transform.setIdentity();
     // position
 	this.transform.setOrigin(AMMO.V3(this.pos[0], this.pos[1], this.pos[2], true));
 	// rotation
 	var q = new Ammo.btQuaternion();
 	q.setEulerZYX(this.rot[2]*AMMO.TORAD,this.rot[1]*AMMO.TORAD,this.rot[0]*AMMO.TORAD);
-	this.transform.setRotation(q);
+	this.transform.setRotation(q);*/
+
+	var startTransform = new Ammo.btTransform();
+    startTransform.setIdentity();
+
+    // position and rotation
+    startTransform.setOrigin(AMMO.V3(this.pos[0], this.pos[1], this.pos[2], true));
+    startTransform.setRotation(new Ammo.btQuaternion(this.quat[0], this.quat[1], this.quat[2], this.quat[3]));
 
 	this.mass = obj.mass || 400;
 
 	this.localInertia = AMMO.V3(0, 0, 0);
 	//this.shape.calculateLocalInertia(this.mass, this.localInertia);
 	this.compound.calculateLocalInertia(this.mass, this.localInertia);
-	this.motionState = new Ammo.btDefaultMotionState(this.transform);
+	this.motionState = new Ammo.btDefaultMotionState(startTransform);
 	//this.rbInfo = new Ammo.btRigidBodyConstructionInfo(this.mass, this.motionState, this.shape, this.localInertia);
 	this.rbInfo = new Ammo.btRigidBodyConstructionInfo(this.mass, this.motionState, this.compound, this.localInertia);
 	
@@ -652,7 +660,9 @@ AMMO.Vehicle = function(obj, Parent){
 
 	
 	//world.addRigidBody(this.body);
-	//this.body.activate();
+	this.body.activate();
+
+	//var rotation = body.getWorldTransform().getRotation();
 
     
 

@@ -309,10 +309,19 @@ V.View.prototype = {
         g.material = this.mat[obj.mat||'chaine']
         this.scene.add(g);
     },
+    quat:function(rot){
+        var q = new THREE.Quaternion();
+        q.setFromEuler(new THREE.Euler(rot[0]*V.ToRad,rot[1]*V.ToRad,rot[2]*V.ToRad));
+        return [q.x,q.y,q.z,q.w];
+    },
     add:function(obj){
         var m;
         obj.pos = obj.pos || [0,0,0];
         obj.size = obj.size || [1,1,1];
+        if(obj.rot){
+            obj.quad = this.quat(obj.rot);//new THREE.Quaternion();
+            //obj.quad.setFromEuler(new THREE.Euler(obj.rot[0]*V.ToRad,obj.rot[1]*V.ToRad,obj.rot[2]*V.ToRad), true);
+        }
         if(obj.type=='blob'){
             var position = new THREE.Vector3(obj.pos[0],obj.pos[1],obj.pos[2])
             m = new V.Blob(this, position, obj.size[0]*4);

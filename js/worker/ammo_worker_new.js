@@ -29,6 +29,8 @@ var prev = Date.now();
 var interval = null;
 var time = 0;
 
+var transform = null;
+
 self.onmessage = function (e) {
 	var m = e.data.m;
 	if(m==='init'){
@@ -130,9 +132,9 @@ AMMO.World = function(obj){
 	//this.mtx = new Float32Array(AMMO.MAX_BODY*8);
 	//this.jmtx = new Float32Array(AMMO.MAX_JOINT*8);
 	//this.mtxCar = new Float32Array(AMMO.MAX_CAR*(8+(8*AMMO.MAX_CAR_WHEEL)));
-
-	this.transform = new Ammo.btTransform();
-	this.transformCar = new Ammo.btTransform();
+	transform = new Ammo.btTransform();
+	//this.transform = new Ammo.btTransform();
+	//this.transformCar = new Ammo.btTransform();
 
 	this.last = 0;
 
@@ -270,15 +272,34 @@ AMMO.World.prototype = {
     	//dt = dt || 1;
     	//var now = Date.now();
     	//this.dt = now - this.last;
-    	var dtt = dt * 0.002;
-    	dtt = (dtt > 0.5 ? 0.5 : dtt);
+    	//var dtt = dt * 0.002;
+    	//dtt = (dtt > 0.5 ? 0.5 : dtt);
 
 
     	this.world.stepSimulation( this.dt, this.iteration );
     	
     	var i;
+    	var p = precission;
+    	var b, n, pos, rot;
     	i = this.BODYID;
-	    while (i--) { this.bodys[i].getMatrix(i); }
+	    while (i--) { 
+	    	n = i*8;
+	    	b = this.bodys[i];
+	    	b.body.getMotionState().getWorldTransform(transform);
+	    	pos = transform.getOrigin();
+	    	rot = transform.getRotation();
+	    	ar[n+0] = b.type;
+	    	ar[n+1] = pos.x().toFixed(p)*AMMO.WORLD_SCALE;
+	    	ar[n+2] = pos.y().toFixed(p)*AMMO.WORLD_SCALE;
+		    ar[n+3] = pos.z().toFixed(p)*AMMO.WORLD_SCALE;
+
+		    ar[n+4] = rot.x().toFixed(p)*1;
+		    ar[n+5] = rot.y().toFixed(p)*1;
+		    ar[n+6] = rot.z().toFixed(p)*1;
+		    ar[n+7] = rot.w().toFixed(p)*1;
+
+	    	//this.bodys[i].getMatrix(i); 
+	    }
 	    i = this.CARID;
 	    while (i--) { 
 	    	if(i==this.currentDrive) this.cars[i].drive();
@@ -395,17 +416,18 @@ AMMO.Rigid.prototype = {
 		if(this.parent == null ){ this.shape=shape; return;}
 
 
-		var transform = new Ammo.btTransform();
-		transform.setIdentity();
+		var startTransform = new Ammo.btTransform();
+		startTransform.setIdentity();
 		// position
-		transform.setOrigin(AMMO.V3A(pos));
+		startTransform.setOrigin(AMMO.V3A(pos));
+
 		// rotation
 		//var q = new Ammo.btQuaternion();
 		//var q = new Ammo.btMatrix3x3();
 		//q.setEulerZYX(rot[2]*AMMO.TORAD,rot[1]*AMMO.TORAD,rot[0]*AMMO.TORAD);
 		//q.setEuler(rot[2]*AMMO.TORAD,rot[1]*AMMO.TORAD,rot[0]*AMMO.TORAD);
 		//var q = new Ammo.btQuaternion(rot[2]*AMMO.TORAD,rot[1]*AMMO.TORAD,rot[0]*AMMO.TORAD);
-		var q = new Ammo.btQuaternion();//rot[1]*AMMO.TORAD,rot[1]*AMMO.TORAD,rot[2]*AMMO.TORAD, 0);
+		//var q = new Ammo.btQuaternion();//rot[1]*AMMO.TORAD,rot[1]*AMMO.TORAD,rot[2]*AMMO.TORAD, 0);
 		//q.setEuler(rot[1]*AMMO.TORAD,rot[1]*AMMO.TORAD,rot[2]*AMMO.TORAD);
 		//transform.setRotation(q);
 
@@ -422,7 +444,7 @@ AMMO.Rigid.prototype = {
 
 		var localInertia = AMMO.V3(0, 0, 0);
 		shape.calculateLocalInertia(mass, localInertia);
-		this.motionState = new Ammo.btDefaultMotionState(transform);
+		this.motionState = new Ammo.btDefaultMotionState(startTransform);
 
 		var rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, this.motionState, shape, localInertia);
 		rbInfo.set_m_friction(phy[0]);
@@ -458,15 +480,15 @@ AMMO.Rigid.prototype = {
     	//this.body.clearForces();
     	if(obj.pos){ this.body.getCenterOfMassTransform().setOrigin(AMMO.V3A(obj.pos));}
     	if(obj.rot){
-    		var q = new Ammo.btQuaternion(obj.rot[2]*AMMO.TORAD,obj.rot[1]*AMMO.TORAD,obj.rot[0]*AMMO.TORAD);
+    		//var q = new Ammo.btQuaternion(obj.rot[2]*AMMO.TORAD,obj.rot[1]*AMMO.TORAD,obj.rot[0]*AMMO.TORAD);
     		/*var q = new Ammo.btQuaternion();
     		q.setEulerZYX(obj.rot[2]*AMMO.TORAD,obj.rot[1]*AMMO.TORAD,obj.rot[0]*AMMO.TORAD);*/
-    		this.body.getCenterOfMassTransform().setRotation(q);
+    		//this.body.getCenterOfMassTransform().setRotation(q);
     	}
     },
     getMatrix:function(id){
     	//this.parent.transform
-    	var trans = new Ammo.btTransform();//this.parent.transform;//new Ammo.btTransform()
+    	//var trans = new Ammo.btTransform();//this.parent.transform;//new Ammo.btTransform()
     	var m = ar;
     	var n = id*8;
     	var p = precission;
@@ -487,16 +509,20 @@ AMMO.Rigid.prototype = {
 	    //var pos = trans.getOrigin();
 	    //var rot = trans.getRotation();
 
-	    this.body.getMotionState().getWorldTransform(this.parent.transform);
-	    var pos = this.parent.transform.getOrigin();
-	    var rot = this.parent.transform.getRotation();
+	    this.body.getMotionState().getWorldTransform(transform);
+	    var pos = transform.getOrigin();
+	    var rot = transform.getRotation();
+
+	    //var t = this.body.getWorldTransform();
+	    //var pos = t.getOrigin();
+	    //var rot = t.getRotation();
 
 	    /*var t = this.body.getWorldTransform();
 	    var pos = t.getOrigin();
 	    var rot = t.getRotation();
 	    */
 	    //if(id == 2) console.log(pos.x(), pos.y(), pos.z())
-
+	    //m[n+0] = 1;
 	    m[n+1] = pos.x().toFixed(p)*AMMO.WORLD_SCALE;
 	    m[n+2] = pos.y().toFixed(p)*AMMO.WORLD_SCALE;
 	    m[n+3] = pos.z().toFixed(p)*AMMO.WORLD_SCALE;
@@ -618,6 +644,7 @@ AMMO.Vehicle = function(obj, Parent){
 	this.size = obj.size || [1,1,1];
 	this.pos = obj.pos || [0,0,0];
 	this.rot = obj.rot || [0,0,0];
+	this.quat = obj.quat || [0,0,0,0];
 	this.phy = obj.phy || [0.5,0];
 	this.limiteY = obj.limiteY || 20;
 	this.massCenter = obj.massCenter || [0,0.05,0];
@@ -685,10 +712,19 @@ AMMO.Vehicle = function(obj, Parent){
     localTrans.setOrigin(AMMO.V3(this.massCenter[0],this.massCenter[1],this.massCenter[2]));
     this.compound.addChildShape(localTrans, this.shape);
 
-    this.transform = new Ammo.btTransform();
-    this.transform.setIdentity();
+    var startTransform = new Ammo.btTransform();
+    startTransform.setIdentity();
+
+    // position and rotation
+    startTransform.setOrigin(AMMO.V3(this.pos[0], this.pos[1], this.pos[2], true));
+    startTransform.setRotation(new Ammo.btQuaternion(this.quat[0], this.quat[1], this.quat[2], this.quat[3]));
+	       // rotation.setX(this.quat[0]);
+            //rotation.setY(this.quat[1]);
+            //rotation.setZ(this.quat[2]);
+            //rotation.setW(this.quat[3]);
     // position
-	this.transform.setOrigin(AMMO.V3(this.pos[0], this.pos[1], this.pos[2], true));
+    //this.position = new THREE.Vector3(this.pos[0], this.pos[1], this.pos[2]);
+	//this.transform.setOrigin(AMMO.V3(this.pos[0], this.pos[1], this.pos[2], true));
 	// rotation
 	//var q = new Ammo.btQuaternion();
 	//q.setEulerZYX(this.rot[2]*AMMO.TORAD,this.rot[1]*AMMO.TORAD,this.rot[0]*AMMO.TORAD);
@@ -696,12 +732,15 @@ AMMO.Vehicle = function(obj, Parent){
 	//var q = new Ammo.btQuaternion(this.rot[1]*AMMO.TORAD,this.rot[0]*AMMO.TORAD,this.rot[2]*AMMO.TORAD);
 	//this.transform.setRotation(q);
 
+	//this.q = obj.quad || null;// new THREE.Quaternion();
+	//this.q.setFromEuler(new THREE.Euler(this.rot[0]*AMMO.TORAD,this.rot[1]*AMMO.TORAD,this.rot[2]*AMMO.TORAD), true);
+
 	this.mass = obj.mass || 400;
 
 	this.localInertia = AMMO.V3(0, 0, 0);
 	//this.shape.calculateLocalInertia(this.mass, this.localInertia);
 	this.compound.calculateLocalInertia(this.mass, this.localInertia);
-	this.motionState = new Ammo.btDefaultMotionState(this.transform);
+	this.motionState = new Ammo.btDefaultMotionState(startTransform);
 	//this.rbInfo = new Ammo.btRigidBodyConstructionInfo(this.mass, this.motionState, this.shape, this.localInertia);
 	this.rbInfo = new Ammo.btRigidBodyConstructionInfo(this.mass, this.motionState, this.compound, this.localInertia);
 	
@@ -730,7 +769,7 @@ AMMO.Vehicle = function(obj, Parent){
     //this.chassis = world.localCreateRigidBody(50,tr,compound);
 	//this.chassis.setActivationState(AMMO.DISABLE_DEACTIVATION);
 
-	this.wheelShape = new Ammo.btCylinderShapeX(AMMO.V3( this.wDeepth , this.wRadius, this.wRadius));
+	//this.wheelShape = new Ammo.btCylinderShapeX(AMMO.V3( this.wDeepth , this.wRadius, this.wRadius));
 
     // create vehicle
     this.init();
@@ -787,7 +826,24 @@ AMMO.Vehicle.prototype = {
 		this.parent.world.addAction(this.vehicle);
         //this.parent.world.addVehicle(this.vehicle, this.wheelShape);
         this.parent.world.addRigidBody(this.body);
-	    this.body.activate();
+
+        /*var origin = this.body.getWorldTransform().getOrigin();
+        origin.setX(this.pos[0]);
+        origin.setY(this.pos[1]);
+        origin.setZ(this.pos[2])
+
+	    //this.body.activate();
+
+	    //if(this.q !== null){
+	    	//console.log('setrotation', this.q[0], this.q[1], this.q[2], this.q[3])
+	        var rotation = this.body.getWorldTransform().getRotation();
+	        rotation.setX(this.quat[0]);
+            rotation.setY(this.quat[1]);
+            rotation.setZ(this.quat[2]);
+            rotation.setW(this.quat[3]);*/
+        //}
+
+        this.body.activate();
     },
     addWheel:function( x,y,z, isFrontWheel ){
     	var wheel = this.vehicle.addWheel( AMMO.V3(x, y, z),this.wheelDir,this.wheelAxe,this.settings.reslength,this.wRadius,this.tuning,isFrontWheel);
@@ -811,7 +867,7 @@ AMMO.Vehicle.prototype = {
     	}
     },*/
     getMatrix:function(id){
-    	var trans = this.parent.transform;
+    	//var trans = this.parent.transform;
     	var m = dr;
     	var n = id*40;
     	var p = precission;
@@ -821,9 +877,12 @@ AMMO.Vehicle.prototype = {
 		//var t = this.body.getCenterOfMassTransform();
 		//var t = this.vehicle.getChassisWorldTransform(); 
 
-		this.body.getMotionState().getWorldTransform(trans);
-	    var pos = trans.getOrigin();
-	    var rot = trans.getRotation();
+		this.body.getMotionState().getWorldTransform(transform);
+	    var pos = transform.getOrigin();
+	    var rot = transform.getRotation();
+
+	    //var pos = this.body.getWorldTransform().getOrigin();
+	    //var rot = this.body.getWorldTransform().getRotation();
 
 		//var t = this.body.getWorldTransform(); 
 	    //var rot = t.getRotation();

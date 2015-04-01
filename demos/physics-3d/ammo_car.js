@@ -99,6 +99,7 @@ function onWorker(){
         type:'c1gt',
         pos:[0,4,0],
         rot:[0,30,0],
+        quat:[0,0,0,0],
         size:[18.5,5,34.4],
         wPos:[7.9,centroidY,12],
         wRadius:3.4,
@@ -114,6 +115,8 @@ function onWorker(){
             reslength: 0.1, roll: 0//.1 
         }
     };
+
+    obj.quat = v.quat(obj.rot);
 
     v.w.post({m:'car', obj:obj });
     v.w.room({w:200, h:30, d:500, m:3});
@@ -132,6 +135,4 @@ function onWorker(){
         if(tt==1) v.add({type:'sphere', mass:0.1, pos:[x, y*(i*0.1), z], size:[sx*0.5,sx*0.5,sx*0.5]});
         if(tt==2) v.add({type:'cylinder', mass:0.1, pos:[x, y*(i*0.1), z], size:[sx*0.5,sy,sx*0.5]});
     }
-
-    console.log('ok')
 }

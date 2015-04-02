@@ -6,12 +6,12 @@ v.mirror(600);
 var isShadeUpdated = false;
 var wheels = [];
 var doors = [];
-var shaders = [];
+var shaders = {};
 var car, carM, carHide, shape, shapemin;
 
 //var sky;// = new V.Skylab(v);
 
-v.tell('ammo car');
+v.tell('AMMO CAR<br>Use keyboard to drive');
 // active keyboard
 v.nav.bindKeys();
 // load car model
@@ -21,7 +21,7 @@ loop();
 
 function loop(){
     v.render();
-    if(car) v.tell('ammo car '+ v.speeds[0] +'km/h');
+    //if(car) v.tell('ammo car '+ v.speeds[0] +'km/h');
     requestAnimationFrame( loop );
 }
 
@@ -48,24 +48,25 @@ function onload(){
         if(m == 'shape_min') shapemin = mesh;
     }
 
-     // create new materials
-    shaders[0] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.6, map:map.body, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// body
-    shaders[1] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.6, map:map.door, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// door
-    shaders[2] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.9, map:map.body, transparent:true, color:0xFFFFFF, side:THREE.DoubleSide });// glass
-    shaders[3] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.4, map:map.wheel, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// wheel
-    shaders[4] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.2, map:map.interior, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// interior
-    shaders[5] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.4, map:map.headLight, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });// headLight
-    shaders[6] = new THREE.MeshBasicMaterial({ envMap:v.environment, reflectivity:0.4, color:0x333333 });
+    // create new materials
+    shaders['body'] = v.material.basic({ envMap:v.environment, reflectivity:0.6, map:map.body, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });
+    shaders['door'] = v.material.basic({ envMap:v.environment, reflectivity:0.6, map:map.door, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });
+    shaders['glass'] = v.material.basic({ envMap:v.environment, reflectivity:0.9, map:map.body, transparent:true, color:0xFFFFFF, side:THREE.DoubleSide });
+    shaders['wheel'] = v.material.basic({ envMap:v.environment, reflectivity:0.4, map:map.wheel, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });
+    shaders['interior'] = v.material.basic({ envMap:v.environment, reflectivity:0.2, map:map.interior, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });
+    shaders['headLight'] = v.material.basic({ envMap:v.environment, reflectivity:0.4, map:map.headLight, transparent:false, color:0xFFFFFF, side:THREE.FrontSide });
+    shaders['other'] = v.material.basic({ envMap:v.environment, reflectivity:0.4, color:0x333333 });
+
     // apply material
     for(var m in v.pool.meshes.c1gt){
         mesh = v.pool.meshes.c1gt[m];
-        if(m == 'body' || m == 'hood' || m == 'MotorAndBorder' || m == 'bottomCar') mesh.material = shaders[0];
-        else if(m == 'doorLeft' || m == 'doorRight') mesh.material = shaders[1];
-        else if(m == 'glass' || m == 'doorGlassRight' || m == 'doorGlassLeft' || m == 'trunk') mesh.material = shaders[2];
-        else if(m == 'wheel_av_l' || m == 'wheel_av_r'|| m == 'wheel_ar_l'|| m == 'wheel_ar_r') mesh.material = shaders[3];
-        else if(m == 'interior') mesh.material = shaders[4];
-        else if(m == 'headLight') mesh.material = shaders[5];
-        else mesh.material = shaders[6];
+        if(m == 'body' || m == 'hood' || m == 'MotorAndBorder' || m == 'bottomCar') mesh.material = shaders.body;
+        else if(m == 'doorLeft' || m == 'doorRight') mesh.material = shaders.door;
+        else if(m == 'glass' || m == 'doorGlassRight' || m == 'doorGlassLeft' || m == 'trunk') mesh.material = shaders.glass;
+        else if(m == 'wheel_av_l' || m == 'wheel_av_r'|| m == 'wheel_ar_l'|| m == 'wheel_ar_r') mesh.material = shaders.wheel;
+        else if(m == 'interior') mesh.material = shaders.interior;
+        else if(m == 'headLight') mesh.material = shaders.headLight;
+        else mesh.material = shaders.other;
     }
 
     var s = 0.2;
@@ -79,7 +80,7 @@ function onload(){
     v.cars.push(car);
 
     var j = 4;
-    var tt = new THREE.MeshBasicMaterial({color:0x00FF00})
+    //var tt = new THREE.MeshBasicMaterial({color:0x00FF00})
     while(j--){
         wheels[j].scale.set(s, s, -s);
         v.wheels[j] = wheels[j];

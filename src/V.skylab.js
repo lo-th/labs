@@ -73,7 +73,7 @@ V.Skylab.prototype = {
     	this.skytest = new THREE.Mesh(new THREE.BufferGeometry().fromGeometry( new THREE.SphereGeometry(800, 20, 12) ), this.material);
     	this.scene = new THREE.Scene();
 
-    	var s = 1;
+    	var s = 0.7;
     	this.camera = new THREE.OrthographicCamera( -s, s, s, -s, 0.1, 2 );
 		//this.camera = new THREE.PerspectiveCamera( 120, 1, 0.1, 5 );
 		
@@ -95,7 +95,7 @@ V.Skylab.prototype = {
     },
     orbit:function(){
         var p = this.position;
-        var d = 1;
+        var d = 0.7;
         var phi = this.root.nav.cam.phi+V.PI;
         var theta = this.root.nav.cam.theta;//+V.PI;
         p.x = d * Math.sin(phi) * Math.cos(theta);
@@ -125,6 +125,21 @@ V.Skylab.prototype = {
     }
 }
 
+/**
+ * @author zz85 / https://github.com/zz85
+ *
+ * Based on "A Practical Analytic Model for Daylight"
+ * aka The Preetham Model, the de facto standard analytic skydome model
+ * http://www.cs.utah.edu/~shirley/papers/sunsky/sunsky.pdf
+ *
+ * First implemented by Simon Wallner
+ * http://www.simonwallner.at/projects/atmospheric-scattering
+ *
+ * Improved by Martin Upitis
+ * http://blenderartists.org/forum/showthread.php?245954-preethams-sky-impementation-HDR
+ *
+ * Three.js integration by zz85 http://twitter.com/blurspline
+*/
 
 V.Sky = {
 uniforms:{

@@ -91,6 +91,7 @@ LTH.labsMenu.prototype = {
 		this.content.onmousemove = function(e){this.mouseMove(e)}.bind(this);
 	},
 	mouseMove:function(e){
+		if(!this.main.menu.isHome) return;
 		var x = e.clientX - (window.innerWidth*0.5);
 		var y = e.clientY - (window.innerHeight*0.5);
 		var angle = Math.atan2(x, -y );
@@ -104,6 +105,8 @@ LTH.labsMenu.prototype = {
 			if(this.current!==null){
 				this.title.style.background = this.arcs[this.current].color;
 			    this.title.innerHTML = (this.current.replace("-", " ")).toUpperCase();
+
+			    this.main.menu.changeBackLogoColor(this.arcs[this.current].color);
 			}
 		} else {
 			this.current = null;

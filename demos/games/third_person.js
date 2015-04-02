@@ -1,12 +1,15 @@
 var v = new V.View(90, 80, 10);
+v.initSky();
+v.sky.autocycle = true;
 var geo = [];
+var shaders = {};
 var player;
 
-v.tell('third person');
+v.tell('Third person<br>Move with keyboard and mouse');
 // active keyboard
 v.nav.bindKeys();
-var env = new V.Environment();
-var envbase = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
+//var env = new V.Environment();
+//var envbase = THREE.ImageUtils.loadTexture( 'images/spherical/e_chrome.jpg');
 var fullLoaded = false;
 
 loop();
@@ -578,7 +581,19 @@ function onload(){
     tx3.flipY = false;
     tx4.flipY = false;
 
-    var material0 = new V.Shader('Spherical', { map:tx0, env:envbase, useMap:1, reflection:0.2, transparent:false });
+    // create new materials
+    shaders['facade'] = v.material.basic({map:tx0, envMap:v.environment, reflectivity:0.6});
+    shaders['elevator'] = v.material.basic({map:tx1, envMap:v.environment, reflectivity:0.6});
+    shaders['floor'] = v.material.basic({map:tx2, envMap:v.environment, reflectivity:0.6});
+    shaders['bigwall'] = v.material.basic({map:tx3, envMap:v.environment, reflectivity:0.6});
+    shaders['floor2'] = v.material.basic({map:tx4, envMap:v.environment, reflectivity:0.6});
+    shaders['facade_w'] = v.material.basic({map:tx0, envMap:v.environment, reflectivity:0.8, transparent:true, side:THREE.DoubleSide});
+    shaders['elevator_w'] = v.material.basic({map:tx1, envMap:v.environment, reflectivity:0.8, transparent:true, side:THREE.DoubleSide });
+
+
+
+
+    /*var material0 = new V.Shader('Spherical', { map:tx0, env:envbase, useMap:1, reflection:0.2, transparent:false });
     var material1 = new V.Shader('Spherical', { map:tx1, env:envbase, useMap:1, reflection:0.2, transparent:false });
     var material2 = new V.Shader('Spherical', { map:tx2, env:envbase, useMap:1, reflection:0.2 });
     var material3 = new V.Shader('Spherical', { map:tx3, env:envbase, useMap:1, reflection:0.2 });
@@ -592,7 +607,7 @@ function onload(){
     env.add(material3);
     env.add(material4);
     env.add(material5);
-    env.add(material6);
+    env.add(material6);*/
     
     var names = ['facade', 'elevator','facade_w','elevator_w','floor','bigwall', 'floor2'];
     var i = names.length, m, name;
@@ -601,16 +616,17 @@ function onload(){
         m = v.pool.meshes.museum[names[i]];
         m.scale.set(sc,sc,-sc);
         m.position.y = decal;
+        m.material = shaders[m.name];
         v.scene.add(m);
 
-        if(m.name == "facade"){ m.material = material0; }
+        /*if(m.name == "facade"){ m.material = material0; }
         if(m.name == "elevator"){ m.material = material1; }
         if(m.name == "facade_w"){ m.material = material4; }
         if(m.name == "elevator_w"){ m.material = material5;}
 
         if(m.name == "floor"){ m.material = material2;  }
         if(m.name == "floor2"){ m.material = material6;  }
-        if(m.name == "bigwall"){ m.material = material3;  }
+        if(m.name == "bigwall"){ m.material = material3;  }*/
 
     }
 
@@ -625,11 +641,14 @@ function onloadNext(){
 	var map = model.material.map;
 	var size = 0.023, morph = false;
 	if(modelName=='droid'){ size = 0.01; morph = true; }
-	var material = new V.Shader('Spherical', {skinning:true, morphTargets:morph, map:map, env:envbase, useMap:1, reflection:0.6});
 
-	env.add(material);
+    shaders['heroes'] = v.material.basic({skinning:true, morphTargets:morph, map:map, envMap:v.environment, reflectivity:0.6 });
 
-	model.material = material;
+	//var material = new V.Shader('Spherical', {skinning:true, morphTargets:morph, map:map, env:envbase, useMap:1, reflection:0.6});
+
+	//env.add(material);
+
+	model.material = shaders.heroes;//material;
 
 	player.addHero(model, size, modelName);
 }

@@ -1,4 +1,6 @@
 var v = new V.View(90, 45, 130);
+v.initSky();
+v.sky.autocycle = true;
 v.tell('infinite terrain<br><br>Move with keyboard<br>Shift to run');
 v.nav.bindKeys();
 
@@ -9,7 +11,7 @@ v.scene.add(ball);
 var key;
 var x = 0;
 var y = 0;
-var env = new V.Environment();
+//var env = new V.Environment();
 var envUp = false;
 var terrain = new TERRAIN.Generate(v)
 

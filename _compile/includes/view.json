@@ -1,5 +1,6 @@
 [   
     "src/V.3d.js",
+    "src/V.material.js",
     "src/V.postprocess.js",
     "src/V.particles.js",
     "src/V.shaders.js",

@@ -113,6 +113,8 @@ V.View = function(h,v,d, loadbasic){
 
     this.isWithSerious = false;
 
+    this.material = new V.Material(this);
+
     
 
 	window.onresize = function(e) {this.resize(e)}.bind(this);

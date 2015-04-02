@@ -34,6 +34,7 @@ LTH.Menu = function(main){
 	this.currentLink = null;
 	this.zone = null;
 	this.logo = null;
+	this.logoBack = null;
 
 	this.isMenu = false;
 	this.isHome = false;
@@ -67,16 +68,26 @@ LTH.Menu.prototype = {
 	initLogo:function(){
 		this.content.appendChild( this.main.labmenu.content );
 
+		this.logoBack = this.doc.createElement('div');
+		this.logoBack.className = 'logo';
+		this.logoBack.style.pointerEvents = 'none';
+		this.logoBack.innerHTML = LTH.LogosBack();
+
 		this.logo = this.doc.createElement('div');
 		this.logo.className = 'logo';
-		this.content.appendChild( this.logo );
 		this.logo.innerHTML = LTH.Logos(this.baseColor);
 		this.title = this.doc.createElement('div');
+
+		this.content.appendChild( this.logoBack );
+		this.content.appendChild( this.logo );
 		
 		this.title.className = 'title';
 		this.content.appendChild( this.title );
 		this.title.innerHTML = 'WELCOME<br>LOADING CODES';
 		this.miniLogos();
+	},
+	changeBackLogoColor:function(color){
+		this.logoBack.innerHTML = LTH.LogosBack(color);
 	},
 	initHomeland:function(isOK){
 		if(isOK){
@@ -152,6 +163,8 @@ LTH.Menu.prototype = {
 	initHome:function(){
 		this.doc.body.onmousemove = function(e){return false;};
 		this.logo.className = 'logo';
+		this.logoBack.className = 'logo';
+
 		this.content.className = 'menu home';
 		this.title.style.top = '50%';
 
@@ -198,7 +211,7 @@ LTH.Menu.prototype = {
 		this.clearDiv(this.leftMenu);
 		this.content.removeChild(this.leftMenu);
 		this.content.removeChild(this.zone);
-		this.content.removeChild(this.topColor);
+		//this.content.removeChild(this.topColor);
 		this.icons = [];
 		this.files = [];
 		this.buttons = [];
@@ -208,6 +221,7 @@ LTH.Menu.prototype = {
 		this.doc.body.onmousemove = function(e){this.showHideMenu(e)}.bind(this);
 		this.content.className = 'menu exemple';
 		this.logo.className = 'logo lmin';
+		this.logoBack.className = 'logo lmin';
 
 		var mode = 'basic';
 		if(LTH.rubriques[LTH.cRubr] === "shaders") mode = 'shader';
@@ -246,10 +260,10 @@ LTH.Menu.prototype = {
 	    this.zone.ondrop = function(e){_this.zoneDrop(e)};
 	},
 	initButton:function(){
-		this.topColor = this.doc.createElement('div');
+		/*this.topColor = this.doc.createElement('div');
 		this.topColor.className = 'topColor';
 		this.topColor.style.background = this.main.labmenu.colors[LTH.cRubr];
-		this.content.appendChild( this.topColor );
+		this.content.appendChild( this.topColor );*/
 		
 
 		this.leftMenu = this.doc.createElement('div');
@@ -537,6 +551,7 @@ LTH.Menu.prototype = {
 			if(c==='menu exemple In'){
 				this.content.className = 'menu exemple Out';
 				this.logo.className = 'logo lmin';
+				this.logoBack.className = 'logo lmin';
 				this.title.innerHTML = '';
 		    }
 		}
@@ -544,6 +559,7 @@ LTH.Menu.prototype = {
 			if(c==='menu exemple' || c==='menu exemple Out'){ 
 				this.content.className = 'menu exemple In';
 				this.logo.className = 'logo lmax';
+				this.logoBack.className = 'logo lmax';
 				this.title.innerHTML = LTH.rubriques[LTH.cRubr].toUpperCase();
 			}
 		}

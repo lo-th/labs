@@ -53,7 +53,7 @@ LTH.Main = function(){
 
 	this.useDirect = useDirect;
 	this.useDirectDebug = useDirectDebug;
-	this.menuSize = 60;
+	this.menuSize = 0;//60
 
 	this.doc = document;
 	this.doc.body.className = 'night';
@@ -315,6 +315,7 @@ LTH.Main.prototype = {
 						"<script src='src/three/dat.gui.js'></script>",
 						options,
 						"<script src='src/V.3d.js'></script>",
+						"<script src='src/V.material.js'></script>",
 						"<script src='src/V.postprocess.js'></script>",
 						"<script src='src/V.particles.js'></script>",
 						"<script src='src/V.shaders.js'></script>",
@@ -401,8 +402,8 @@ LTH.Main.prototype = {
 
 // --------
 
+
 LTH.Logos = function(color, blink){
-	
 	var eye = "<path id='Symbole_1_0_Layer0_1_1_STROKES' stroke='#"+color+"' stroke-width='3' stroke-linejoin='round' stroke-linecap='round' fill='none' d='M 19.85 53.5 Q 19.85 54.95 18.8 56 17.75 57.05 16.3 57.05 14.85 57.05 13.8 56 12.75 54.95 12.75 53.5 12.75 52.05 13.8 51 14.85 49.95 16.3 49.95 17.75 49.95 18.8 51 19.85 52.05 19.85 53.5 Z'/></defs>";
 	if(blink) eye = "<path id='Symbole_1_0_Layer0_1_1_STROKES' stroke='#"+color+"' stroke-width='3' stroke-linejoin='round' stroke-linecap='round' fill='none' d='M 11.5 55.8L 21.55 55.8'/></defs>";
 	var txt = [
@@ -418,7 +419,57 @@ LTH.Logos = function(color, blink){
 	"<g transform='matrix( 1, 0, 0, 1, 0,2.2) '><use xlink:href='#Symbole_1_0_Layer0_1_1_STROKES'/></g></g>",
 	"</g></svg>"
 	].join("\n");
+	return txt;
+}
 
+/*LTH.LogosBack = function(color){
+	color = color || '#000000';
+	var color2 = '#000000';
+	var txt = [
+	"<svg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' preserveAspectRatio='none' x='0px' y='0px' width='128px' height='128px' viewBox='0 0 128 128'><defs>",
+    "<radialGradient id='Gradient_1' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='50' fx='0' fy='-13' gradientTransform='matrix(1,0,0,1,64,64)' spreadMethod='pad'>",
+    "<stop offset='15%' stop-color='"+color+"' stop-opacity='0.8'/>",
+    //"<stop offset='27%' stop-color='"+color+"' stop-opacity='0'/>",
+    //"<stop offset='28%' stop-color='"+color+"' stop-opacity='0'/>",
+    "<stop offset='28%' stop-color='"+color+"' stop-opacity='0.2'/>",
+    "<stop offset='40%' stop-color='"+color2+"' stop-opacity='0.1'/>",
+    "<stop offset='70%' stop-color='"+color2+"' stop-opacity='0.1'/></radialGradient>",
+    "<radialGradient id='Gradient_2' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='64' fx='0' fy='-13' gradientTransform='matrix(1,0,0,1,64,64)' spreadMethod='pad'>",
+    "<stop offset='0%' stop-color='"+color2+"' stop-opacity='1'/>",
+    "<stop offset='60%' stop-color='"+color2+"' stop-opacity='0.1'/>",
+    "<stop offset='90%' stop-color='"+color2+"' stop-opacity='0'/></radialGradient>",
+    "<g id='bg'><path fill='url(#Gradient_1)' stroke='none' d='M 95.8 43 Q 94.75 32.25 86.25 24.15 77.65 15.9 64 16.25 50.35 15.9 41.75 24.15 33.25 32.25 32.2 43 32.2 43.1 32.15 43.25 29.25 58.55 32.2 73.5 33.25 78.3 35.8 80.1 40.85 83.5 43.15 90.2 44.8875 93.9875 46.6 97.75 47.259375 98.865625 47.9 99.85 54.3619140625 109.6810546875 64 110 73.63828125 109.6810546875 80.05 99.85 80.7408203125 98.8654296875 81.35 97.75 83.1125 93.975 84.85 90.2 87.15 83.5 92.2 80.1 94.75 78.3 95.8 73.5 98.75 58.55 95.85 43.25 95.8 43.1 95.8 43 Z'/>",
+    "<path fill='url(#Gradient_2)' stroke='none' d='M 0 128 L 128 128 128 0 0 0 0 128 M 86.25 24.15 Q 94.75 32.25 95.8 43 95.8 43.1 95.85 43.25 98.75 58.55 95.8 73.5 94.75 78.3 92.2 80.1 87.15 83.5 84.85 90.2 83.1125 93.975 81.35 97.75 80.764453125 98.8845703125 80.1 99.9 L 80.05 99.85 Q 73.63828125 109.6810546875 64 110 54.3619140625 109.6810546875 47.9 99.85 L 47.9 99.9 Q 47.2357421875 98.884765625 46.6 97.75 44.8875 93.9875 43.15 90.2 40.85 83.5 35.8 80.1 33.25 78.3 32.2 73.5 29.25 58.55 32.15 43.25 32.2 43.1 32.2 43 33.25 32.25 41.75 24.15 50.35 15.9 64 16.25 77.65 15.9 86.25 24.15 Z'/>",
+    "</g></defs>",
+    "<g><use xlink:href='#bg'/></g></svg>",
+	].join("\n");
+	return txt;
+}*/
+
+
+LTH.LogosBack = function(color){
+	color = color || '#000000';
+	var color2 = '#000000';
+	var txt = [
+	"<svg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' preserveAspectRatio='none' x='0px' y='0px' width='128px' height='128px' viewBox='0 0 128 128'><defs>",
+    "<radialGradient id='Gradient_1' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='50' fx='0' fy='-13' gradientTransform='matrix(1,0,0,1,64,64)' spreadMethod='pad'>",
+    "<stop offset='15%' stop-color='"+color+"' stop-opacity='0.8'/>",
+    //"<stop offset='27%' stop-color='"+color+"' stop-opacity='0'/>",
+    //"<stop offset='28%' stop-color='"+color+"' stop-opacity='0'/>",
+    "<stop offset='28%' stop-color='"+color+"' stop-opacity='0.2'/>",
+    "<stop offset='40%' stop-color='"+color+"' stop-opacity='0.1'/>",
+    "<stop offset='70%' stop-color='"+color+"' stop-opacity='0'/></radialGradient>",
+    //"<radialGradient id='Gradient_2' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='64' fx='0' fy='-13' gradientTransform='matrix(1,0,0,1,64,64)' spreadMethod='pad'>",
+    //"<stop offset='0%' stop-color='"+color2+"' stop-opacity='1'/>",
+    //"<stop offset='60%' stop-color='"+color2+"' stop-opacity='0.1'/>",
+    //"<stop offset='90%' stop-color='"+color2+"' stop-opacity='0'/></radialGradient>",
+    "<g id='bg'><path fill='url(#Gradient_1)' stroke='none' d='M 95.8 43 Q 94.75 32.25 86.25 24.15 77.65 15.9 64 16.25 50.35 15.9 41.75 24.15 33.25 32.25 32.2 43 32.2 43.1 32.15 43.25 29.25 58.55 32.2 73.5 33.25 78.3 35.8 80.1 40.85 83.5 43.15 90.2 44.8875 93.9875 46.6 97.75 47.259375 98.865625 47.9 99.85 54.3619140625 109.6810546875 64 110 73.63828125 109.6810546875 80.05 99.85 80.7408203125 98.8654296875 81.35 97.75 83.1125 93.975 84.85 90.2 87.15 83.5 92.2 80.1 94.75 78.3 95.8 73.5 98.75 58.55 95.85 43.25 95.8 43.1 95.8 43 Z'/>",
+    //"<path fill='url(#Gradient_2)' stroke='none' d='M 0 128 L 128 128 128 0 0 0 0 128 M 86.25 24.15 Q 94.75 32.25 95.8 43 95.8 43.1 95.85 43.25 98.75 58.55 95.8 73.5 94.75 78.3 92.2 80.1 87.15 83.5 84.85 90.2 83.1125 93.975 81.35 97.75 80.764453125 98.8845703125 80.1 99.9 L 80.05 99.85 Q 73.63828125 109.6810546875 64 110 54.3619140625 109.6810546875 47.9 99.85 L 47.9 99.9 Q 47.2357421875 98.884765625 46.6 97.75 44.8875 93.9875 43.15 90.2 40.85 83.5 35.8 80.1 33.25 78.3 32.2 73.5 29.25 58.55 32.15 43.25 32.2 43.1 32.2 43 33.25 32.25 41.75 24.15 50.35 15.9 64 16.25 77.65 15.9 86.25 24.15 Z'/>",
+    "<path stroke='#000000' stroke-opacity='0.1' stroke-width='5' stroke-linejoin='round' stroke-linecap='round' fill='none' d='M 87.35 22.975 Q 96.30625 31.5 97.425 42.825 L 97.425 42.85 Q 97.4431640625 42.8984375 97.45 42.95 L 97.45 42.975 Q 100.4072265625 58.5806640625 97.4 73.825 L 97.4 73.85 Q 96.174609375 79.3970703125 93.125 81.425 L 93.125 81.45 Q 88.51171875 84.58125 86.4 90.725 86.378515625 90.796875 86.35 90.875 L 82.9 98.425 Q 82.8529296875 98.5146484375 82.8 98.6 82.1375 99.7126953125 81.475 100.775 L 81.45 100.8 Q 74.4958984375 111.36875 64.05 111.625 64 111.6265625 63.95 111.625 53.5009765625 111.3705078125 46.6 100.8 45.9537109375 99.8115234375 45.4 98.825 45.2619140625 98.667578125 45.175 98.475 L 41.675 90.875 Q 41.63515625 90.8 41.6 90.725 39.48828125 84.58125 34.875 81.45 L 34.875 81.425 Q 31.825390625 79.3970703125 30.6 73.85 L 30.6 73.825 Q 27.5923828125 58.580859375 30.55 42.975 L 30.55 42.95 Q 30.5611328125 42.9 30.575 42.85 31.6802734375 31.5123046875 40.65 22.975 L 40.625 22.975 Q 49.6408203125 14.2853515625 63.95 14.625 64 14.6236328125 64.05 14.625 78.3587890625 14.2853515625 87.375 22.975 L 87.35 22.975 Z'/>",
+    "<path stroke='#000000' stroke-opacity='0.1' stroke-width='8' stroke-linejoin='round' stroke-linecap='round' fill='none' d='M 102.65 45.7 Q 104.7 58.85 102.65 71.9 M 107.8 68.5 Q 108.95 58.8 107.8 49.1 110.95 58.8 107.8 68.5 Z M 25.35 45.7 Q 23.3 58.85 25.35 71.9 M 20.2 68.5 Q 19.05 58.8 20.2 49.1 17.05 58.8 20.2 68.5 Z'/>",
+    "</g></defs>",
+    "<g><use xlink:href='#bg'/></g></svg>",
+	].join("\n");
 	return txt;
 }
 

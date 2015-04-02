@@ -216,9 +216,9 @@ TERRAIN.Generate.prototype = {
         this.terrainShader = TERRAIN.ShaderTerrain;
 
         //this.terrainShader.uniforms[ 'combine' ].value = THREE.MixOperation;
-        this.terrainShader.uniforms[ 'env' ].value = THREE.ImageUtils.loadTexture( './images/spherical/e_chrome.jpg');
+        this.terrainShader.uniforms[ 'env' ].value = this.main.environment;//THREE.ImageUtils.loadTexture( './images/spherical/e_chrome.jpg');
         //this.terrainShader.uniforms[ 'tCube' ].value = this.main.sky;
-        this.terrainShader.uniforms[ 'reflectivity' ].value = 0.3;
+        this.terrainShader.uniforms[ 'reflectivity' ].value = 0.6;
         this.terrainShader.uniforms[ 'enableReflection' ].value = true;
 
         this.terrainShader.uniforms[ 'oceanTexture' ].value = this.textures[0];
@@ -297,7 +297,7 @@ TERRAIN.Generate.prototype = {
         this.mesh.material = this.mlib.terrain;
         this.mesh.visible = true;
 
-        if(env) env.add(terrain.mlib.terrain);
+        //if(env) env.add(terrain.mlib.terrain);
 
         this.fullLoaded = true;
         this.update(1);

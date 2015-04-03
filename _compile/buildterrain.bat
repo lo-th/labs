@@ -1,1 +1,0 @@
-python build.py --include terrain --minify --output ../js/libs/terrain.min.js

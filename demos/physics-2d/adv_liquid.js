@@ -1,5 +1,5 @@
 var v = new V.View(-90, 25, 50);
-v.tell('Advanced Liquid<br>You can move the red spot');
+v.tell('Advanced Liquid<p>You can move the red spot');
 v.metaball(onShader);
 
 var select = null;

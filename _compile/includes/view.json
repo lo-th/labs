@@ -5,6 +5,7 @@
     "src/V.particles.js",
     "src/V.shaders.js",
     "src/V.skylab.js",
+    "src/V.terrain.js",
     "src/V.workers.js",
     "src/V.pool.js",
     "src/V.gui.js"

@@ -553,6 +553,7 @@ LTH.Menu.prototype = {
 				this.logo.className = 'logo lmin';
 				this.logoBack.className = 'logo lmin';
 				this.title.innerHTML = '';
+				this.main.menuShow(false);
 		    }
 		}
 		if(x<60){
@@ -561,6 +562,7 @@ LTH.Menu.prototype = {
 				this.logo.className = 'logo lmax';
 				this.logoBack.className = 'logo lmax';
 				this.title.innerHTML = LTH.rubriques[LTH.cRubr].toUpperCase();
+				this.main.menuShow(true);
 			}
 		}
 	}

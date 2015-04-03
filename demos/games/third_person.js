@@ -5,7 +5,7 @@ var geo = [];
 var shaders = {};
 var player;
 
-v.tell('Third person<br>Move with keyboard and mouse');
+v.tell('Third person<br><p>Move with keyboard and mouse</p>');
 // active keyboard
 v.nav.bindKeys();
 //var env = new V.Environment();

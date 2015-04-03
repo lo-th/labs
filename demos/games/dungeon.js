@@ -1,7 +1,7 @@
 var v = new V.View(180, 45, 100);
 var geo, mat, mat2, map, gui, player, gamePhase = 'start';
 
-v.tell('The dungeon');
+v.tell('The dungeon<p>Generate random dungeon<br>Click to add character and move</p>');
 v.zone();
 
 var shader = new V.Shader('Ground', {}, false , onShaderload );

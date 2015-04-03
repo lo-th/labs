@@ -11,7 +11,7 @@ var car, carM, carHide, shape, shapemin;
 
 //var sky;// = new V.Skylab(v);
 
-v.tell('AMMO CAR<br>Use keyboard to drive');
+v.tell('Ammo car<p>Use keyboard to drive');
 // active keyboard
 v.nav.bindKeys();
 // load car model

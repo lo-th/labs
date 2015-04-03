@@ -5,11 +5,7 @@
 *    @author LoTh / http://lo-th.github.io/labs/
 */
 
-var THREE, env, terrain;
-
-var TERRAIN = { REVISION: '0.1' };
-
-TERRAIN.Generate = function(Parent, obj){
+V.Terrain = function(Parent, obj){
     this.main = Parent;
     this.debug = true;
 
@@ -83,8 +79,8 @@ TERRAIN.Generate = function(Parent, obj){
 
 }
 
-TERRAIN.Generate.prototype = {
-    constructor: TERRAIN.Generate,
+V.Terrain.prototype = {
+    constructor: V.Terrain,
     load:function(endFunction){
         this.end = endFunction;
         var PATH = 'images/terrain/';
@@ -92,25 +88,19 @@ TERRAIN.Generate.prototype = {
         while(i--){
             this.textures[i] = new THREE.ImageUtils.loadTexture( PATH + this.maps[i]+ '.jpg' );
         }
-        var _this = this;
-        this.timerTest = setInterval(this.loadTextures, 20, _this);
+        this.timerTest = setInterval(function(){ this.testTextures(); }.bind(this), 20);
     },
-    loadTextures:function (tt) {
-        var _this = tt;
-        if ( _this.textures.length == _this.maps.length)  {
-            clearInterval(_this.timerTest);
-
-            var i = _this.textures.length;
+    testTextures:function () {
+        if ( this.textures.length == this.maps.length)  {
+            clearInterval(this.timerTest);
+            var i = this.textures.length;
             while(i--){
-                _this.textures[i].format = THREE.RGBFormat;
-                _this.textures[i].wrapS = _this.textures[i].wrapT = THREE.RepeatWrapping;
+                this.textures[i].format = THREE.RGBFormat;
+                this.textures[i].wrapS = this.textures[i].wrapT = THREE.RepeatWrapping;
             }
-
-            //TERRAIN.initShader();
-            _this.start();
+            this.start();
         }
     },
-
     clear:function () {
         this.container.remove(this.mesh);
         //this.mesh.material.dispose();
@@ -182,9 +172,10 @@ TERRAIN.Generate.prototype = {
 
         // NORMAL MAPS
 
-        this.normalShader = TERRAIN.NormalMapShader;
+        this.normalShader = V.TerrainNormal;
 
-        var pars = { minFilter: THREE.LinearMipmapLinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat };
+        //var pars = { minFilter: THREE.LinearMipmapLinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat };
+        var pars = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat };
 
         this.heightMap = new THREE.WebGLRenderTarget( this.div[0], this.div[1], pars );
         this.normalMap = new THREE.WebGLRenderTarget( this.div[0], this.div[1], pars );
@@ -199,13 +190,13 @@ TERRAIN.Generate.prototype = {
         this.normalShader.uniforms.heightMap.value = this.heightMap;
 
         // NOISE
-        this.noiseShader = TERRAIN.ShaderNoise;
+        this.noiseShader = V.TerrainNoise;
 
 
         //this.specularMap = new THREE.WebGLRenderTarget( 512, 512, pars );
         //this.specularMap = new THREE.WebGLRenderTarget( 1024, 1024, pars );
 
-        this.specularShader = TERRAIN.LuminosityShader;
+        this.specularShader = V.TerrainLuminosity;
 
         this.specularShader.uniforms.tDiffuse.value = this.normalMap;
 
@@ -213,7 +204,7 @@ TERRAIN.Generate.prototype = {
 
         // TERRAIN SHADER
 
-        this.terrainShader = TERRAIN.ShaderTerrain;
+        this.terrainShader = V.TerrainShader;
 
         //this.terrainShader.uniforms[ 'combine' ].value = THREE.MixOperation;
         this.terrainShader.uniforms[ 'env' ].value = this.main.environment;//THREE.ImageUtils.loadTexture( './images/spherical/e_chrome.jpg');
@@ -267,7 +258,7 @@ TERRAIN.Generate.prototype = {
         var params = [
             [ 'heightmap',  this.noiseShader.fs, this.noiseShader.vs, this.noiseShader.uniforms, false ],
             [ 'normal',     this.normalShader.fs,  this.normalShader.vs, this.normalShader.uniforms, false ],
-            [ 'specular',       this.specularShader.fs,  this.specularShader.vs, this.specularShader.uniforms, false ],
+            [ 'specular',   this.specularShader.fs,  this.specularShader.vs, this.specularShader.uniforms, false ],
             [ 'terrain',    this.terrainShader.fs, this.terrainShader.vs, this.terrainShader.uniforms, true ]
         ];
 
@@ -405,7 +396,7 @@ TERRAIN.Generate.prototype = {
                 this.quadTarget.material =  this.mlib.specular;
                 this.main.renderer.render( this.sceneRenderTarget, this.cameraOrtho, this.specularMap, true );
 
-               // this.generatePhysics();
+               // this.generatePhysicsData();
             }
         }
 
@@ -423,6 +414,23 @@ TERRAIN.Generate.prototype = {
         var pixel = Math.floor(((colz-1)*this.div[0])+colx)*4;
         var result = (this.tmpData[pixel+0]+this.tmpData[pixel+1]+this.tmpData[pixel+2])*this.ratio;
         return result;
+    },
+    generatePhysicsData : function () {
+        var pix, j, n;
+        var np = 0;
+        var i = this.div[0];
+        while (i--) {
+            //j = this.div[1];
+            //while (j--) {
+            for (j = 0; j < this.div[1]; j++) {
+                n = ((i)*this.div[0])+(j+1);
+                pix = n*4;
+                np ++;
+                this.hfFloatBuffer[np] = (this.tmpData[pix+0]+this.tmpData[pix+1]+this.tmpData[pix+2])*this.ratio;
+            }
+        }
+
+        //UP_TERRAIN(this.hfFloatBuffer);
     }
 
 }
@@ -466,7 +474,7 @@ TERRAIN.Water.prototype = {
 }*/
 
 
-TERRAIN.NormalMapShader = {
+V.TerrainNormal = {
 
     uniforms: {
         'heightMap':  { type: 't', value: null },
@@ -512,7 +520,7 @@ TERRAIN.NormalMapShader = {
 };
 
 
-TERRAIN.ShaderNoise = {
+V.TerrainNoise = {
 
     uniforms:{ 
         time:   { type: 'f', value: 1.0 },
@@ -653,7 +661,7 @@ TERRAIN.ShaderNoise = {
     ].join('\n')
 };
 
-TERRAIN.LuminosityShader = {
+V.TerrainLuminosity = {
 
 uniforms: {
     'tDiffuse': { type: 't', value: null }
@@ -680,15 +688,15 @@ fs: [
 
 
 
-TERRAIN.ShaderTerrain = {
+V.TerrainShader = {
 uniforms:{
-env : { type: 't', value: null },
-enableReflection: { type: 'i', value: 0 },
-useRefract : { type: 'i', value: 0 },
-reflectivity : { type: 'f', value: 1.0 },
-refractionRatio : { type: 'f', value: 0.98 },
-combine : { type: 'i', value: 0 },
-fogcolor : { type: 'c', value:  new THREE.Color( 0x25292e ) },
+    env : { type: 't', value: null },
+    enableReflection: { type: 'i', value: 0 },
+    useRefract : { type: 'i', value: 0 },
+    reflectivity : { type: 'f', value: 1.0 },
+    refractionRatio : { type: 'f', value: 0.98 },
+    combine : { type: 'i', value: 0 },
+    fogcolor : { type: 'c', value:  new THREE.Color( 0x25292e ) },
 
                 'oceanTexture'  : { type: 't', value: null },
                 'sandyTexture'  : { type: 't', value: null },

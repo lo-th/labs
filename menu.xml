@@ -17,7 +17,7 @@
 	<demo n='shadowmap' lib='' ic='0'></demo>
 </rubrique>	
 <rubrique n='experiments' color='FF9500'>
-	<demo n='terrain' lib='terrain' ic='11'></demo>
+	<demo n='terrain' lib='' ic='11'></demo>
 	<demo n='seriously' lib='serious' ic='6'></demo>
 	<demo n='crowd_test' lib='' ic='12'></demo>
 	<demo n='human' lib='' ic='7'></demo>

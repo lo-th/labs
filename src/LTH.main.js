@@ -9,7 +9,7 @@ var LTH = {};
 var useDirect = useDirect || false;
 var useDirectDebug = useDirectDebug || false;
 
-LTH.CODES = ['full','serious','rot','terrain','liquid','ammo','oimo','crowd','traffic'];
+LTH.CODES = ['v3d','full','serious','rot','liquid','ammo','oimo','crowd','traffic'];
 
 LTH.rubriques = [];
 LTH.demoNames = [];
@@ -87,6 +87,14 @@ LTH.Main = function(){
 	this.previewMain = null;
 
 	this.happ = this.supports_history_api();
+
+	this.baseScript = [
+	    "var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
+		"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
+		"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
+		"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
+		"function menuShow(b){ if(b){ info.className = 'info txtopen'; debug.className = 'debug txtopen'; }else{ info.className = 'info txtnorm'; debug.className = 'debug txtnorm'; } }"
+	].join("\n");
 
 	this.fileSystem = new LTH.FileSystem(this);
 	this.fileSystem.loadXML('menu.xml');
@@ -272,13 +280,15 @@ LTH.Main.prototype = {
 					"<link rel='stylesheet' href='css/basic.css'>",
 					"<script src='" + this.transcode.codes.full + "'></script>",
 					options,
-					"<script src='build/v3d.min.js'></script>",
+					"<script src='" + this.transcode.codes.v3d + "'></script>",
+					//"<script src='build/v3d.min.js'></script>",
 					"</head><body class='"+this.mainClass+"'>",
 					"<script>",
-					"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
-					"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
-					"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
-					"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
+					this.baseScript,
+					//"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
+					//"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
+					//"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
+					//"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
 					value,
 					"</script>",
 					"</body></html>"
@@ -320,15 +330,17 @@ LTH.Main.prototype = {
 						"<script src='src/V.particles.js'></script>",
 						"<script src='src/V.shaders.js'></script>",
 						"<script src='src/V.skylab.js'></script>",
+						"<script src='src/V.terrain.js'></script>",
 						"<script src='src/V.workers.js'></script>",
 						"<script src='src/V.pool.js'></script>",
 						"<script src='src/V.gui.js'></script>",
 						"</head><body class='"+this.mainClass+"'>",
 						"<script>",
-						"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
-						"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
-						"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
-						"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
+						this.baseScript,
+						//"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
+						//"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
+						//"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
+						//"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
 						value,
 						"</script>",
 						"</body></html>"
@@ -347,10 +359,11 @@ LTH.Main.prototype = {
 						"<script src='build/v3d.min.js'></script>",
 						"</head><body class='"+this.mainClass+"'>",
 						"<script>",
-						"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
-						"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
-						"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
-						"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
+						this.baseScript,
+						//"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
+						//"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
+						//"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
+						//"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
 						value,
 						"</script>",
 						"</body></html>"
@@ -375,6 +388,9 @@ LTH.Main.prototype = {
 			if(this.isFirst) this.isFirst=false;
 			else this.menu.modified();
 		}
+	},
+	menuShow:function(b){
+		if(this.previewMain) this.previewMain.menuShow(b);
 	},
 	/*checkCurrent:function(){
 		for(var i=0; i< this.numLesson; i++){

@@ -52,7 +52,22 @@ V.View = function(h,v,d, loadbasic){
     this.info = info;
     this.loader = loader;
 
-    this.renderer = new THREE.WebGLRenderer({canvas:canvas, precision:"mediump", antialias:true, alpha:true, stencil:false });
+    // WEBGL 2 TEST
+
+    /*this.isWebGL2 = false;
+    var gl = canvas.getContext( 'webgl2', { antialias: false } );
+    if (!gl) gl = canvas.getContext( 'experiemental-webgl2', { antialias: false } );
+    this.isWebGL2 = !!gl;
+    if (this.isWebGL2){
+        console.log("I can haz flag, so WebGL 2 is yes!");
+        this.renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:false, alpha:false, context:gl });
+    } else {
+        this.renderer = new THREE.WebGLRenderer({canvas:canvas, precision:"mediump", antialias:true, alpha:true, stencil:false });
+    }*/
+
+
+    this.renderer = new THREE.WebGLRenderer({canvas:canvas, precision:"mediump", antialias:true, alpha:true });
+
     //logarithmicDepthBuffer: true
     //this.renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha: true });
     this.renderer.setSize( this.dimentions.w, this.dimentions.h );
@@ -114,6 +129,8 @@ V.View = function(h,v,d, loadbasic){
     this.isWithSerious = false;
 
     this.material = new V.Material(this);
+
+    
 
     
 

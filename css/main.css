@@ -81,9 +81,16 @@ html, body {
 
 .home {  width:100%;  }
 .exemple {  width:60px;  }
-
-.In {  width:180px; 
+.night .In {  width:180px; 
     background:#25292e;
+    /*box-shadow:-12px 0px 12px -12px rgba(0, 0, 0, 0.3) inset;*/
+    -webkit-transition: 0.2s ease-out;
+    -moz-transition: 0.2s ease-out;
+    -o-transition: 0.2s ease-out;
+    transition: 0.2s ease-out;
+}
+.day .In {  width:180px; 
+    background:#d2cec8;
     /*box-shadow:-12px 0px 12px -12px rgba(0, 0, 0, 0.3) inset;*/
     -webkit-transition: 0.2s ease-out;
     -moz-transition: 0.2s ease-out;
@@ -120,11 +127,14 @@ html, body {
 
 .zone {
 	position:absolute; left:10px; top:180px; width:calc(100% - 20px); height:calc(100% - 260px);
-	border:1px dashed rgba(0,0,0,0.1); pointer-events:auto; overflow:hidden;
+	/*border:1px dashed rgba(0,0,0,0.1); */
+    pointer-events:auto; overflow:hidden;
 }
 
-.day .zone   {border:1px dashed rgba(0,0,0,0.1);}
-.night .zone {border:1px dashed rgba(255, 255, 255, 0.1);}
+/*.day .zone   {border:1px dashed rgba(0,0,0,0.1);}
+.night .zone {border:1px dashed rgba(255, 255, 255, 0.1);}*/
+.day .border   {border:1px dashed rgba(0,0,0,0.1);}
+.night .border {border:1px dashed rgba(255, 255, 255, 0.1);}
 
 .day .hover { border: 1px dashed rgba(0,0,0,0.3); }
 .night .hover { border: 1px dashed rgba(255, 255, 255 ,0.3); }

@@ -11,7 +11,7 @@ LTH.Menu = function(main){
 	this.baseColor = "d2cec8";
 	this.baseColorOver = "FF0073";
 	this.main = main;
-	this.doc = document;
+	this.doc = this.main.doc;//document;
 
 
 
@@ -218,7 +218,8 @@ LTH.Menu.prototype = {
 		this.isMenu = false;
 	},
 	initMenu:function(){
-		this.doc.body.onmousemove = function(e){this.showHideMenu(e)}.bind(this);
+		this.doc.onmousemove = function(e){this.showHideMenu(e)}.bind(this);
+		//this.doc.body.onmousemove = function(e){this.showHideMenu(e)}.bind(this);
 		this.content.className = 'menu exemple';
 		this.logo.className = 'logo lmin';
 		this.logoBack.className = 'logo lmin';
@@ -545,8 +546,9 @@ LTH.Menu.prototype = {
 		}
 	},
 	showHideMenu:function(e){
+		e = e || window.event;
 		var c = this.content.className;
-		var x = e.clientX;
+		var x = e.screenX;//clientX;
 		if(x>170){
 			if(c==='menu exemple In'){
 				this.content.className = 'menu exemple Out';
@@ -554,6 +556,7 @@ LTH.Menu.prototype = {
 				this.logoBack.className = 'logo lmin';
 				this.title.innerHTML = '';
 				this.main.menuShow(false);
+				this.zone.classList.remove("border");
 		    }
 		}
 		if(x<60){
@@ -563,7 +566,10 @@ LTH.Menu.prototype = {
 				this.logoBack.className = 'logo lmax';
 				this.title.innerHTML = LTH.rubriques[LTH.cRubr].toUpperCase();
 				this.main.menuShow(true);
+				this.zone.classList.add("border");
 			}
 		}
+		e.preventDefault();
+        e.stopPropagation();
 	}
 }

@@ -8,8 +8,9 @@
 var LTH = {};
 var useDirect = useDirect || false;
 var useDirectDebug = useDirectDebug || false;
+var URL = window.URL || window.webkitURL;
 
-LTH.CODES = ['v3d','full','serious','rot','liquid','ammo','oimo','crowd','traffic'];
+LTH.CODES = ['full','v3d','serious','rot','liquid','ammo','oimo','crowd','traffic'];
 
 LTH.rubriques = [];
 LTH.demoNames = [];
@@ -32,9 +33,9 @@ function init(){
 	main = new LTH.Main();
 }
 
-function endTranscode(){
+/*function endTranscode(){
     main.menu.initHomeland(main.detector.webgl);
-}
+}*/
 
 //----------------------------------------
 //
@@ -107,8 +108,11 @@ LTH.Main.prototype = {
 		this.editor = new LTH.CodeEditor(this);
 		this.labmenu = new LTH.labsMenu(this);
 		this.menu = new LTH.Menu(this);
+		this.transcode = new LTH.Transcode(this);
+
 		// load png code if useDirect = false
-		this.transcode = new LTH.Transcode(this, endTranscode);
+		if(this.useDirect) this.menu.initHomeland(this.detector.webgl);
+		else this.transcode.initRootCode();
 
 	    window.onresize = function(e) {this.resize(e)}.bind(this);
 	},

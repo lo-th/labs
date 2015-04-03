@@ -1,13 +1,13 @@
 // File:src/Three.js
 
-var module;
+
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
 var THREE = { REVISION: '72dev' };
-
+var module;
 // browserify support
 
 if ( typeof module === 'object' ) {

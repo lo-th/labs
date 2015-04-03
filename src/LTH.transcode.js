@@ -5,32 +5,46 @@
 *    @author LoTh / http://lo-th.github.io/labs/
 */
 
-var URL = window.URL || window.webkitURL;
-
-LTH.Transcode = function(main, callback){
+LTH.Transcode = function(main){
 	this.main = main;
-	this.list = LTH.CODES;
-	this.callback = callback || function(){};
+	this.callback = null;
 	this.canvas = document.createElement("canvas");
 	this.gl = null;
 	this.ctx = null;
 	this.size = {w:0, h:0};
 	this.name = '';
 	this.time = 0;
-
 	this.codes = {};
 	this.useTrans = false;
-
-	if(!this.main.useDirect)this.init();
-	else this.callback();
 }
 
 LTH.Transcode.prototype = {
 	constructor: LTH.Transcode,
-	init:function(){
-		this.load();
+	initRootCode:function(){
+		this.list = LTH.CODES;
+		this.callback = function(string){
+			this.main.menu.title.innerHTML = 'WELCOME<br>LOADING CODES<br>'+this.name.toUpperCase() + ' ' + (Date.now()-this.time)+' MS';
+		    //test first code if transcript give good code result
+		    if(this.name==='full'){
+		    	if(string.substring(1, 11)==='use strict') this.useTrans = true;
+			    else this.useTrans = false;
+		    }
+		    // convert string code to blob
+		    if(this.useTrans){
+		    	try{
+				    var sblob = new Blob([ string ], { type: 'application/javascript' });
+				    this.codes[this.name] = URL.createObjectURL(sblob);
+				    //console.log(this.name)
+			    }
+			    catch(e){ this.useTrans = false; this.list.length = 0; }
+		    }else{
+		    	this.list.length = 0;
+		    }
+		}.bind(this);
+
+		this.loadList();
 	},
-	load:function(){
+	loadList:function(){
 		this.name = this.list[0];
 		var img = new Image();
 		img.onload = function() {
@@ -38,14 +52,20 @@ LTH.Transcode.prototype = {
 			this.canvas.width = this.size.w = img.width;
 			this.canvas.height = this.size.h = img.height;
 			
-			this.canvas3d(img);
+			this.transcanvas(img);
 
 			this.list.shift();
-            if(this.list.length) this.load();
-            else this.callback();
+            if(this.list.length) this.loadList();
+            else this.main.menu.initHomeland(this.main.detector.webgl);
 
 		}.bind(this);
 		img.src = 'images/code/'+this.name+'.png';
+	},
+	load:function(name, callback){
+		this.callback = callback || function(){};
+		var img = new Image();
+		img.onload = function() { this.transcanvas(img); }.bind(this);
+	    img.src = name;
 	},
 	create3dContext:function(){
 		var n = ["webgl", "experimental-webgl"];
@@ -61,16 +81,19 @@ LTH.Transcode.prototype = {
 	    	this.gl = null;
 	    }
 	},
-	canvas3d:function(image){
+	transcanvas:function(image){
 		var w = this.size.w;
 	    var h = this.size.h;
 	    var data;
-
-	    if (!this.main.detector.webgl) {
+	    
+	    if (!this.main.detector.webgl) { 
+	        // canvas 2d
 	    	this.ctx = this.canvas.getContext('2d');
 	    	this.ctx.drawImage(image, 0, 0);
 	    	data = this.ctx.getImageData(0, 0, this.size.w, this.size.h).data;
+	    	this.ctx.clearRect ( 0 , 0 , this.size.w, this.size.h );
 	    } else {
+	        // canvas 3d
 	    	if(this.gl==null) this.create3dContext();
 	    	var gl = this.gl;
 		    var positionLocation = gl.getAttribLocation(this.program, "a_position");
@@ -102,14 +125,8 @@ LTH.Transcode.prototype = {
 		    gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
 		}
 
-	    this.decodeData(data);
-	},
-	/*canvas2d:function(image) {
-	    this.ctx.drawImage(image, 0, 0);
-	    var data = this.ctx.getImageData(0, 0, this.size.w, this.size.h).data;
-	    this.decodeData(data);
-	},*/
-	decodeData:function(data){
+		// DECODE DATA
+
 		var color = 0;
 		if(data[1]!==0)color=1;
 		if(data[2]!==0)color=2;
@@ -120,26 +137,11 @@ LTH.Transcode.prototype = {
 			pix = pix == 127 ? 10 : pix;
 			string += String.fromCharCode(pix);
 		}
-		//if(this.isDebug){
-			this.main.menu.title.innerHTML = 'WELCOME<br>LOADING CODES<br>'+this.name.toUpperCase() + ' ' + (Date.now()-this.time)+' MS';
-		    //console.log(this.name, Date.now()-this.time+'ms');
-		//}
 
-		if(this.name=='full'){
-			if(string.substring(3, 8)=='three') this.useTrans = false;//console.log(string.substring(3, 8));
-			else this.useTrans = false;
-		}
+		// END FUNCTION
 
-		try{
-			var sblob = new Blob([ string ], { type: 'application/javascript' });
-			this.codes[this.name] = URL.createObjectURL(sblob);
-			this.useTrans = true;
-		}
-		catch(e){ this.useTrans = false; }
+		this.callback(string);
 
-		if(!this.useTrans)this.list.length = 0;
-
-		//console.log(this.useTrans);
 	},
 	createProgram:function (gl,shader){
 	    var fs = gl.createShader(gl.FRAGMENT_SHADER);

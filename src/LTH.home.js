@@ -53,6 +53,11 @@ LTH.labsMenu.prototype = {
 	    this.content.appendChild( this.subTitle );
 	    this.subTitle.style.color = '#'+this.baseColor;
 
+	    this.press = document.createElement('div');
+	    this.press.className = 'press';
+	    this.content.appendChild( this.press );
+	    this.press.innerHTML = "I'm loth french free-lance. Developer webgl, graphic and modeler 3d.<br>Contact me for any work at <a HREF='mailto:3dflashlo@gmail.com'>3dflashlo@gmail.com</a>"
+
 		this.canvas = document.createElement('canvas');
 		this.canvas.className = 'labsCanvas';
 		this.content.appendChild( this.canvas );

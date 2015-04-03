@@ -218,7 +218,7 @@ LTH.Menu.prototype = {
 		this.isMenu = false;
 	},
 	initMenu:function(){
-		this.doc.onmousemove = function(e){this.showHideMenu(e)}.bind(this);
+		this.doc.body.onmousemove = function(e){this.showHideMenu(e)}.bind(this);
 		//this.doc.body.onmousemove = function(e){this.showHideMenu(e)}.bind(this);
 		this.content.className = 'menu exemple';
 		this.logo.className = 'logo lmin';
@@ -546,9 +546,9 @@ LTH.Menu.prototype = {
 		}
 	},
 	showHideMenu:function(e){
-		e = e || window.event;
+		//e = e || window.event;
 		var c = this.content.className;
-		var x = e.screenX;//clientX;
+		var x = e.clientX;//screenX;//clientX;
 		if(x>170){
 			if(c==='menu exemple In'){
 				this.content.className = 'menu exemple Out';
@@ -569,7 +569,7 @@ LTH.Menu.prototype = {
 				this.zone.classList.add("border");
 			}
 		}
-		e.preventDefault();
-        e.stopPropagation();
+		//e.preventDefault();
+        //e.stopPropagation();
 	}
 }

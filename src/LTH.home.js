@@ -61,6 +61,11 @@ LTH.labsMenu.prototype = {
 	    this.pinsContent.className = 'pinsContent';
 	    this.content.appendChild( this.pinsContent );
 
+	    this.puce = document.createElement('div');
+	    this.puce.className = 'puce';
+	    this.puce.innerHTML = LTH.IconPuce(this.topColor);
+	    this.pinsContent.appendChild( this.puce );
+
 		this.ctx = this.canvas.getContext('2d');
 		this.canvas.width = this.canvas.height = this.size;
 
@@ -224,7 +229,6 @@ LTH.labsMenu.prototype = {
 			}
 			this.startPins++;
 			this.anim = setTimeout(function(e){this.updatePins()}.bind(this), this.time);
-
 		}
 	},
 	liner:function(p, c, i){
@@ -267,17 +271,23 @@ LTH.labsMenu.prototype = {
 	    
 	    this.pins[id] = pn;
 	    this.pins[id].onclick = function(e){ 
+	    	this.puce.className = 'puce phide';
 	    	var r = e.target.name.substring(0,1)*1;
 	    	var n = e.target.name.substring(2,e.target.name.length)*1;
 	    	this.main.menu.resetHome(r, n);
 	    }.bind(this);
 	    this.pins[id].onmouseover = function(e){ 
+	    	this.puce.className = 'puce rotating';
 	    	e.target.style.background = '#'+this.baseColor;
+	    	this.puce.style.left = (e.target.offsetLeft+15)+'px';
+	    	this.puce.style.top = (e.target.offsetTop+15)+'px';
+	    	
 	    	var r = e.target.name.substring(0,1)*1;
 	    	var n = e.target.name.substring(2,e.target.name.length)*1;
 	    	this.subTitle.innerHTML = (this.demosNames[r][n].replace("_", " ")).toUpperCase();
 	    }.bind(this);
 		this.pins[id].onmouseout = function(e){ 
+			this.puce.className = 'puce phide';
 			e.target.style.background = color;
 			this.subTitle.innerHTML = ''
 		}.bind(this);
@@ -312,6 +322,16 @@ LTH.IconMicro = function(color, type){
 		case 14: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
 		case 15: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
 	}
+	t[2] = "</g></svg>";
+	return t.join("\n");
+}
+
+LTH.IconPuce = function(color){
+	var width = 50;
+	var Kwidth = '0 0 50 50';
+	var t = [];
+	t[0] = "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' preserveAspectRatio='none' x='0px' y='0px' width='"+width+"px' height='"+width+"px' viewBox='"+Kwidth+"';'><g>";
+	t[1] = "<path id='Layer1_0_1_STROKES' stroke='#FFFFFF' stroke-width='2' stroke-linejoin='round' stroke-linecap='round' fill='none' d='M 40.5 25 Q 40.5 31.4 36 35.95 31.45 40.5 25 40.5 18.6 40.5 14.05 35.95 9.5 31.4 9.5 25 9.5 18.6 14.05 14.05 18.6 9.5 25 9.5 31.45 9.5 36 14.05 40.5 18.6 40.5 25 Z M 43.525 17.325 Q 42.065234375 13.7900390625 39.15 10.85 L 36.3 13.7 M 32.675 6.45 Q 36.222265625 7.922265625 39.15 10.85 M 6.475 17.375 Q 7.9322265625 13.8265625 10.875 10.875 L 10.9 10.85 Q 13.8291015625 7.9208984375 17.35 6.45 M 13.7 13.7 L 10.875 10.875 M 17.325 43.525 Q 13.81171875 42.06171875 10.9 39.15 L 10.875 39.125 Q 7.9392578125 36.2052734375 6.475 32.675 M 13.675 36.325 L 10.875 39.125 M 43.525 32.725 Q 42.0603515625 36.2396484375 39.15 39.15 36.2396484375 42.0603515625 32.725 43.525 M 39.15 39.15 L 36.325 36.325'/>";
 	t[2] = "</g></svg>";
 	return t.join("\n");
 }

@@ -153,3 +153,7 @@ body.night .dg .c .slider:hover { background: rgba(0,0,0,0.3);}
 
 body.day .dg .c .slider { background: rgba(255,255,255,0.1);}
 body.day .dg .c .slider:hover { background: rgba(255,255,255,0.3);}
+
+
+.bvhDragZone { position:absolute; font-weight: bold; top:10px; right:10px; width:144px; height:30px; background-color:none; padding-top:10px;  border: 2px dashed #ccc; pointer-events:auto; text-align: center;font-size: 14px;}
+.bvhDragZone.hover { border: 2px dashed #ff9500; }

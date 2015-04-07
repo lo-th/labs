@@ -29,10 +29,18 @@ V.BvhPlayer.prototype = {
         this.boneInverses = this.model.skeleton.boneInverses;
         this.preservesBoneSize = true;
 
+        var i = this.bones.length;
+        while(i--){
+        	console.log(this.bones[i].name);
+        }
+
+
         this.root.scene.add(this.model);
     },
     clearSkin:function(){
-
+    	this.root.scene.remove(this.model);
+    	this.model.material.dispose();
+    	this.model.geometry.dispose();
     },
     boneSize:function(v){
     	var s = v/30;
@@ -61,7 +69,7 @@ V.BvhPlayer.prototype = {
 	    var globalMtx = new THREE.Matrix4();
 	    var localMtx = new THREE.Matrix4();
 		
-		var i =  len-1;
+		var i =  len;
 	    while(i--){	
 	        bone = this.bones[i];
 	        name = bone.name;
@@ -97,15 +105,13 @@ V.BvhPlayer.prototype = {
 	    }
 
 		if (this.preservesBoneSize){
-			for( i = 0; i < len; i++){	
+			i =  len;
+			while(i--){
 				bone = this.bones[i];
 				name = bone.name;
-	           // return;
-				if(name!=='Hips'){// && name!=='LeftCollar' && name!=='RightCollar'){
+				if(name!=='Hips'){
 	    			var parentMtx = bone.parent.mtx ? bone.parent.mtx : bone.parent.matrixWorld;
-	    			
 	    			if (node = nodes[name]){
-	    				
 	    				//	GLOBAL TO LOCAL		
 	    				var origineInv = new THREE.Matrix4();
 	    				var originePos = new THREE.Vector3();
@@ -118,7 +124,6 @@ V.BvhPlayer.prototype = {
 	    				
 	    				//--
 	    				globalMtx = new THREE.Matrix4().multiplyMatrices( parentMtx, localMtx );
-	    			
 	    				bone.mtx = globalMtx;				
 	    			} else {
 	    				globalMtx = new THREE.Matrix4().multiplyMatrices( parentMtx, bone.matrix );

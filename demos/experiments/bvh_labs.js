@@ -6,7 +6,7 @@ var bvh = new V.BvhPlayer(v);
 //bvh.load('images/bvh/tpose.bvh');
 bvh.load('images/bvh/action.png');
 
-v.pool.load('stickman', onload, true);
+v.pool.load('stickman', onload);
 
 
 
@@ -26,7 +26,7 @@ function onload(){
 	bvh.skin(m);
 }
 
-
+// DRAGZONE
 var zone = document.createElement('div');
 zone.className = 'bvhDragZone';
 zone.innerHTML = 'Drag bvh file';

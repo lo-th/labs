@@ -90,8 +90,6 @@ LTH.Transcode.prototype = {
 		var w = this.size.w;
 	    var h = this.size.h;
 	    var data;
-
-	    console.log(this.size.w, this.size.h)
 	    
 	    if (!this.main.detector.webgl) { 
 	    	

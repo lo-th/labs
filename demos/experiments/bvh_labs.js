@@ -4,9 +4,9 @@ v.mirror(300, {pos:new THREE.Vector3(0,5,0), color:0x25292e, alpha:0.3});
 
 var bvh = new V.BvhPlayer(v);
 //bvh.load('images/bvh/tpose.bvh');
-bvh.load('images/bvh/action.png');
+bvh.load('images/bvh/action.png', onbvhload);
 
-v.pool.load('stickman', onload);
+
 
 loop();
 
@@ -14,6 +14,10 @@ function loop(){
     v.render();
     bvh.update();
     requestAnimationFrame(loop);
+}
+
+function onbvhload(){
+	v.pool.load('stickman', onload);
 }
 
 function onload(){

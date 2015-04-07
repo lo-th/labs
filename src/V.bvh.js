@@ -29,10 +29,10 @@ V.BvhPlayer.prototype = {
         this.boneInverses = this.model.skeleton.boneInverses;
         this.preservesBoneSize = true;
 
-        var i = this.bones.length;
+        /*var i = this.bones.length;
         while(i--){
         	console.log(this.bones[i].name);
-        }
+        }*/
 
 
         this.root.scene.add(this.model);
@@ -58,7 +58,6 @@ V.BvhPlayer.prototype = {
     	if(this.model !== null) this.updateSkin();
     },
     updateSkin:function(){
-    	//console.log('skin')
     	var bone, node, name;
 		var nodes = this.reader.Nodes;
 		var len = this.bones.length;
@@ -594,7 +593,7 @@ V.BvhReader.prototype = {
     	if ( this.play ) { 
 			this.frame = ((((Date.now() - this.startTime) / this.secsPerFrame / 1000) )*this.speed)| 0;
 			if(this.oldFrame!==0)this.frame += this.oldFrame;
-			if(this.frame > this.numFrames ){this.frame = 0;this.oldFrame=0; this.startTime =Date.now() }
+			if(this.frame > this.numFrames ){this.frame = 0; this.oldFrame=0; this.startTime = Date.now(); }
 
 			this.animate();
 		}

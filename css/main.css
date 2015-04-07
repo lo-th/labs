@@ -121,11 +121,11 @@ a{
 }
 .rotating {
     display:block;
-    -webkit-animation: rotating 1.3s linear infinite;
-    -moz-animation: rotating 1.3s linear infinite;
-    -ms-animation: rotating 1.3s linear infinite;
-    -o-animation: rotating 1.3s linear infinite;
-    animation: rotating 1.3s linear infinite;
+    -webkit-animation: rotating 1s linear infinite;
+    -moz-animation: rotating 1s linear infinite;
+    -ms-animation: rotating 1s linear infinite;
+    -o-animation: rotating 1s linear infinite;
+    animation: rotating 1s linear infinite;
 }
 
 /* TITLE */

@@ -8,8 +8,6 @@ bvh.load('images/bvh/action.png');
 
 v.pool.load('stickman', onload);
 
-
-
 loop();
 
 function loop(){
@@ -35,11 +33,11 @@ zone.ondragover = function () { this.className = 'bvhDragZone hover'; return fal
 zone.ondragend = function () { this.className = 'bvhDragZone'; return false; };
 zone.ondrop = function (e) {
 	this.className = 'bvhDragZone';
-	e.preventDefault();
 	var file = e.dataTransfer.files[0];
 	var reader = new FileReader();
 	zone.innerHTML = file.name;
-    reader.onload = (function(theFile) { return function(e) { bvh.reader.parseData(e.target.result.split(/\s+/g));}; })(file);
+    reader.onload = function(e) { bvh.reader.parseData(e.target.result.split(/\s+/g));}
     reader.readAsText(file);
+    e.preventDefault();
     return false;
 };

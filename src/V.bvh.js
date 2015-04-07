@@ -50,8 +50,8 @@ V.BvhPlayer.prototype = {
     speed:function(speed){
     	this.reader.speed = speed || 1;
     },
-    load:function(file, callback){
-    	this.reader.load(file, callback);
+    load:function(name, callback){
+    	this.reader.load(name, callback);
     },
     update:function(){
     	this.reader.update();

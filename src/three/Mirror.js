@@ -195,6 +195,8 @@ THREE.Mirror = function ( renderer, camera, options ) {
 	this.material.uniforms.textureMatrix.value = this.textureMatrix;
 	this.material.uniforms.size.value.set( width, height );
 
+	if(alpha<1) this.material.transparent = true;
+
 
 	if ( !THREE.Math.isPowerOfTwo(width) || !THREE.Math.isPowerOfTwo( height ) ) {
 

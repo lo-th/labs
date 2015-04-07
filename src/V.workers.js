@@ -282,7 +282,7 @@ V.Worker.prototype = {
 
     },
     postAmmo:function(){
-        this.w.postMessage({m:'run', time:this.d[1], m2:this.msg, key:this.root.nav.key, ar:this.ar, dr:this.dr},[this.ar.buffer, this.dr.buffer]);
+        this.w.postMessage({m:'run', time:this.d[1], m2:this.msg, key:this.root.imput.key, ar:this.ar, dr:this.dr},[this.ar.buffer, this.dr.buffer]);
     },
 
 

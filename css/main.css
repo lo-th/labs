@@ -11,7 +11,7 @@
 }
 html, body {
 	font-family: Consolas, 'ConsolasRegular', 'Courier New', monospace;
-	font-size: 14px;
+	font-size: 12px;
     height:100%;
     background:#25292e;
     color:#d2cec8;
@@ -24,9 +24,11 @@ html, body {
 
 a{
     color: #FFFFFF;
+    font-size: 10px;
     text-decoration: none;
 
 }
+
 .night { background:#25292e; color:#d2cec8; }
 .day { background:#d2cec8; color:#25292e; text-shadow: 1px 1px 1px rgba(0,0,0,0.3);}
 

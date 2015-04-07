@@ -13,7 +13,8 @@ var car, carM, carHide, shape, shapemin;
 
 v.tell('Ammo car<p>Use keyboard to drive');
 // active keyboard
-v.nav.bindKeys();
+v.imput.bindKeys();
+//v.nav.bindKeys();
 // load car model
 v.pool.load('c1gt', onload);
 

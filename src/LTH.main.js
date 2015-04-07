@@ -266,15 +266,15 @@ LTH.Main.prototype = {
 			this.clearPreview();
 			this.initPreview();
 
-			var options, ops, i, myContent;
+			var myContent;
+			var options = '';
+			var ops = LTH.libsNames[LTH.cRubr][LTH.cFile];
+			var i = 0;
+
+			if(ops && ops.length) i = ops.length;
 
 			if(this.transcode.useTrans){
-				// extra libs
-				options = '';
-				ops = LTH.libsNames[LTH.cRubr][LTH.cFile];
-				i = ops.length;
 				while(i--) {if(ops[i]!=='')options+="<script src='" + this.transcode.codes[ops[i]] + "'></script>";}
-
 		        myContent = [
 				    "<!DOCTYPE html>",
 					"<html lang='en'><head>",
@@ -289,19 +289,12 @@ LTH.Main.prototype = {
 					"</head><body class='"+this.mainClass+"'>",
 					"<script>",
 					this.baseScript,
-					//"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
-					//"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
-					//"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
-					//"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
 					value,
 					"</script>",
 					"</body></html>"
 				].join("\n");
 			}else{
 				// extra libs
-				options = '';
-				ops = LTH.libsNames[LTH.cRubr][LTH.cFile];
-				i = ops.length;
 				while(i--) {if(ops[i]!=='')options+="<script src='js/libs/"+ops[i]+".min.js'></script>";}
 				if(this.useDirectDebug){
 					myContent = [
@@ -332,19 +325,17 @@ LTH.Main.prototype = {
 						"<script src='src/V.material.js'></script>",
 						"<script src='src/V.postprocess.js'></script>",
 						"<script src='src/V.particles.js'></script>",
+						"<script src='src/V.UserImput.js'></script>",
 						"<script src='src/V.shaders.js'></script>",
 						"<script src='src/V.skylab.js'></script>",
 						"<script src='src/V.terrain.js'></script>",
 						"<script src='src/V.workers.js'></script>",
 						"<script src='src/V.pool.js'></script>",
 						"<script src='src/V.gui.js'></script>",
+						"<script src='src/V.bvh.js'></script>",
 						"</head><body class='"+this.mainClass+"'>",
 						"<script>",
 						this.baseScript,
-						//"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
-						//"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
-						//"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
-						//"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
 						value,
 						"</script>",
 						"</body></html>"
@@ -364,10 +355,6 @@ LTH.Main.prototype = {
 						"</head><body class='"+this.mainClass+"'>",
 						"<script>",
 						this.baseScript,
-						//"var canvas = document.createElement('canvas'); document.body.appendChild( canvas );",
-						//"var info = document.createElement('div'); document.body.appendChild( info ); info.className = 'info';",
-						//"var debug = document.createElement('div'); document.body.appendChild( debug ); debug.className = 'debug';",
-						//"var loader = document.createElement('div'); document.body.appendChild( loader ); loader.className = 'loader';",
 						value,
 						"</script>",
 						"</body></html>"

@@ -128,6 +128,9 @@ V.View = function(h,v,d, loadbasic){
 
     this.isWithSerious = false;
 
+    //this.key = { up:0, down:0, left:0, right:0, ctrl:0, action:0, space:0, shift:0 };
+    this.imput = new V.UserImput(this);
+
     this.material = new V.Material(this);
 
     
@@ -214,7 +217,7 @@ V.View.prototype = {
             textureWidth:this.dimentions.w, 
             textureHeight:this.dimentions.h, 
             color: sets.color || 0x777777, 
-            alpha: sets.alpha || 0.02, 
+            alpha: sets.alpha || 0.5, 
             power: sets.power || 1, 
             radius: sets.radius || 1.0 
         };
@@ -513,6 +516,8 @@ V.Nav = function(parent, h, v, d){
 	this.cursor = new V.Cursor();
     this.lockView = false;
 
+
+
 	this.camera = new THREE.PerspectiveCamera( V.Resolution.f, this.root.dimentions.r, 0.1, 2000 );
 	this.mouse3d = new THREE.Vector3();
 	this.selectName = '';
@@ -523,7 +528,9 @@ V.Nav = function(parent, h, v, d){
     this.position = new THREE.Vector3();
 	this.cam = { horizontal:h||0, vertical:v||90, distance:d||20, automove:false, theta:0, phi:0 };
     this.mouse = { x:0, y:0, ox:0, oy:0, h:0, v:0, mx:0, my:0, px:0, py:0, pz:0, r:0, down:false, move:true, button:0 };
+
     this.key = { up:0, down:0, left:0, right:0, ctrl:0, action:0, space:0, shift:0 };
+    //this.imput = new V.UserImput(this);
 
     this.moveCamera();
 

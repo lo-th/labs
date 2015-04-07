@@ -3,10 +3,12 @@
     "src/V.material.js",
     "src/V.postprocess.js",
     "src/V.particles.js",
+    "src/V.UserImput.js",
     "src/V.shaders.js",
     "src/V.skylab.js",
     "src/V.terrain.js",
     "src/V.workers.js",
     "src/V.pool.js",
+    "src/V.bvh.js",
     "src/V.gui.js"
 ]

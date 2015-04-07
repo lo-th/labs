@@ -5,7 +5,7 @@ var b1, b2, actif = '', prevy=0, prevr = 0;
 var v = new V.View(110, 65, 100);
 //v.mirror(300, {pos:new THREE.Vector3(0,-14.2,0)});
 
-v.tell('seriously<br><br>Move tv button bro !');
+v.tell('Seriously TV<p>Click and drag tv buttons');
 v.pool.load('tv', onload);
 
 v.zone({s:200, type:'plane', pos:[19,8.5,10]});

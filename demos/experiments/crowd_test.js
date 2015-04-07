@@ -1,5 +1,5 @@
 var v = new V.View(180, 45, 200);
-v.tell('crowd simulation<br><br>click to add agent !');
+v.tell('Crowd simulation<p>Click to add agents');
 
 var model1, model2;
 var workerOn = false;

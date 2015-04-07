@@ -1,5 +1,5 @@
 var v = new V.View(-110, 68, 30);
-v.tell('human');
+v.tell('Human');
 var m = {};
 var gui = new V.Gui(false);
 var morphsTables = [];

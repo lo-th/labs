@@ -6,6 +6,10 @@
 */
 
 LTH.labsMenu = function(main){
+	//this.t = [90,10,25,70,45, 13];
+	this.t = [90,20,20,60,40, 13]
+	this.inc = 0.07;//0.1;
+	
 	this.main = main;
 	this.baseColor = 'd2cec8';
 	this.topColor= '25292e';
@@ -15,7 +19,7 @@ LTH.labsMenu = function(main){
 	this.rdecal = -30;
 	this.center = this.size*0.5;
 	this.radius = 10;
-	this.endRadius = 110;
+	this.endRadius = 90;//110;
 	this.line = 1;
 	this.content = document.createElement('div');
 	//this.main.menu.content.appendChild( this.content );
@@ -95,7 +99,7 @@ LTH.labsMenu.prototype = {
 			this.anim = setTimeout(function(e){this.update()}.bind(this), this.time);
 		}
 		this.radius++;
-		this.line+=0.1;//2;
+		this.line+=this.inc;//2;
 	},
 	activeMouse:function(){
 		this.content.onmousemove = function(e){this.mouseMove(e)}.bind(this);
@@ -166,16 +170,16 @@ LTH.labsMenu.prototype = {
 	},
 	findPoint:function(angle){
 		var a = angle*LTH.ToRad;
-		var a2 = (angle+13)*LTH.ToRad;
-		var a3 = (angle-13)*LTH.ToRad;
-		var point, dist = 90;
-		var r = this.endRadius-10;
+		var a2 = (angle+this.t[5])*LTH.ToRad;
+		var a3 = (angle-this.t[5])*LTH.ToRad;
+		var point, dist = this.t[0];
+		var r = this.endRadius-this.t[1];
 		var p = [];
 		for(var i=0; i<13; i++){
-			if(i==0) point = this.radialPos(a,r+25);
-			else if(i==1) point = this.radialPos(a,r+70);
+			if(i==0) point = this.radialPos(a,r+this.t[2]);
+			else if(i==1) point = this.radialPos(a,r+this.t[3]);
 			else {
-				if((i & 1)==1){ point = this.radialPos(a3,r+dist); dist +=45; } // impaire
+				if((i & 1)==1){ point = this.radialPos(a3,r+dist); dist += this.t[4]; } // impaire
 				else point = this.radialPos(a2,r+dist);
 			}
 			p.push(point);
@@ -326,6 +330,8 @@ LTH.IconMicro = function(color, type){
 		case 13: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
 		case 14: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
 		case 15: t[1]="<path fill='#"+color+"' d='M 16 11 L 14 11 14 14 11 14 11 16 14 16 14 19 16 19 16 16 19 16 19 14 16 14 16 11 Z'/>";break;
+		case 16: t[1]="<path fill='#"+color+"' d='M 6 10 L 6 12 9 12 9 10 6 10 M 17 10 L 17 12 20 12 20 10 17 10 M 13 12 L 13 10 10 10 10 12 13 12 M 21 10 L 21 12 24 12 24 10 21 10 M 12 17 L 11 18 11 20 13 20 14 19 14 17 12 17 M 9 20 L 8 21 8 23 10 23 11 22 11 20 9 20 M 22 21 L 21 20 19 20 19 22 20 23 22 23 22 21 M 19 18 L 18 17 16 17 16 19 17 20 19 20 19 18 M 16 10 L 14 10 14 17 16 17 16 10 M 16 6 L 16 5 14 5 14 6 13 6 13 8 14 8 14 9 16 9 16 8 17 8 17 6 16 6 Z'/>";break;
+		case 17: t[1]="<path fill='#"+color+"' d='M 14 8 L 16 8 16 5 14 5 14 8 M 8 20 L 8 21 7 21 7 23 9 23 9 22 10 22 10 20 8 20 M 25 16 L 25 14 22 14 22 16 25 16 M 22 21 L 22 20 20 20 20 22 21 22 21 23 23 23 23 21 22 21 M 23 9 L 23 7 21 7 21 8 20 8 20 10 22 10 22 9 23 9 M 9 8 L 9 7 7 7 7 9 8 9 8 10 10 10 10 8 9 8 M 8 14 L 5 14 5 16 8 16 8 14 M 16 22 L 14 22 14 25 16 25 16 22 M 13 10 L 13 11 11 11 11 13 10 13 10 17 11 17 11 19 13 19 13 20 17 20 17 19 19 19 19 17 20 17 20 13 19 13 19 11 17 11 17 10 13 10 M 13 12 L 17 12 17 13 18 13 18 17 17 17 17 18 13 18 13 17 12 17 12 13 13 13 13 12 Z'/>";break;
 	}
 	t[2] = "</g></svg>";
 	return t.join("\n");

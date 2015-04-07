@@ -21,7 +21,8 @@
 	<demo n='seriously' lib='serious' ic='6'></demo>
 	<demo n='crowd_test' lib='' ic='12'></demo>
 	<demo n='human' lib='' ic='7'></demo>
-	<demo n='skylab' lib='' ic='0'></demo>
+	<demo n='skylab' lib='' ic='17'></demo>
+	<demo n='bvh_labs' lib='' ic='16'></demo>
 </rubrique>
 <rubrique n='tests' color='CAD33C'>
 	<demo n='liquid_mesh' lib='' ic='0'></demo>

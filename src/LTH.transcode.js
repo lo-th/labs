@@ -62,9 +62,14 @@ LTH.Transcode.prototype = {
 		img.src = 'images/code/'+this.name+'.png';
 	},
 	load:function(name, callback){
+
 		this.callback = callback || function(){};
 		var img = new Image();
-		img.onload = function() { this.transcanvas(img); }.bind(this);
+		img.onload = function() { 
+			this.canvas.width = this.size.w = img.width;
+			this.canvas.height = this.size.h = img.height;
+			this.transcanvas(img); 
+		}.bind(this);
 	    img.src = name;
 	},
 	create3dContext:function(){
@@ -85,14 +90,18 @@ LTH.Transcode.prototype = {
 		var w = this.size.w;
 	    var h = this.size.h;
 	    var data;
+
+	    console.log(this.size.w, this.size.h)
 	    
 	    if (!this.main.detector.webgl) { 
+	    	
 	        // canvas 2d
 	    	this.ctx = this.canvas.getContext('2d');
 	    	this.ctx.drawImage(image, 0, 0);
 	    	data = this.ctx.getImageData(0, 0, this.size.w, this.size.h).data;
 	    	this.ctx.clearRect ( 0 , 0 , this.size.w, this.size.h );
 	    } else {
+	    	
 	        // canvas 3d
 	    	if(this.gl==null) this.create3dContext();
 	    	var gl = this.gl;
@@ -123,6 +132,7 @@ LTH.Transcode.prototype = {
 		    data = new Uint8Array(w*h*4);
 		    gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, data);
 		    gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+		    //gl = null;
 		}
 
 		// DECODE DATA
@@ -135,11 +145,10 @@ LTH.Transcode.prototype = {
 			id = (i*4)+color;
 			pix = data[id]+32;
 			pix = pix == 127 ? 10 : pix;
-			string += String.fromCharCode(pix);
+			if( pix<127 ) string += String.fromCharCode(pix);
 		}
 
 		// END FUNCTION
-
 		this.callback(string);
 
 	},

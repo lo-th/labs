@@ -29,7 +29,7 @@ function onload(){
 
 var zone = document.createElement('div');
 zone.className = 'bvhDragZone';
-zone.innerHTML = 'Drag File';
+zone.innerHTML = 'Drag bvh file';
 document.body.appendChild( zone );
 zone.ondragover = function () { this.className = 'bvhDragZone hover'; return false; };
 zone.ondragend = function () { this.className = 'bvhDragZone'; return false; };

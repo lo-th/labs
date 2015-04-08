@@ -2,6 +2,8 @@ var v = new V.View(90, 90, 200, true);
 v.nav.moveto(0,50,0);
 v.mirror(300, {pos:new THREE.Vector3(0,5,0), color:0x25292e, alpha:0.3});
 
+var man, woman;
+
 var bvh = new V.BvhPlayer(v);
 //bvh.load('images/bvh/tpose.bvh');
 bvh.load('images/bvh/action.png', onbvhload);
@@ -17,15 +19,22 @@ function loop(){
 }
 
 function onbvhload(){
-	v.pool.load('stickman', onload);
+	v.pool.load('human', onload);;
 }
 
 function onload(){
-	var m = v.pool.meshes.stickman.body;
+
+	man = v.pool.meshes.human.man;
+	woman = v.pool.meshes.human.woman;
+
 	var size = 1;
-	m.scale.set(size,size,-size);
-	m.material = new THREE.MeshBasicMaterial({color:0xCCCCCC, skinning:true, envMap:v.environment, reflectivity:0.8, transparent:true, opacity:0.9})
-	bvh.skin(m);
+	var skinMat = new THREE.MeshBasicMaterial({color:0xCCCCCC, skinning:true, envMap:v.environment, reflectivity:0.8, transparent:true, opacity:0.9});
+	man.scale.set(size,size,-size);
+	man.material = skinMat;
+	woman.scale.set(size,size,-size);
+	woman.material = skinMat;
+
+	bvh.skin(man, true);
 }
 
 // DRAGZONE
@@ -45,3 +54,21 @@ zone.ondrop = function (e) {
     e.preventDefault();
     return false;
 };
+
+// BUTTON
+var butMan = document.createElement('div');
+butMan.className = 'bvhButton';
+butMan.innerHTML = 'MAN';
+document.body.appendChild( butMan );
+butMan.onclick = function (e) { bvh.skin(man, true); }
+butMan.onmouseover = function (e) { this.className = 'bvhButton hover'; }
+butMan.onmouseout = function (e) { this.className = 'bvhButton'; }
+
+var butWoman = document.createElement('div');
+butWoman.className = 'bvhButton';
+butWoman.innerHTML = 'WOMAN';
+butWoman.style.right = '86px';
+document.body.appendChild( butWoman );
+butWoman.onclick = function (e) { bvh.skin(woman, true); }
+butWoman.onmouseover = function (e) { this.className = 'bvhButton hover'; }
+butWoman.onmouseout = function (e) { this.className = 'bvhButton'; }

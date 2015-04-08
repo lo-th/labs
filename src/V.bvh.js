@@ -22,25 +22,24 @@ V.BvhPlayer.prototype = {
 
 
     },
-    skin:function(mesh){
+    skin:function(mesh, bsize){
     	if(this.model!==null) this.clearSkin();
     	this.model = mesh;
     	this.bones = this.model.skeleton.bones;
         this.boneInverses = this.model.skeleton.boneInverses;
-        this.preservesBoneSize = true;
+        this.preservesBoneSize = bsize || false;
 
         /*var i = this.bones.length;
         while(i--){
         	console.log(this.bones[i].name);
         }*/
 
-
         this.root.scene.add(this.model);
     },
     clearSkin:function(){
     	this.root.scene.remove(this.model);
-    	this.model.material.dispose();
-    	this.model.geometry.dispose();
+    	//this.model.material.dispose();
+    	//this.model.geometry.dispose();
     },
     boneSize:function(v){
     	var s = v/30;
@@ -61,76 +60,52 @@ V.BvhPlayer.prototype = {
     	var bone, node, name;
 		var nodes = this.reader.Nodes;
 		var len = this.bones.length;
-		var notAsign = [];
-
+		var globalMtx, localMtx, parentMtx, tmpMtx, worldMtx;
+		var globalQuat = new THREE.Quaternion();
 	    var globalPos = new THREE.Vector3();
-	    var globalQuat = new THREE.Quaternion();
-	    var globalMtx = new THREE.Matrix4();
-	    var localMtx = new THREE.Matrix4();
-		
-		var i =  len;
-	    while(i--){	
+	    var tmpPos = new THREE.Vector3();
+
+	    for(var i=0; i<len; i++){
 	        bone = this.bones[i];
 	        name = bone.name;
-
+	        worldMtx = bone.parent.matrixWorld;
+	        parentMtx = bone.parent.mtx ? bone.parent.mtx : worldMtx;
 	        if ( node = nodes[name] ){
 				
 				// LOCAL TO GLOBAL
-	            var nodeMtx = new THREE.Matrix4().copy( node.matrixWorld );
-	            var pos_target = new THREE.Vector3();
-				globalPos.setFromMatrixPosition( nodeMtx );
-	            globalQuat.setFromRotationMatrix( nodeMtx );
+				tmpMtx = node.matrixWorld.clone();
+				globalPos.setFromMatrixPosition( tmpMtx );
+	            globalQuat.setFromRotationMatrix( tmpMtx );
 
-				//	PREPARES MATRIX
+				// PREPARES MATRIX
 				globalMtx = new THREE.Matrix4();	
 				if (!bone.rootMatrix) bone.rootMatrix = bone.matrixWorld.clone();		
 				
-				//	MODIFY TRANSFORM
+				// MODIFY TRANSFORM
 	            globalMtx.makeRotationFromQuaternion( globalQuat );
 				globalMtx.multiply( bone.rootMatrix );
 				globalMtx.setPosition( globalPos );
 				
-				//	GLOBAL TO LOCAL
-				var inv = new THREE.Matrix4().getInverse( bone.parent.matrixWorld );
-				localMtx = new THREE.Matrix4().multiplyMatrices( inv, globalMtx );
-				globalMtx.multiplyMatrices( bone.parent.matrixWorld, localMtx );
-				
-				//	UPDATE BONE
-				bone.mtx = globalMtx.clone();
-	        } else {
-				globalMtx = new THREE.Matrix4().multiplyMatrices( bone.parent.mtx ? bone.parent.mtx : bone.parent.matrixWorld, bone.matrix );
-				bone.mtx = globalMtx;
-			}
-	    }
+				// GLOBAL TO LOCAL
+				tmpMtx = new THREE.Matrix4().getInverse( worldMtx );
+				localMtx = new THREE.Matrix4().multiplyMatrices( tmpMtx, globalMtx );
+				globalMtx.multiplyMatrices( worldMtx, localMtx );
 
-		if (this.preservesBoneSize){
-			i =  len;
-			while(i--){
-				bone = this.bones[i];
-				name = bone.name;
-				if(name!=='Hips'){
-	    			var parentMtx = bone.parent.mtx ? bone.parent.mtx : bone.parent.matrixWorld;
-	    			if (node = nodes[name]){
-	    				//	GLOBAL TO LOCAL		
-	    				var origineInv = new THREE.Matrix4();
-	    				var originePos = new THREE.Vector3();
-	                    origineInv.getInverse( parentMtx );
-	    				localMtx = new THREE.Matrix4().multiplyMatrices( origineInv, bone.mtx );
-	    								
-	    				//--
-	                    originePos.setFromMatrixPosition( bone.matrix );
-	                    localMtx.setPosition( originePos );						
-	    				
-	    				//--
-	    				globalMtx = new THREE.Matrix4().multiplyMatrices( parentMtx, localMtx );
-	    				bone.mtx = globalMtx;				
-	    			} else {
-	    				globalMtx = new THREE.Matrix4().multiplyMatrices( parentMtx, bone.matrix );
-	    				bone.mtx = globalMtx;
-	    			}
-	            }
+				// PRESERVES BONE SIZE
+				if(this.preservesBoneSize && name!=='Hips'){
+					tmpMtx = new THREE.Matrix4().getInverse( parentMtx );
+					tmpPos.setFromMatrixPosition( bone.matrix );
+	    			localMtx = new THREE.Matrix4().multiplyMatrices( tmpMtx, globalMtx );
+	    			localMtx.setPosition( tmpPos );
+	    			globalMtx = new THREE.Matrix4().multiplyMatrices( parentMtx, localMtx );
+				}
+	        } else {
+	        	globalMtx = new THREE.Matrix4().multiplyMatrices( parentMtx, bone.matrix );
 			}
-		}
+
+			// UPDATE BONE
+			bone.mtx = globalMtx;
+	    }
     }
 }
 

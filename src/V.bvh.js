@@ -68,7 +68,7 @@ V.BvhPlayer.prototype = {
 	    for(var i=0; i<len; i++){
 	        bone = this.bones[i];
 	        name = bone.name;
-	        worldMtx = bone.parent.matrixWorld;
+	        worldMtx = bone.parent.matrixWorld || new THREE.Matrix4();
 	        parentMtx = bone.parent.mtx ? bone.parent.mtx : worldMtx;
 	        if ( node = nodes[name] ){
 				

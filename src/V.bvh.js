@@ -26,7 +26,7 @@ V.BvhPlayer.prototype = {
     	if(this.model!==null) this.clearSkin();
     	this.model = mesh;
     	this.bones = this.model.skeleton.bones;
-        this.boneInverses = this.model.skeleton.boneInverses;
+        //this.boneInverses = this.model.skeleton.boneInverses;
         this.preservesBoneSize = bsize || false;
 
         /*var i = this.bones.length;
@@ -321,7 +321,7 @@ V.BvhReader.prototype = {
     	for(var i=0; i<n; i++){
     		node = this.nodes[i];
 
-    		this.nodesMesh[i] = new THREE.Mesh( this.nodegeo, this.nodeMaterial  )
+    		this.nodesMesh[i] = new THREE.Mesh( this.nodegeo, this.nodeMaterial );
     		this.skeleton.add(this.nodesMesh[i]);
 
     		if ( node.name !== 'Site' ){
@@ -332,7 +332,7 @@ V.BvhReader.prototype = {
 	    		bone.name = node.name;
 	    		this.skeleton.add(bone);
 	    		this.bones[i] = bone;
-	    		this.BoneByName[node.name]= bone;
+	    		this.BoneByName[node.name] = bone;
     	    }
     	}
     	this.root.scene.add( this.skeleton );

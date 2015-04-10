@@ -1,5 +1,6 @@
 [
-	"src/loader/SEA3D.js",
-	"src/loader/SEA3DLoader.js",
-	"src/loader/SEA3DLZMA.js"
+	"src/three/loader/SEA3D.js",
+	"src/three/loader/SEA3DDef.js",
+	"src/three/loader/SEA3DLoader.js",
+	"src/three/loader/SEA3DLZMA.js"
 ]

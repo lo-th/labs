@@ -19,7 +19,7 @@ function loop(){
 }
 
 function onbvhload(){
-	v.pool.load('human', onload);;
+	v.pool.load('human', onload);
 }
 
 function onload(){

@@ -41,6 +41,20 @@ V.Gui.prototype = {
 
 // -----------------------------------
 
+V.LoGui = function(isWithModel){
+    this.content = document.createElement('div');
+    this.content.className = 'logui';
+    document.body.appendChild( this.content );
+}
+V.LoGui.prototype = {
+    constructor: V.LoGui,
+    slide:function(){
+
+    }
+}
+
+// -----------------------------------
+
 V.Environment = function(){
     this.shaders = [];
     this.envLists = ['e_chrome.jpg','e_black.jpg','e_brush.jpg', 'e_metal.jpg','e_plastic.jpg','e_plastic_r.jpg','e_smooth.jpg','env.jpg','env0.jpg','env1.jpg'];

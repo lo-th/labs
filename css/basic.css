@@ -160,3 +160,9 @@ body.day .dg .c .slider:hover { background: rgba(255,255,255,0.3);}
 
 .bvhButton { cursor:pointer; position:absolute; font-weight:bold; top:66px; right:10px; width:70px; height:20px; background-color:none; padding-top:3px;border-radius:10px; border: 2px solid #ccc; pointer-events:auto; text-align:center; font-size: 14px;}
 .bvhButton.hover { border: 2px solid #ff9500; color:#ff9500;}
+
+/* LOGUI */
+
+.logui{
+    position:absolute; width:180px; height:100%; right:0px; top:0px;
+}

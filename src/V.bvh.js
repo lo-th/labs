@@ -105,6 +105,9 @@ V.BvhPlayer.prototype = {
 
 			// UPDATE BONE
 			bone.mtx = globalMtx;
+
+			//mesh.skeleton.bones[i].matrixAutoUpdate = true;
+			//mesh.skeleton.bones[i].matrixWorldNeedsUpdate = true;
 	    }
     }
 }

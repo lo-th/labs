@@ -315,6 +315,7 @@ LTH.Main.prototype = {
 						"<script src='src/three/shaders/SSAOShader.js'></script>",
 						"<script src='src/three/shaders/FXAAShader.js'></script>",
 						"<script src='src/three/shaders/DepthDef.js'></script>",
+						"<script src='src/three/modifiers/SubdivisionModifier.js'></script>",
 						"<script src='src/three/loader/SEA3D.js'></script>",
 						"<script src='src/three/loader/SEA3DLoader.js'></script>",
 						"<script src='src/three/loader/SEA3DLZMA.js'></script>",

@@ -19,15 +19,33 @@ function loop(){
 }
 
 function onbvhload(){
-	v.pool.load('human', onload);
+	v.pool.load('human_high', onload);
 }
 
 function onload(){
-
-	man = v.pool.meshes.human.man;
-	woman = v.pool.meshes.human.woman;
-
 	var size = 1;
+	//var modifier = new THREE.SubdivisionModifier( 2 );
+
+	man = v.pool.meshes.human_high.man;
+	woman = v.pool.meshes.human_high.woman;
+
+
+	/*var skeleton = new THREE.Skeleton( man.skeleton.bones );
+	var geo =  man.geometry;//.clone();
+	//geo.mergeVertices();
+	//geo.computeFaceNormals();
+	//geo.computeVertexNormals();
+	//geo.applyMatrix(new THREE.Matrix4().makeScale(size,size,-size))
+	modifier.modify( geo );
+
+	var me = new THREE.SkinnedMesh(geo, new THREE.MeshBasicMaterial({color:0xCCCCCC, skinning:true}), true )
+
+	me.bind( skeleton );
+	//me.skeleton = man.skeleton;
+	//me.scale.set(size,size,-size);
+	v.scene.add(me)*/
+
+	
 	var skinMat = new THREE.MeshBasicMaterial({color:0xCCCCCC, skinning:true, envMap:v.environment, reflectivity:0.8, transparent:true, opacity:0.9});
 	man.scale.set(size,size,-size);
 	man.material = skinMat;

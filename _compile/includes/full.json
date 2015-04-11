@@ -9,6 +9,7 @@
     "src/three/shaders/SSAOShader.js",
     "src/three/shaders/FXAAShader.js",
     "src/three/shaders/DepthDef.js",
+    "src/three/modifiers/SubdivisionModifier.js",
 	"src/three/loader/SEA3D.js",
 	"src/three/loader/SEA3DLoader.js",
 	"src/three/loader/SEA3DLZMA.js",

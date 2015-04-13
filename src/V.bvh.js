@@ -14,6 +14,8 @@ V.BvhPlayer = function(parent){
 	this.root = parent;
 	this.reader = new V.BvhReader(this.root);
 	this.model = null;
+
+
 }
 
 V.BvhPlayer.prototype = {
@@ -70,6 +72,7 @@ V.BvhPlayer.prototype = {
 	        name = bone.name;
 	        worldMtx = bone.parent.matrixWorld || new THREE.Matrix4();
 	        parentMtx = bone.parent.mtx ? bone.parent.mtx : worldMtx;
+	        //parentMtx = worldMtx.clone();
 	        if ( node = nodes[name] ){
 				
 				// LOCAL TO GLOBAL
@@ -106,8 +109,9 @@ V.BvhPlayer.prototype = {
 			// UPDATE BONE
 			bone.mtx = globalMtx;
 
-			//mesh.skeleton.bones[i].matrixAutoUpdate = true;
-			//mesh.skeleton.bones[i].matrixWorldNeedsUpdate = true;
+			//bone.matrixWorld = globalMtx;
+			//bone.matrixAutoUpdate = false;
+			//bone.matrixWorldNeedsUpdate = true;
 	    }
     }
 }
@@ -155,7 +159,8 @@ THREE.Skeleton.prototype.update = ( function () {
 V.BvhReader = function(parent){
 	this.root = parent;
 	this.debug = true;
-	this.type = "";
+	this.type = "deff";
+	this.searchType = true;
 	this.data = null;
 	this.rootBone = null;
 	this.numFrames = 0;
@@ -210,14 +215,14 @@ V.BvhReader.prototype = {
 
     load:function(fname, callback){
     	this.callback = callback || function(){};
-    	this.type = fname.substring(fname.length-3,fname.length);
+    	var typeOfFile = fname.substring(fname.length-3,fname.length);
 			
-		if(this.type === 'bvh'){// direct from file
+		if(typeOfFile === 'bvh'){// direct from file
 			var xhr = new XMLHttpRequest();
 		    xhr.open( 'GET', fname, true );
 			xhr.onreadystatechange = function(){ if ( xhr.readyState == 4 ){ this.parseData(xhr.responseText.split(/\s+/g));}}.bind(this);
 			xhr.send( null );
-	    } else if(this.type === 'png'){// from png link
+	    } else if(typeOfFile === 'png'){// from png link
 	    	window.top.main.transcode.load(fname, function(string) { this.parseData(string.split(/\s+/g))}.bind(this) );
 		}
     },
@@ -382,56 +387,104 @@ V.BvhReader.prototype = {
 	    	}
     	}
     },
+    testBvhType:function(name){
+    	if(name==="rButtock") { this.type = 'cgspeedDAZ'; this.searchType=false; };
+    	if(name==="ToSpine") { this.type = 'openMotion'; this.searchType=false; };
+    	if(name==="RHipJoint") { this.type = 'cgspeed3DS'; this.searchType=false; };//this.type = 'cgspeed';//name = "Hips";// same as Hips
+		//if(name==="LHipJoint") this.type = 'cgspeed';//name = "Hips";// same as Hips
+
+		
+
+    },
 	transposeName:function(name){
 		if(name==="hip" || name==="SpineBase") name = "Hips";
+
+
 		if(name==="abdomen" || name==="SpineBase2") name = "Spine1";
+
 		if(name==="chest" || name==="SpineMid") name = "Chest";
 		if(name==="neck" || name==="Neck2") name = "Neck";
 		if(name==="head") name = "Head";
-		if(name==="lCollar") name = "LeftCollar";
-		if(name==="rCollar") name = "RightCollar";
-		if(name==="lShldr") name = "LeftUpArm";
-		if(name==="rShldr") name = "RightUpArm";
-		if(name==="lForeArm") name = "LeftLowArm";
-		if(name==="rForeArm") name = "RightLowArm";
-		if(name==="lHand") name = "LeftHand";
-		if(name==="rHand") name = "RightHand";
-		if(name==="lFoot") name = "LeftFoot";
-		if(name==="rFoot") name = "RightFoot";
-		if(name==="lThigh") name = "LeftUpLeg";
-		if(name==="rThigh") name = "RightUpLeg";
-		if(name==="lShin") name = "LeftLowLeg";
-		if(name==="rShin") name = "RightLowLeg";
 
-		// leg
-		if(name==="RightHip" || name==="HipRight") name = "RightUpLeg";
-		if(name==="LeftHip" || name==="HipLeft") name = "LeftUpLeg";
-		if(name==="RightKnee" || name==="KneeRight") name = "RightLowLeg";
-		if(name==="LeftKnee" || name==="KneeLeft") name = "LeftLowLeg";
-		if(name==="RightAnkle" || name==="AnkleRight") name = "RightFoot";
-		if(name==="LeftAnkle" || name==="AnkleLeft") name = "LeftFoot";
-		// arm
-		if(name==="RightShoulder" || name==="ShoulderRight") name = "RightUpArm";
-		if(name==="LeftShoulder" || name==="ShoulderLeft") name = "LeftUpArm";
-		if(name==="RightElbow" || name==="ElbowRight") name = "RightLowArm";
-		if(name==="LeftElbow" || name==="ElBowLeft") name = "LeftLowArm";
-		if(name==="RightWrist" || name==="WristRight") name = "RightHand";
-		if(name==="LeftWrist"|| name==="WristLeft") name = "LeftHand";
+		if(name==="rCollar" || name==="rcollar" || name==="CollarRight") name = "RightCollar";
+		if(name==="lCollar" || name==="lcollar" || name==="CollarLeft") name = "LeftCollar";
 
-		if(name==="rcollar" || name==="CollarRight") name = "RightCollar";
-		if(name==="lcollar" || name==="CollarLeft") name = "LeftCollar";
+		//if(name==="lShldr") name = "LeftUpArm";
+		//if(name==="rShldr") name = "RightUpArm";
+		//if(name==="lForeArm") name = "LeftLowArm";
+		//if(name==="rForeArm") name = "RightLowArm";
+		//if(name==="lHand") name = "LeftHand";
+		//if(name==="rHand") name = "RightHand";
+		//if(name==="lFoot") name = "LeftFoot";
+		//if(name==="rFoot") name = "RightFoot";
 
-		if(name==="rtoes") name = "RightToe";
-		if(name==="ltoes") name = "LeftToe";
+		//if(name==="lThigh") name = "LeftUpLeg";
+		//if(name==="rThigh") name = "RightUpLeg";
+		//if(name==="lShin") name = "LeftLowLeg";
+		//if(name==="rShin") name = "RightLowLeg";
 
 		if(name==="upperback") name = "Spine1";
+		if(name==="lowerback") name = "Spine1";
+		if(name==="Chest2") name = "Chest";
+
+		
+
+		// leg
+		if(name==="rThigh" || name==="RightHip" || name==="HipRight") name = "RightUpLeg";
+		if(name==="lThigh" || name==="LeftHip" || name==="HipLeft") name = "LeftUpLeg";
+		if(name==="rShin" || name==="RightKnee" || name==="KneeRight") name = "RightLowLeg";
+		if(name==="lShin" || name==="LeftKnee" || name==="KneeLeft") name = "LeftLowLeg";
+		if(name==="rFoot" || name==="RightAnkle" || name==="AnkleRight") name = "RightFoot";
+		if(name==="lFoot" || name==="LeftAnkle" || name==="AnkleLeft") name = "LeftFoot";
+
+		if(name==="RightLeg") name = "RightLowLeg";
+		if(name==="LeftLeg") name = "LeftLowLeg";
+
+		if(name==="rtoes" || name==="RightToeBase") name = "RightToe";
+		if(name==="ltoes" || name==="LeftToeBase") name = "LeftToe";
+
+
+
+		// arm
+		//if(name==="rShldr" || name==="RightArm" || name==="RightShoulder" || name==="ShoulderRight") name = "RightUpArm";
+		//if(name==="lShldr" || name==="LeftArm"  || name==="LeftShoulder"  || name==="ShoulderLeft") name = "LeftUpArm";
+		if(name==="rShldr" || name==="RightArm" || name==="ShoulderRight") name = "RightUpArm";
+		if(name==="lShldr" || name==="LeftArm"  || name==="ShoulderLeft") name = "LeftUpArm";
+		if(name==="rForeArm" || name==="RightForeArm" || name==="RightElbow" || name==="ElbowRight") name = "RightLowArm";
+		if(name==="lForeArm" || name==="LeftForeArm"  || name==="LeftElbow"  || name==="ElBowLeft") name = "LeftLowArm";
+		if(name==="rHand" || name==="RightWrist" || name==="WristRight") name = "RightHand";
+		if(name==="lHand" || name==="LeftWrist"  || name==="WristLeft") name = "LeftHand";
+
+		
+
+		
+
+		//if(name==="RightArm") name = "RightUpArm";
+		//if(name==="LeftArm") name = "LeftUpArm";
+		//if(name==="RightForeArm") name = "RightLowArm";
+		//if(name==="LeftForeArm") name = "LeftLowArm";
+
+		//if(name==="RHipJoint") name = "RightLowArm";
+		//if(name==="LHipJoint") name = "LeftLowArm";
+
+		
+
+		// on old cgspeed bvh
+		if(name==="RightShoulder" ) name = "RightCollar";
+		if(name==="LeftShoulder" ) name = "LeftCollar";
+
+
+
+		
 		
 		return name;
 	},
     parseNode:function(data){
     	var name, done, n, node, t;
 		name = data.shift();
+		if(this.searchType) this.testBvhType(name);
 		name = this.transposeName(name);
+
 		node = new THREE.Group();
 
 
@@ -501,24 +554,36 @@ V.BvhReader.prototype = {
 		var n =  this.frame % this.numFrames * this.channels.length;
 		var ref = this.channels;
 		var isRoot = false;
+		var isRevers = false;
 
 		for ( var i = 0, len = ref.length; i < len; i++) {
 			ch = ref[ i ];
 			if(ch.node.name === "Hips") isRoot = true;
 			else isRoot = false;
 
+			if(this.type === 'cgspeedDAZ' && ch.node.name ==='LeftLowArm') isRevers = true;
+			else isRevers = false;
+
+
+
 
 			switch ( ch.prop ) {
 				case 'Xrotation':
+				    //if(isRevers)this.autoDetectRotation(ch.node, "X", -parseFloat(this.data[n]));
+				    //else 
 				    this.autoDetectRotation(ch.node, "X", parseFloat(this.data[n]));
 					//ch.node.rotation.x = (parseFloat(this.data[n])) * V.ToRad;
 					break;
 				case 'Yrotation':
-				    this.autoDetectRotation(ch.node, "Y", parseFloat(this.data[n]));
+				    //this.autoDetectRotation(ch.node, "Y", parseFloat(this.data[n]));
+				    if(isRevers)this.autoDetectRotation(ch.node, "Y", -parseFloat(this.data[n]));
+				    else this.autoDetectRotation(ch.node, "Y", parseFloat(this.data[n]));
 					//ch.node.rotation.y = (parseFloat(this.data[n])) * V.ToRad;
 					break;
 				case 'Zrotation':
-				    this.autoDetectRotation(ch.node, "Z", parseFloat(this.data[n]));
+				    // NOT SUR
+				    if(isRevers)this.autoDetectRotation(ch.node, "Z", -parseFloat(this.data[n]));
+				    else this.autoDetectRotation(ch.node, "Z", parseFloat(this.data[n]));
 					//ch.node.rotation.z = (parseFloat(this.data[n])) * V.ToRad;
 					break;
 				case 'Xposition':

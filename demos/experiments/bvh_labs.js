@@ -45,8 +45,10 @@ function onload(){
 	//me.scale.set(size,size,-size);
 	v.scene.add(me)*/
 
+	var tx = THREE.ImageUtils.loadTexture( 'images/avatar.jpg');
+	tx.flipY = false;
 	
-	var skinMat = new THREE.MeshBasicMaterial({color:0xCCCCCC, skinning:true, envMap:v.environment, reflectivity:0.8, transparent:true, opacity:0.9});
+	var skinMat = new THREE.MeshBasicMaterial({map:tx, color:0xFFFFFF, skinning:true, envMap:v.environment, reflectivity:0.4, transparent:true, opacity:0.9});
 	man.scale.set(size,size,-size);
 	man.material = skinMat;
 	woman.scale.set(size,size,-size);

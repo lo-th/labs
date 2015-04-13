@@ -15,6 +15,13 @@ V.BvhPlayer = function(parent){
 	this.reader = new V.BvhReader(this.root);
 	this.model = null;
 
+	// hack for bvh cgspeed 3DS version
+	this.qdecalLeft = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1), 21*V.ToRad);
+	this.qdecalRight = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1), -21*V.ToRad);
+
+	this.qdecalLeft2 = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1), -90*V.ToRad);
+	this.qdecalRight2 = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1), 90*V.ToRad);
+
 
 }
 
@@ -59,6 +66,7 @@ V.BvhPlayer.prototype = {
     	if(this.model !== null) this.updateSkin();
     },
     updateSkin:function(){
+    	var type = this.reader.type;
     	var bone, node, name;
 		var nodes = this.reader.Nodes;
 		var len = this.bones.length;
@@ -66,6 +74,7 @@ V.BvhPlayer.prototype = {
 		var globalQuat = new THREE.Quaternion();
 	    var globalPos = new THREE.Vector3();
 	    var tmpPos = new THREE.Vector3();
+
 
 	    for(var i=0; i<len; i++){
 	        bone = this.bones[i];
@@ -79,6 +88,14 @@ V.BvhPlayer.prototype = {
 				tmpMtx = node.matrixWorld.clone();
 				globalPos.setFromMatrixPosition( tmpMtx );
 	            globalQuat.setFromRotationMatrix( tmpMtx );
+
+	            if(type==='cgspeed3DS'){
+	            	if(name==='RightUpLeg' || name==='RightLowLeg' || name==='RightFoot'){globalQuat.multiply(this.qdecalRight);}
+	            	if(name==='LeftUpLeg' || name==='LeftLowLeg' || name==='LeftFoot')globalQuat.multiply(this.qdecalLeft);
+
+	            	if(name==='RightUpArm' || name==='RightLowArm' || name==='RightHand'){globalQuat.multiply(this.qdecalRight2);}
+	            	if(name==='LeftUpArm' || name==='LeftLowArm' || name==='LeftHand')globalQuat.multiply(this.qdecalLeft2);
+	            }
 
 				// PREPARES MATRIX
 				globalMtx = new THREE.Matrix4();	
@@ -388,8 +405,9 @@ V.BvhReader.prototype = {
     	}
     },
     testBvhType:function(name){
-    	if(name==="rButtock") { this.type = 'cgspeedDAZ'; this.searchType=false; };
     	if(name==="ToSpine") { this.type = 'openMotion'; this.searchType=false; };
+    	if(name==="rButtock") { this.type = 'cgspeedDAZ'; this.searchType=false; };
+    	
     	if(name==="RHipJoint") { this.type = 'cgspeed3DS'; this.searchType=false; };//this.type = 'cgspeed';//name = "Hips";// same as Hips
 		//if(name==="LHipJoint") this.type = 'cgspeed';//name = "Hips";// same as Hips
 
@@ -406,6 +424,7 @@ V.BvhReader.prototype = {
 		if(name==="neck" || name==="Neck2") name = "Neck";
 		if(name==="head") name = "Head";
 
+		// shoulder
 		if(name==="rCollar" || name==="rcollar" || name==="CollarRight") name = "RightCollar";
 		if(name==="lCollar" || name==="lcollar" || name==="CollarLeft") name = "LeftCollar";
 
@@ -424,8 +443,14 @@ V.BvhReader.prototype = {
 		//if(name==="rShin") name = "RightLowLeg";
 
 		if(name==="upperback") name = "Spine1";
-		if(name==="lowerback") name = "Spine1";
+		//if(name==="lowerback") name = "Spine1";
 		if(name==="Chest2") name = "Chest";
+
+
+		if(this.type == 'cgspeed3DS'){
+			if(name==="lowerback") name = "Spine1";
+			if(name==="Spine1") name = "Chest";
+		}
 
 		
 
@@ -448,8 +473,8 @@ V.BvhReader.prototype = {
 		// arm
 		//if(name==="rShldr" || name==="RightArm" || name==="RightShoulder" || name==="ShoulderRight") name = "RightUpArm";
 		//if(name==="lShldr" || name==="LeftArm"  || name==="LeftShoulder"  || name==="ShoulderLeft") name = "LeftUpArm";
-		if(name==="rShldr" || name==="RightArm" || name==="ShoulderRight") name = "RightUpArm";
-		if(name==="lShldr" || name==="LeftArm"  || name==="ShoulderLeft") name = "LeftUpArm";
+		if(name==="rShldr" || name==="RightArm" || name==="RightShoulder" || name==="ShoulderRight") name = "RightUpArm";
+		if(name==="lShldr" || name==="LeftArm"  || name==="LeftShoulder" || name==="ShoulderLeft") name = "LeftUpArm";
 		if(name==="rForeArm" || name==="RightForeArm" || name==="RightElbow" || name==="ElbowRight") name = "RightLowArm";
 		if(name==="lForeArm" || name==="LeftForeArm"  || name==="LeftElbow"  || name==="ElBowLeft") name = "LeftLowArm";
 		if(name==="rHand" || name==="RightWrist" || name==="WristRight") name = "RightHand";
@@ -470,8 +495,8 @@ V.BvhReader.prototype = {
 		
 
 		// on old cgspeed bvh
-		if(name==="RightShoulder" ) name = "RightCollar";
-		if(name==="LeftShoulder" ) name = "LeftCollar";
+		//if(name==="RightShoulder" ) name = "RightCollar";
+		//if(name==="LeftShoulder" ) name = "LeftCollar";
 
 
 

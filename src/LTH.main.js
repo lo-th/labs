@@ -1,8 +1,8 @@
-/**   _     _   _     
-*    | |___| |_| |__
-*    | / _ \  _|    |
-*    |_\___/\__|_||_|
-*    @author LoTh / http://lo-th.github.io/labs/
+/**   _   _____ _   _   
+*    | | |_   _| |_| |
+*    | |_ _| | |  _  |
+*    |___|_|_| |_| |_|
+*    @author l.th / http://lo-th.github.io/labs/
 */
 
 var LTH = {};
@@ -429,31 +429,6 @@ LTH.Logos = function(color, blink){
 	].join("\n");
 	return txt;
 }
-
-/*LTH.LogosBack = function(color){
-	color = color || '#000000';
-	var color2 = '#000000';
-	var txt = [
-	"<svg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' preserveAspectRatio='none' x='0px' y='0px' width='128px' height='128px' viewBox='0 0 128 128'><defs>",
-    "<radialGradient id='Gradient_1' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='50' fx='0' fy='-13' gradientTransform='matrix(1,0,0,1,64,64)' spreadMethod='pad'>",
-    "<stop offset='15%' stop-color='"+color+"' stop-opacity='0.8'/>",
-    //"<stop offset='27%' stop-color='"+color+"' stop-opacity='0'/>",
-    //"<stop offset='28%' stop-color='"+color+"' stop-opacity='0'/>",
-    "<stop offset='28%' stop-color='"+color+"' stop-opacity='0.2'/>",
-    "<stop offset='40%' stop-color='"+color2+"' stop-opacity='0.1'/>",
-    "<stop offset='70%' stop-color='"+color2+"' stop-opacity='0.1'/></radialGradient>",
-    "<radialGradient id='Gradient_2' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='64' fx='0' fy='-13' gradientTransform='matrix(1,0,0,1,64,64)' spreadMethod='pad'>",
-    "<stop offset='0%' stop-color='"+color2+"' stop-opacity='1'/>",
-    "<stop offset='60%' stop-color='"+color2+"' stop-opacity='0.1'/>",
-    "<stop offset='90%' stop-color='"+color2+"' stop-opacity='0'/></radialGradient>",
-    "<g id='bg'><path fill='url(#Gradient_1)' stroke='none' d='M 95.8 43 Q 94.75 32.25 86.25 24.15 77.65 15.9 64 16.25 50.35 15.9 41.75 24.15 33.25 32.25 32.2 43 32.2 43.1 32.15 43.25 29.25 58.55 32.2 73.5 33.25 78.3 35.8 80.1 40.85 83.5 43.15 90.2 44.8875 93.9875 46.6 97.75 47.259375 98.865625 47.9 99.85 54.3619140625 109.6810546875 64 110 73.63828125 109.6810546875 80.05 99.85 80.7408203125 98.8654296875 81.35 97.75 83.1125 93.975 84.85 90.2 87.15 83.5 92.2 80.1 94.75 78.3 95.8 73.5 98.75 58.55 95.85 43.25 95.8 43.1 95.8 43 Z'/>",
-    "<path fill='url(#Gradient_2)' stroke='none' d='M 0 128 L 128 128 128 0 0 0 0 128 M 86.25 24.15 Q 94.75 32.25 95.8 43 95.8 43.1 95.85 43.25 98.75 58.55 95.8 73.5 94.75 78.3 92.2 80.1 87.15 83.5 84.85 90.2 83.1125 93.975 81.35 97.75 80.764453125 98.8845703125 80.1 99.9 L 80.05 99.85 Q 73.63828125 109.6810546875 64 110 54.3619140625 109.6810546875 47.9 99.85 L 47.9 99.9 Q 47.2357421875 98.884765625 46.6 97.75 44.8875 93.9875 43.15 90.2 40.85 83.5 35.8 80.1 33.25 78.3 32.2 73.5 29.25 58.55 32.15 43.25 32.2 43.1 32.2 43 33.25 32.25 41.75 24.15 50.35 15.9 64 16.25 77.65 15.9 86.25 24.15 Z'/>",
-    "</g></defs>",
-    "<g><use xlink:href='#bg'/></g></svg>",
-	].join("\n");
-	return txt;
-}*/
-
 
 LTH.LogosBack = function(color){
 	color = color || '#000000';

@@ -1,8 +1,8 @@
-/**   _     _   _     
-*    | |___| |_| |__
-*    | / _ \  _|    |
-*    |_\___/\__|_||_|
-*    @author LoTh / http://lo-th.github.io/labs/
+/**   _   _____ _   _   
+*    | | |_   _| |_| |
+*    | |_ _| | |  _  |
+*    |___|_|_| |_| |_|
+*    @author l.th / http://lo-th.github.io/labs/
 */
 
 LTH.labsMenu = function(main){
@@ -60,7 +60,7 @@ LTH.labsMenu.prototype = {
 	    this.press = document.createElement('div');
 	    this.press.className = 'press';
 	    this.content.appendChild( this.press );
-	    this.press.innerHTML = "I'm loth french free-lance. Developer webgl, graphic and modeler 3d.<br>Contact me for any work at <a HREF='mailto:3dflashlo@gmail.com'>3dflashlo@gmail.com</a>"
+	    this.press.innerHTML = "I'm l.th french free-lance. Developer webgl, graphic and modeler 3d.<br>Contact me for any work at <a HREF='mailto:3dflashlo@gmail.com'>3dflashlo@gmail.com</a>"
 
 		this.canvas = document.createElement('canvas');
 		this.canvas.className = 'labsCanvas';

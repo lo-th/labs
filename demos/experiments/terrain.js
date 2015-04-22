@@ -20,7 +20,9 @@ loop();
 function loop(){
     key = v.nav.key;
     requestAnimationFrame( loop );
+    
+    v.render();
+
     terrain.easing();
     ball.position.y = terrain.getz(0,0);
-    v.render();
 }

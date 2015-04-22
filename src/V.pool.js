@@ -1,8 +1,8 @@
-/**   _     _   _     
-*    | |___| |_| |__
-*    | / _ \  _|    |
-*    |_\___/\__|_||_|
-*    @author LoTh / http://lo-th.github.io/labs/
+/**   _   _____ _   _   
+*    | | |_   _| |_| |
+*    | |_ _| | |  _  |
+*    |___|_|_| |_| |_|
+*    @author l.th / http://lo-th.github.io/labs/
 */
 
 V.SeaPool = function(parent){

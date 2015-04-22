@@ -1,8 +1,8 @@
-/**   _     _   _     
-*    | |___| |_| |__
-*    | / _ \  _|    |
-*    |_\___/\__|_||_|
-*    @author LoTh / http://lo-th.github.io/labs/
+/**   _   _____ _   _   
+*    | | |_   _| |_| |
+*    | |_ _| | |  _  |
+*    |___|_|_| |_| |_|
+*    @author l.th / http://lo-th.github.io/labs/
 */
 
 LTH.logoTimer = null;
@@ -92,7 +92,7 @@ LTH.Menu.prototype = {
 	initHomeland:function(isOK){
 		if(isOK){
 			this.initHome();
-			this.title.innerHTML = 'LOTH LABS';
+			this.title.innerHTML = 'L.TH LABS';
 			this.title.style.height = '20px';
 			this.title.style.marginTop = '-66px';
 			this.logo.onmousedown = function(e){ this.initHome(e); }.bind(this);
@@ -178,7 +178,7 @@ LTH.Menu.prototype = {
 		if(this.isHome) return;
 		LTH.cRubr = -1;
 		LTH.cFile = -1;
-		this.title.innerHTML = 'LOTH LABS';
+		this.title.innerHTML = 'L.TH LABS';
 
 		this.main.labmenu.init();
 		this.isHome = true;
